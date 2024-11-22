@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="true" scanPeriod="60 seconds">
+    <property name="FILE_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} [%file:%line] - %msg%n"/>
+
+    <property name="SERVER" value="PNUserCenter_web"/>
+    <property name="SQL" value="PNUserCenter_sql"/>
+    <property name="JOB" value="PNUserCenter__job"/>
+    <property name="REQUEST" value="PNUserCenter_http_request"/>
+    <property name="SLOW_SQL" value="PNUserCenter_slowSql"/>
+
+    <!--记录所有业务日志-->
+    <appender name="SERVER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.dir}/logs/${SERVER}.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${user.dir}/logs/history/${SERVER}_%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>5</maxHistory>
+            <MaxFileSize>128MB</MaxFileSize>
+            <totalSizeCap>1GB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <!--记录请求日志  通过监听切面实现-->
+    <appender name="REQUEST" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.dir}/logs/${REQUEST}.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${user.dir}/logs/history/${REQUEST}_%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>5</maxHistory>
+            <MaxFileSize>128MB</MaxFileSize>
+            <totalSizeCap>1GB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <!--记录定时任务日志-->
+    <appender name="JOB" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.dir}/logs/${JOB}.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${user.dir}/logs/history/${JOB}_%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>5</maxHistory>
+            <MaxFileSize>128MB</MaxFileSize>
+            <totalSizeCap>1GB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <!-- 慢日志 -->
+    <appender name="SLOW_SQL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.dir}/logs/${SLOW_SQL}.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${user.dir}/logs/history/${SLOW_SQL}_%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>5</maxHistory>
+            <MaxFileSize>128MB</MaxFileSize>
+            <totalSizeCap>1GB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <!-- SQL 日志 -->
+    <appender name="SQL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.dir}/logs/${SQL}.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${user.dir}/logs/history/${SQL}_%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>5</maxHistory>
+            <MaxFileSize>128MB</MaxFileSize>
+            <totalSizeCap>1GB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <logger name="org.apache.ibatis" level="DEBUG" additivity="false">
+        <appender-ref ref="SQL"/>
+    </logger>
+<!--    <logger name="com.PNUserCenter.web.controller.log.LoggingAspect"  level="info" additivity="false">-->
+<!--        <appender-ref ref="REQUEST"/>-->
+<!--    </logger>-->
+    <!--慢sql日志-->
+<!--    <logger name="com.alibaba.druid.filter.stat.StatFilter" level="info" additivity="false">-->
+<!--        <appender-ref ref="SLOW_SQL"/>-->
+<!--    </logger>-->
+    <logger name="job" level="info" additivity="false">
+        <appender-ref ref="JOB"/>
+    </logger>
+
+    <!-- 输出到控制台 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <!--此日志appender是为开发使用，只配置最底级别，控制台输出的日志级别是大于或等于此级别的日志信息-->
+        <!-- 例如：如果此处配置了INFO级别，则后面其他位置即使配置了DEBUG级别的日志，也不会被输出 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <Pattern>${FILE_PATTERN}</Pattern>
+            <!-- 设置字符集 -->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--记录info日志-->
+    <root level="info">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="SERVER"/>
+    </root>
+</configuration>

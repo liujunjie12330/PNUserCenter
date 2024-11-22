@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pn.dao.mapper.PnUserMapper">
+  <resultMap id="BaseResultMap" type="com.pn.dao.entity.PnUser">
+    <!--@mbg.generated-->
+    <!--@Table pn_user-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+    <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
+    <result column="is_deleted" jdbcType="BOOLEAN" property="isDeleted" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="full_name" jdbcType="VARCHAR" property="fullName" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="is_admin" jdbcType="VARCHAR" property="isAdmin" />
+    <result column="last_login_date" jdbcType="TIMESTAMP" property="lastLoginDate" />
+    <result column="update_last_time" jdbcType="TIMESTAMP" property="updateLastTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+      <!--@mbg.generated-->
+      id,
+      create_by,
+      update_by,
+      create_at,
+      update_at,
+      is_deleted,
+      username,
+      `password`,
+      full_name,
+      phone,
+      email,
+      is_admin,
+      last_login_date,
+      update_last_time
+  </sql>
+</mapper>

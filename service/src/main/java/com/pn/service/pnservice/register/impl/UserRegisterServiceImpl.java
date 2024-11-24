@@ -62,6 +62,7 @@ public class UserRegisterServiceImpl implements UserRegisterService {
         pnUser.setPassword(userRegisterDTO.getPassword());
         pnUser.setPhone(userRegisterDTO.getPhone());
         pnUser.setEmail(userRegisterDTO.getEmail());
+        pnUser.setFullName(userRegisterDTO.getFullName());
         pnUser.setIsDeleted(false); // 默认值
         pnUser.setIsAdmin("0"); // 默认非管理员
         pnUser.setLastLoginDate(null); // 注册时无登录记录

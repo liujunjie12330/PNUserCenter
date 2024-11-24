@@ -1,7 +1,10 @@
 package com.pn.web;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * @author: javadadi
@@ -9,6 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @ClassName: PNUserCenterApp
  */
 @SpringBootApplication
+@MapperScan("com.pn.dao.mapper")
+@ComponentScan("com.pn")
 public class PNUserCenterApp {
     public static void main(String[] args) {
         SpringApplication.run(PNUserCenterApp.class,args);

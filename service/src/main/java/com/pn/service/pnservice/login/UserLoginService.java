@@ -7,4 +7,5 @@ package com.pn.service.pnservice.login;
  */
 public interface UserLoginService {
 
+    String doLogin(String username, String password, String code);
 }

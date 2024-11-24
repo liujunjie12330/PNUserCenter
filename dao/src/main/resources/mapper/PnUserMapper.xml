@@ -43,4 +43,12 @@
       where `is_deleted` = 0
         and `username` = #{username}
   </select>
+
+  <select id="getUserByUsername" resultMap="BaseResultMap">
+      select
+      <include refid="Base_Column_List"/>
+        from pn_user
+        where is_deleted = 0
+      and username = #{username}
+    </select>
 </mapper>

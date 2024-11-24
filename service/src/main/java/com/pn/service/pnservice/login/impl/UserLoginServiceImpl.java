@@ -85,7 +85,7 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
     private void checkPassword(String username,String password){
         UsernamePasswordDTO user = userMapper.getByUsername(username);
         String realPassword = user.getPassword();
-        String currentPassword  = DigestUtil.md5Hex(PNUserCenterConstant.USER_PASSWORD_SLOT+password);
+        String currentPassword  = DigestUtil.md5Hex((PNUserCenterConstant.USER_PASSWORD_SLOT+password).getBytes());
         if (!realPassword.equals(currentPassword)){
             throw new BizException(StatusCode.PASSWORD_ERROR);
         }

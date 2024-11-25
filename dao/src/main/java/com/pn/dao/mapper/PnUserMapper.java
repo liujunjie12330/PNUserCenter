@@ -8,4 +8,5 @@ import org.apache.ibatis.annotations.Param;
 public interface PnUserMapper extends BaseMapper<PnUser> {
     UsernamePasswordDTO getByUsername(@Param("username")String username);
     PnUser getUserByUsername(@Param("username")String username);
+    void deletionUser(PnUser user);
 }

@@ -1,15 +1,20 @@
 package com.pn.service.pnservice.register.impl;
 
+import cn.hutool.crypto.digest.DigestUtil;
+import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.constant.RedisKeyConstant;
 import com.pn.common.exception.BizException;
+import com.pn.dao.dto.register.UserDeletionReqDTO;
 import com.pn.dao.dto.register.UserRegisterDTO;
 import com.pn.dao.dto.register.UserRegisterRespDTO;
 import com.pn.dao.entity.PnUser;
 import com.pn.dao.mapper.PnUserMapper;
 import com.pn.service.pnservice.register.UserRegisterService;
+import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.concurrent.TimeUnit;
@@ -19,15 +24,22 @@ public class UserRegisterServiceImpl implements UserRegisterService {
 
     private final RedissonClient redissonClient;
     private final PnUserMapper userMapper;
-
+    private final RBloomFilter<String> userRegisterBloomFilter;
+    private final StringRedisTemplate stringRedisTemplate;
     @Autowired
-    public UserRegisterServiceImpl(RedissonClient redissonClient, PnUserMapper userMapper) {
+    public UserRegisterServiceImpl(RedissonClient redissonClient, PnUserMapper userMapper, RBloomFilter<String> userRegisterBloomFilter,StringRedisTemplate stringRedisTemplate) {
         this.redissonClient = redissonClient;
         this.userMapper = userMapper;
+        this.userRegisterBloomFilter = userRegisterBloomFilter;
+        this.stringRedisTemplate = stringRedisTemplate;
     }
     @Override
     @Transactional(rollbackFor = Exception.class)
     public UserRegisterRespDTO register(UserRegisterDTO userRegisterDTO) {
+        Boolean hasUsername = hasUsername(userRegisterDTO.getUsername());
+        if(!hasUsername){
+            throw new BizException("用户名已存在！");
+        }
         RLock lock = redissonClient.getLock(RedisKeyConstant.LOCK_USER_REGISTER + userRegisterDTO.getUsername());
         boolean tryLock = false;
         try {
@@ -40,8 +52,11 @@ public class UserRegisterServiceImpl implements UserRegisterService {
             if (insert < 1) {
                 throw new BizException("用户注册失败，请稍后重试！");
             }
-            return mapToUserRegisterRespDTO(userRegisterDTO);
-
+            //用户注销之后,原本所持有的用户名则会被放到redis中可复用的集合中重新拿来使用。
+            //使用则删除分片中的用户名
+            stringRedisTemplate.opsForSet().remove(RedisKeyConstant.USER_REGISTER_REUSE,userRegisterDTO.getUsername());
+            //布隆过滤器防止用户重复注册，缓存穿透
+            userRegisterBloomFilter.add(userRegisterDTO.getUsername());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new BizException("系统繁忙，请稍后重试！");
@@ -50,6 +65,17 @@ public class UserRegisterServiceImpl implements UserRegisterService {
                 lock.unlock();
             }
         }
+        return mapToUserRegisterRespDTO(userRegisterDTO);
+
+    }
+
+    @Override
+    public Boolean hasUsername(String username) {
+        boolean contains = userRegisterBloomFilter.contains(username);
+        if (contains){
+          return stringRedisTemplate.opsForSet().isMember(RedisKeyConstant.LOCK_USER_REGISTER,username);
+        }
+        return true;
     }
 
     /**
@@ -58,7 +84,8 @@ public class UserRegisterServiceImpl implements UserRegisterService {
     private PnUser mapToPnUser(UserRegisterDTO userRegisterDTO) {
         PnUser pnUser = new PnUser();
         pnUser.setUsername(userRegisterDTO.getUsername());
-        pnUser.setPassword(userRegisterDTO.getPassword());
+        String saltedPassword = DigestUtil.md5Hex((PNUserCenterConstant.USER_PASSWORD_SLOT + userRegisterDTO.getPassword()).getBytes());
+        pnUser.setPassword(saltedPassword);
         pnUser.setPhone(userRegisterDTO.getPhone());
         pnUser.setEmail(userRegisterDTO.getEmail());
         pnUser.setFullName(userRegisterDTO.getFullName());
@@ -76,7 +103,21 @@ public class UserRegisterServiceImpl implements UserRegisterService {
         respDTO.setUsername(userRegisterDTO.getUsername());
         respDTO.setPhone(userRegisterDTO.getPhone());
         respDTO.setEmail(userRegisterDTO.getEmail());
+        respDTO.setPassword(userRegisterDTO.getPassword());
         return respDTO;
     }
 
+    @Override
+    public void deletion(UserDeletionReqDTO userDeletionReqDTO) {
+        //添加ThreadLocal之后比对注销用户是否一致
+        RLock lock=redissonClient.getLock(RedisKeyConstant.USER_DELETION+userDeletionReqDTO.getUsername());
+        lock.lock();
+        try{
+            PnUser pnUser=new PnUser();
+            pnUser.setUsername(userDeletionReqDTO.getUsername());
+            userMapper.deletionUser(pnUser);
+        }finally {
+            lock.unlock();
+        }
+    }
 }

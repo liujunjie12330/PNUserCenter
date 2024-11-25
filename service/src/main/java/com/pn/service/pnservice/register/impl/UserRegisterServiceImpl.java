@@ -12,7 +12,6 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -66,7 +65,6 @@ public class UserRegisterServiceImpl implements UserRegisterService {
         pnUser.setIsDeleted(false); // 默认值
         pnUser.setIsAdmin("0"); // 默认非管理员
         pnUser.setLastLoginDate(null); // 注册时无登录记录
-        pnUser.setUpdateLastTime(new Date()); // 初始化最后更新时间
         return pnUser;
     }
 

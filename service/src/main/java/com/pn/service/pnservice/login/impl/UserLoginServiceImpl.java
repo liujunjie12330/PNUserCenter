@@ -62,6 +62,8 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
         return token;
     }
 
+
+
     private PnUser checkPreLogin(String username, String password,String code){
         boolean isAccount = RegularUtil.isAccount(username);
         boolean isPassword = RegularUtil.isPassword(password);
@@ -90,5 +92,8 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
             throw new BizException(StatusCode.PASSWORD_ERROR);
         }
     }
+
+
+
 
 }

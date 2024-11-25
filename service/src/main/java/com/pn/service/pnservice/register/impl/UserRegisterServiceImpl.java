@@ -4,6 +4,7 @@ import cn.hutool.crypto.digest.DigestUtil;
 import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.constant.RedisKeyConstant;
 import com.pn.common.exception.BizException;
+import com.pn.dao.dto.register.UserDeletionReqDTO;
 import com.pn.dao.dto.register.UserRegisterDTO;
 import com.pn.dao.dto.register.UserRegisterRespDTO;
 import com.pn.dao.entity.PnUser;
@@ -108,4 +109,17 @@ public class UserRegisterServiceImpl implements UserRegisterService {
         return respDTO;
     }
 
+    @Override
+    public void deletion(UserDeletionReqDTO userDeletionReqDTO) {
+        //添加ThreadLocal之后比对注销用户是否一致
+        RLock lock=redissonClient.getLock(RedisKeyConstant.USER_DELETION+userDeletionReqDTO.getUsername());
+        lock.lock();
+        try{
+            PnUser pnUser=new PnUser();
+            pnUser.setUsername(userDeletionReqDTO.getUsername());
+            userMapper.deletionUser(pnUser);
+        }finally {
+            lock.unlock();
+        }
+    }
 }

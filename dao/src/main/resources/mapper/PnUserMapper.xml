@@ -51,4 +51,10 @@
         where is_deleted = 0
       and username = #{username}
     </select>
+
+    <update id="deletionUser" parameterType="com.pn.dao.entity.PnUser">
+        update pn_user
+        set is_deleted ='1'
+        where username=#{username} and is_deleted='0';
+    </update>
 </mapper>

@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author: javadadi
@@ -52,5 +53,10 @@ public class UserVo {
      * 最后一次修改时间
      */
     private Date updateLastTime;
+
+    /**
+     * 权限列表
+     */
+    private List<String> permissions;
 
 }

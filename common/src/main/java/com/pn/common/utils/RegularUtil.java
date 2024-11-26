@@ -25,7 +25,7 @@ public class RegularUtil {
     /**
      * 密码正则,以字母开头，长度在8~16之间，只能包含字母、数字和下划线
      */
-    public static final Pattern PASSWORD_PATTERN = Pattern.compile("^[a-zA-Z]\\w{7,15}$");
+    public static final Pattern PASSWORD_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{8,16}$");
     /**
      * 电话号码正则
      */

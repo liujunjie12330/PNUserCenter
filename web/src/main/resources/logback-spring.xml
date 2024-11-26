@@ -8,7 +8,7 @@
     <property name="JOB" value="PNUserCenter__job"/>
     <property name="REQUEST" value="PNUserCenter_http_request"/>
     <property name="SLOW_SQL" value="PNUserCenter_slowSql"/>
-
+    <property name="CUSTOMIZE" value="PNUserCenter_customize"/>
     <!--记录所有业务日志-->
     <appender name="SERVER" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${user.dir}/logs/${SERVER}.log</file>
@@ -24,6 +24,7 @@
             <pattern>${FILE_PATTERN}</pattern>
         </encoder>
     </appender>
+
     <!--记录请求日志  通过监听切面实现-->
     <appender name="REQUEST" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${user.dir}/logs/${REQUEST}.log</file>
@@ -39,6 +40,7 @@
             <pattern>${FILE_PATTERN}</pattern>
         </encoder>
     </appender>
+
     <!--记录定时任务日志-->
     <appender name="JOB" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${user.dir}/logs/${JOB}.log</file>
@@ -54,6 +56,7 @@
             <pattern>${FILE_PATTERN}</pattern>
         </encoder>
     </appender>
+
     <!-- 慢日志 -->
     <appender name="SLOW_SQL" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${user.dir}/logs/${SLOW_SQL}.log</file>
@@ -69,6 +72,7 @@
             <pattern>${FILE_PATTERN}</pattern>
         </encoder>
     </appender>
+
     <!-- SQL 日志 -->
     <appender name="SQL" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${user.dir}/logs/${SQL}.log</file>
@@ -84,16 +88,41 @@
             <pattern>${FILE_PATTERN}</pattern>
         </encoder>
     </appender>
+
+    <appender name="CUSTOMIZE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.dir}/logs/${CUSTOMIZE}.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${user.dir}/logs/history/${CUSTOMIZE}_%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>5</maxHistory>
+            <MaxFileSize>128MB</MaxFileSize>
+            <totalSizeCap>1GB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+        </encoder>
+    </appender>
+<!--                        具体的日志记录器                                    -->
     <logger name="org.apache.ibatis" level="DEBUG" additivity="false">
         <appender-ref ref="SQL"/>
     </logger>
-<!--    <logger name="com.PNUserCenter.web.controller.log.LoggingAspect"  level="info" additivity="false">-->
-<!--        <appender-ref ref="REQUEST"/>-->
-<!--    </logger>-->
+
+<!--    controller 日志打印-->
+    <logger name="com.pn.web.log.LoggingAspect"  level="info" additivity="false">
+        <appender-ref ref="REQUEST"/>
+    </logger>
+
+<!--自定义日志打印-->
+    <logger name="com.pn.service.log.JobLoggingAspect"  level="info" additivity="false">
+        <appender-ref ref="CUSTOMIZE"/>
+    </logger>
+
     <!--慢sql日志-->
 <!--    <logger name="com.alibaba.druid.filter.stat.StatFilter" level="info" additivity="false">-->
 <!--        <appender-ref ref="SLOW_SQL"/>-->
 <!--    </logger>-->
+
     <logger name="job" level="info" additivity="false">
         <appender-ref ref="JOB"/>
     </logger>

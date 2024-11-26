@@ -44,7 +44,7 @@ public class RegisterController {
         if (StringUtils.isAnyBlank(username, password, checkPassword)) {
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
-        if (checkPassword.equals(password)) {
+        if (!checkPassword.equals(password)) {
             throw new BizException(StatusCode.PASSWORD_NOT_EQUALS);
         }
         return ResultUtils.success(userRegisterService.register(param));

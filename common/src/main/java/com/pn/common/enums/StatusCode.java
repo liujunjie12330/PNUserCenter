@@ -17,7 +17,7 @@ public enum StatusCode {
     USER_NO_REGISTERING(1001, "用户未注册"),
     USER_ALREADY_EXIST(1002, "用户已经存在"),
     USER_NO_LOGIN(1003, "用户未登录"),
-    NO_PERMISSION(1004, "无权限"),
+    NO_AUTH_ERROR(1004, "无权限"),
     FORBIDDEN_ACCESS(1005, "禁止访问"),
     PARAMS_ERROR(1006, "参数错误"),
     FORMAT_ERROR(1007, "格式错误"),

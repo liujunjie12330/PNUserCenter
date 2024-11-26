@@ -1,5 +1,8 @@
 package com.pn.common.constant;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 系统相关常量
  * @author: javadadi
@@ -36,4 +39,11 @@ public interface PNUserCenterConstant {
      */
     public static final String JWT_SECRET_KEY = "pn_user_center_jwt";
 
+    /**
+     * 拦截放开地址
+     */
+    public static final List<String> EXCLUDE_PATH = Arrays.asList(
+            "/v1/usercenter/server/user/register",
+            "/v1/usercenter/server/user/login",
+            "/v1/usercenter/server/user/getCode");
 }

@@ -57,7 +57,8 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
         String jsonStr = JSONUtil.toJsonStr(userVo);
         redisCache.set(PNUserCenterConstant.USER_LOGIN+ pnUser.getId()+pnUser.getUsername(),jsonStr);
         Map<String, String> map = new HashMap<>();
-        map.put("userAccount", userVo.getUsername());
+        map.put("userId", String.valueOf(userVo.getId()));
+        map.put("username", userVo.getUsername());
         String token = JWTUtil.sign(map);
         return token;
     }

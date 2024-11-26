@@ -92,7 +92,7 @@ public class UserRegisterServiceImpl implements UserRegisterService {
         pnUser.setEmail(userRegisterParam.getEmail());
         pnUser.setFullName(userRegisterParam.getFullName());
         pnUser.setIsDeleted(false); // 默认值
-        pnUser.setIsAdmin("0"); // 默认非管理员
+        pnUser.setIsAdmin(0); // 默认非管理员
         pnUser.setLastLoginDate(null); // 注册时无登录记录
         return pnUser;
     }

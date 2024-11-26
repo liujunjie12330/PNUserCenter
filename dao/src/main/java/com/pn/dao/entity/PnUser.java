@@ -64,7 +64,7 @@ public class PnUser extends BaseModel implements Serializable {
      * 是否管理员
      */
     @TableField(value = "is_admin")
-    private String isAdmin;
+    private Integer isAdmin;
 
     /**
      * 最后一次登录时间

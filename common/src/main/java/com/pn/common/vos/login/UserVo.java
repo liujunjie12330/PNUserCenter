@@ -41,7 +41,7 @@ public class UserVo {
     /**
      * 是否管理员
      */
-    private String isAdmin;
+    private Integer isAdmin;
 
     /**
      * 最后一次登录时间

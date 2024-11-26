@@ -9,8 +9,6 @@ import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.exception.BizException;
 import com.pn.common.params.register.UserRegisterParam;
 import com.pn.common.vos.login.UserVo;
-import com.pn.common.vos.register.UserRegisterRespVo;
-import com.pn.dao.dto.register.UserRegisterDTO;
 import com.pn.dao.entity.PnUser;
 import com.pn.dao.mapper.PnUserMapper;
 import com.pn.service.pnservice.login.Login3rdTarget;

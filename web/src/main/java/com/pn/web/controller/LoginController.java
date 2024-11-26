@@ -41,22 +41,22 @@ public class LoginController {
         return ResultUtils.success("ok");
     }
 
-    @PostMapping("/user/login/third")
-    public BaseResponse<String> loginByOAuth(@RequestParam String state, @RequestParam String code, HttpServletResponse response){
-        if(StringUtils.isBlank(state) ){
+    @PostMapping("/login/third")
+    public BaseResponse<String> loginByOAuth(@RequestParam String oauthName, @RequestParam String code, HttpServletResponse response){
+        if(StringUtils.isBlank(oauthName) ){
             throw new BizException(StatusCode.PASSWORD_ERROR);
         }
         String token ="";
-        if("GITEE".equals(state)){
-            token = login3rdTarget.loginByGitee(code, state);
+        if("GITEE".equals(oauthName)){
+            token = login3rdTarget.loginByGitee(code, oauthName);
         }
-        if( "GITHUB".equals(state)){
-            token = login3rdTarget.loginByGitHub(code,state);
+        if( "GITHUB".equals(oauthName)){
+            token = login3rdTarget.loginByGitHub(code,oauthName);
         }
-        if("qq".equals(state)){
+        if("qq".equals(oauthName)){
             token = login3rdTarget.loginByQQ("params");
         }
-        if("wechat".equals(state)){
+        if("wechat".equals(oauthName)){
             token = login3rdTarget.loginByWechat("params");
         }
         response.setHeader("token",token);

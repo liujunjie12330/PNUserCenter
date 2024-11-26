@@ -7,7 +7,9 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.exception.BizException;
+import com.pn.common.params.register.UserRegisterParam;
 import com.pn.common.vos.login.UserVo;
+import com.pn.common.vos.register.UserRegisterRespVo;
 import com.pn.dao.dto.register.UserRegisterDTO;
 import com.pn.dao.entity.PnUser;
 import com.pn.dao.mapper.PnUserMapper;
@@ -160,14 +162,14 @@ public class Login3rdAdapter  implements Login3rdTarget {
         //第三方第一次登录？自动注册
         PnUser pnUser = pnUserMapper.getUserByUsername(userAccount);
         if(ObjectUtil.isEmpty(pnUser)) {
-            UserRegisterDTO userRegisterDTO = new UserRegisterDTO();
-            userRegisterDTO.setUsername(userAccount);
-            userRegisterDTO.setFullName(userFullName);
+            UserRegisterParam userRegisterParam = new UserRegisterParam();
+            userRegisterParam.setUsername(userAccount);
+            userRegisterParam.setFullName(userFullName);
             //自动注册密码设定如：gitee_@Ming608
-            userRegisterDTO.setPassword(thirdName+"_"+userAccount);
-            userRegisterDTO.setPhone("");
-            userRegisterDTO.setEmail("");
-            userRegisterService.register(userRegisterDTO);
+            userRegisterParam.setPassword(thirdName+"_"+userAccount);
+            userRegisterParam.setPhone("");
+            userRegisterParam.setEmail("");
+            userRegisterService.register(userRegisterParam);
             pnUser = pnUserMapper.getUserByUsername(userAccount);
         }
 

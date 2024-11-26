@@ -1,6 +1,5 @@
 package com.pn.service.pnservice.register;
 
-import com.pn.common.params.register.UserDeletionReqParam;
 import com.pn.common.params.register.UserRegisterParam;
 import com.pn.common.vos.register.UserRegisterRespVo;
 

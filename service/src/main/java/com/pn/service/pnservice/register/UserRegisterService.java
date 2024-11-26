@@ -1,17 +1,17 @@
 package com.pn.service.pnservice.register;
 
-import com.pn.dao.dto.register.UserDeletionReqDTO;
-import com.pn.dao.dto.register.UserRegisterDTO;
-import com.pn.dao.dto.register.UserRegisterRespDTO;
+import com.pn.common.params.register.UserDeletionReqParam;
+import com.pn.common.params.register.UserRegisterParam;
+import com.pn.common.vos.register.UserRegisterRespVo;
 
 public interface UserRegisterService {
 
     /**
      * 用户注册
-     * @param userRegisterDTO
+     * @param userRegisterParam
      * @return
      */
-    UserRegisterRespDTO register(UserRegisterDTO userRegisterDTO);
+    UserRegisterRespVo register(UserRegisterParam userRegisterParam);
     /**
      * 用户名是否存在
      *
@@ -20,5 +20,5 @@ public interface UserRegisterService {
      */
     Boolean hasUsername(String username);
 
-    void deletion(UserDeletionReqDTO userDeletionReqDTO);
+    void deletion(UserRegisterParam param);
 }

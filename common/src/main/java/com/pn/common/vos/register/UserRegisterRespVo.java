@@ -1,9 +1,9 @@
-package com.pn.dao.dto.register;
+package com.pn.common.vos.register;
 
 import lombok.Data;
 
 @Data
-public class UserRegisterRespDTO {
+public class UserRegisterRespVo {
     private String username;
     private String password;
     private String phone;

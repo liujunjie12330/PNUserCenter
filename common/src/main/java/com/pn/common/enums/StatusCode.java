@@ -26,6 +26,7 @@ public enum StatusCode {
     NO_SUCH_ROLE(1010, "没有该角色"),
     NO_SUCH_PERMISSION(1011, "没有该权限"),
     NO_SUCH_PERMISSION_MESSAGE(1012, "没有该授权信息"),
+    PASSWORD_NOT_EQUALS(1013,"两次密码不相同"),
     /**
      * 系统相关
      */

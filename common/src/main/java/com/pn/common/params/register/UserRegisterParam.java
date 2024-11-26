@@ -1,11 +1,12 @@
-package com.pn.dao.dto.register;
+package com.pn.common.params.register;
 
 import lombok.Data;
 
 @Data
-public class UserRegisterDTO {
+public class UserRegisterParam {
     private String username;
     private String password;
+    private String checkPassword;
     private String email;
     private String phone;
     private String fullName;

@@ -22,12 +22,12 @@ import javax.servlet.http.HttpServletResponse;
  * @ClassName: LoginController
  */
 @RestController
-@RequestMapping(PNUserCenterConstant.BASE_URL)
+@RequestMapping(PNUserCenterConstant.BASE_URL+"user")
 public class LoginController {
     @Resource
     private UserLoginService loginService;
 
-    @PostMapping("/user/login")
+    @PostMapping("/login")
     public BaseResponse<String> login(@RequestBody UserLoginParams params, HttpServletResponse response){
      String username = params.getUsername();
      String password = params.getPassword();

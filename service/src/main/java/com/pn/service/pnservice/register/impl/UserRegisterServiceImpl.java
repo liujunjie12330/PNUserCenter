@@ -7,10 +7,12 @@ import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
 import com.pn.common.params.register.UserDeletionReqParam;
 import com.pn.common.params.register.UserRegisterParam;
+import com.pn.common.utils.RegularUtil;
 import com.pn.common.vos.register.UserRegisterRespVo;
 import com.pn.dao.entity.PnUser;
 import com.pn.dao.mapper.PnUserMapper;
 import com.pn.service.pnservice.register.UserRegisterService;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
@@ -41,6 +43,12 @@ public class UserRegisterServiceImpl implements UserRegisterService {
         Boolean hasUsername = hasUsername(userRegisterParam.getUsername());
         if(!hasUsername){
             throw new BizException(StatusCode.USER_ALREADY_EXIST);
+        }
+        //用户名，用户密码规范校验
+        boolean isUsername = RegularUtil.isAccount(userRegisterParam.getUsername());
+        boolean isPassword = RegularUtil.isPassword(userRegisterParam.getPassword());
+        if(BooleanUtils.isFalse(isUsername && isPassword)){
+            throw new BizException(StatusCode.FORMAT_ERROR);
         }
         RLock lock = redissonClient.getLock(RedisKeyConstant.LOCK_USER_REGISTER + userRegisterParam.getUsername());
         boolean tryLock = false;

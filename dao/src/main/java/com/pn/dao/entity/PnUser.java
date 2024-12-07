@@ -77,22 +77,4 @@ public class PnUser extends BaseModel implements Serializable {
      */
     @TableField(value = "update_last_time")
     private Date updateLastTime;
-
-    /**
-     * github 登陆id
-     */
-    @TableField(value = "github_id")
-    private String githubId;
-
-    /**
-     * gitee 登陆id
-     */
-    @TableField(value = "gitee_id")
-    private String giteeId;
-    /**
-     * gitlab 登陆id
-     */
-    @TableField(value = "gitlab_id")
-    private String gitlabId;
-
 }

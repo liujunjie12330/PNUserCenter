@@ -47,16 +47,16 @@ public class LoginController {
             throw new BizException(StatusCode.PASSWORD_ERROR);
         }
         String token ="";
-        if("GITEE".equals(oauthName)){
+        if("GITEE".equalsIgnoreCase(oauthName)){
             token = login3rdTarget.loginByGitee(code, oauthName);
         }
-        if( "GITHUB".equals(oauthName)){
+        if( "GITHUB".equalsIgnoreCase(oauthName)){
             token = login3rdTarget.loginByGitHub(code,oauthName);
         }
-        if("qq".equals(oauthName)){
+        if("qq".equalsIgnoreCase(oauthName)){
             token = login3rdTarget.loginByQQ("params");
         }
-        if("wechat".equals(oauthName)){
+        if("wechat".equalsIgnoreCase(oauthName)){
             token = login3rdTarget.loginByWechat("params");
         }
         response.setHeader("token",token);

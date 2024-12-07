@@ -18,9 +18,6 @@
         <result column="is_admin" jdbcType="INTEGER" property="isAdmin"/>
         <result column="last_login_date" jdbcType="TIMESTAMP" property="lastLoginDate"/>
         <result column="update_last_time" jdbcType="TIMESTAMP" property="updateLastTime"/>
-        <result column="github_id" jdbcType="VARCHAR" property="githubId"/>
-        <result column="gitlab_id" jdbcType="VARCHAR" property="gitlabId"/>
-        <result column="gitee_id" jdbcType="VARCHAR" property="giteeId"/>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
@@ -38,9 +35,6 @@
         is_admin,
         last_login_date,
         update_last_time,
-        gitee_id,
-        github_id,
-        gitlab_id
     </sql>
 
     <select id="getByUsername" resultType="com.pn.dao.dto.login.UsernamePasswordDTO">

@@ -38,7 +38,7 @@ public class LoginController {
     @Resource
     private AuthListBean auth;
 
-    @PostMapping("/loginByUsername")
+    @PostMapping("/login/byUsername")
     public BaseResponse<String> login(@RequestBody UserLoginParams params, HttpServletResponse response) {
         String username = params.getUsername();
         String password = params.getPassword();
@@ -51,14 +51,14 @@ public class LoginController {
         return ResultUtils.success("ok");
     }
 
-    @GetMapping("loginByGitee")
+    @GetMapping("login/byGitee")
     public void loginByGitee(HttpServletResponse response) throws IOException {
         AuthRequest authRequest = auth.getAuthRequest(AuthEnum.GITEE.getName());
         String authorizeUrl = authRequest.authorize(AuthStateUtils.createState());
         response.sendRedirect(authorizeUrl);
     }
 
-    @GetMapping("loginByGithub")
+    @GetMapping("login/byGithub")
     public void loginByGithub(HttpServletResponse response) throws IOException {
         AuthRequest authRequest = auth.getAuthRequest(AuthEnum.GITHUB.getName());
         String authorizeUrl = authRequest.authorize(AuthStateUtils.createState());

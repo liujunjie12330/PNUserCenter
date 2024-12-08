@@ -64,5 +64,5 @@ public class PnUserOauth extends BaseModel {
      * 是否删除
      */
     @TableField(value = "is_deleted")
-    private Boolean isDeleted;
+    private Integer isDeleted;
 }

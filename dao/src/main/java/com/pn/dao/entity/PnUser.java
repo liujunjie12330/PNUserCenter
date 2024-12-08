@@ -28,7 +28,7 @@ public class PnUser extends BaseModel implements Serializable {
      * 是否删除（0,1）
      */
     @TableField(value = "is_deleted")
-    private Boolean isDeleted;
+    private Integer isDeleted;
 
     /**
      * 用户名
@@ -39,7 +39,7 @@ public class PnUser extends BaseModel implements Serializable {
     /**
      * 用户密码
      */
-    @TableField(value = "`password`")
+    @TableField(value = "password")
     private String password;
 
     /**

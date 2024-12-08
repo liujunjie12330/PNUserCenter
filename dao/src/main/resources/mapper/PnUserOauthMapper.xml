@@ -11,7 +11,7 @@
         <result column="platform_username" jdbcType="VARCHAR" property="platformUsername"/>
         <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl"/>
         <result column="authorized_at" jdbcType="TIMESTAMP" property="authorizedAt"/>
-        <result column="is_deleted" jdbcType="BOOLEAN" property="isDeleted"/>
+        <result column="is_deleted" jdbcType="INTEGER" property="isDeleted"/>
         <result column="update_at" jdbcType="TIMESTAMP" property="updateAt"/>
         <result column="create_at" jdbcType="TIMESTAMP" property="createAt"/>
         <result column="create_by" jdbcType="BIGINT" property="createBy"/>

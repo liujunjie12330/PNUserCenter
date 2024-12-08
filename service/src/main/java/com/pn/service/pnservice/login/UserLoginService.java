@@ -1,5 +1,7 @@
 package com.pn.service.pnservice.login;
 
+import me.zhyd.oauth.model.AuthUser;
+
 /**
  * @author: javadadi
  * @Time: 19:08
@@ -8,4 +10,7 @@ package com.pn.service.pnservice.login;
 public interface UserLoginService {
 
     String doLogin(String username, String password, String code);
+
+    String doLogin(AuthUser authUser);
+
 }

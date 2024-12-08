@@ -18,6 +18,10 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>me.zhyd.oauth</groupId>
+            <artifactId>JustAuth</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.pn.usercenter</groupId>
             <artifactId>dao</artifactId>
             <version>1.0-SNAPSHOT</version>

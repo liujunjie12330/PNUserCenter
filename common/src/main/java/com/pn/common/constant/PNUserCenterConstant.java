@@ -35,5 +35,4 @@ public interface PNUserCenterConstant {
      * jwt secret
      */
     public static final String JWT_SECRET_KEY = "pn_user_center_jwt";
-
 }

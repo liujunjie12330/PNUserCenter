@@ -77,4 +77,7 @@ public class PnUser extends BaseModel implements Serializable {
      */
     @TableField(value = "update_last_time")
     private Date updateLastTime;
+
+    @TableField("avatar")
+    private String avatar;
 }

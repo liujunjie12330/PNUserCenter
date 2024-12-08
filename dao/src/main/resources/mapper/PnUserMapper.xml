@@ -18,6 +18,7 @@
         <result column="is_admin" jdbcType="INTEGER" property="isAdmin"/>
         <result column="last_login_date" jdbcType="TIMESTAMP" property="lastLoginDate"/>
         <result column="update_last_time" jdbcType="TIMESTAMP" property="updateLastTime"/>
+        <result column="avatar" jdbcType="VARCHAR" property="avatar"/>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
@@ -35,6 +36,7 @@
         is_admin,
         last_login_date,
         update_last_time,
+        avatar
     </sql>
 
     <select id="getByUsername" resultType="com.pn.dao.dto.login.UsernamePasswordDTO">
@@ -58,4 +60,12 @@
         where username = #{username}
           and is_deleted = '0';
     </update>
+
+    <insert id="addUser" useGeneratedKeys="true" keyProperty = "id" keyColumn = "id">
+        insert into pn_user
+            value (null, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 0, 0, #{username}, #{password}, #{fullName}, #{phone},
+                   #{email}, 0,
+                   CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+                   #{avatar})
+    </insert>
 </mapper>

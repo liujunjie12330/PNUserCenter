@@ -6,11 +6,10 @@
         <!--@Table pn_user_oauth-->
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="user_id" jdbcType="BIGINT" property="userId"/>
-        <result column="platform" jdbcType="VARCHAR" property="platform"/>
-        <result column="platform_user_id" jdbcType="VARCHAR" property="platformUserId"/>
+        <result column="source" jdbcType="VARCHAR" property="source"/>
+        <result column="uuid" jdbcType="VARCHAR" property="uuid"/>
         <result column="platform_username" jdbcType="VARCHAR" property="platformUsername"/>
         <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl"/>
-        <result column="token" jdbcType="VARCHAR" property="token"/>
         <result column="authorized_at" jdbcType="TIMESTAMP" property="authorizedAt"/>
         <result column="is_deleted" jdbcType="BOOLEAN" property="isDeleted"/>
         <result column="update_at" jdbcType="TIMESTAMP" property="updateAt"/>
@@ -22,11 +21,10 @@
         <!--@mbg.generated-->
         id,
         user_id,
-        platform,
-        platform_user_id,
+        source,
+        uuid,
         platform_username,
         avatar_url,
-        token,
         authorized_at,
         is_deleted,
         update_at,
@@ -34,4 +32,13 @@
         create_by,
         update_by
     </sql>
+
+    <select id="getByUuidAndSource" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pn_user_oauth
+        where `is_deleted` = 0
+          and `uuid` = #{uuid}
+          and `source` = #{source}
+    </select>
 </mapper>

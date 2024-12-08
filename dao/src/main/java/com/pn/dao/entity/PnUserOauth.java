@@ -33,14 +33,14 @@ public class PnUserOauth extends BaseModel {
     /**
      * 第三方登录方式(github,gitee..)
      */
-    @TableField(value = "platform")
-    private String platform;
+    @TableField(value = "source")
+    private String source;
 
     /**
      * 三方平台用户id
      */
-    @TableField(value = "platform_user_id")
-    private String platformUserId;
+    @TableField(value = "uuid")
+    private String uuid;
 
     /**
      * 三方平台用户名
@@ -53,12 +53,6 @@ public class PnUserOauth extends BaseModel {
      */
     @TableField(value = "avatar_url")
     private String avatarUrl;
-
-    /**
-     * 授权token
-     */
-    @TableField(value = "token")
-    private String token;
 
     /**
      * 用户授权时间

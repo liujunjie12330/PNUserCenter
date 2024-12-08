@@ -10,18 +10,23 @@ import com.pn.common.utils.RegularUtil;
 import com.pn.common.vos.login.UserVo;
 import com.pn.dao.dto.login.UsernamePasswordDTO;
 import com.pn.dao.entity.PnUser;
+import com.pn.dao.entity.PnUserOauth;
 import com.pn.dao.mapper.PnUserMapper;
+import com.pn.dao.mapper.PnUserOauthMapper;
 import com.pn.service.pnservice.login.UserLoginService;
 import com.pn.service.utils.JWTUtil;
 import com.pn.service.utils.RedisCache;
+import me.zhyd.oauth.model.AuthUser;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * @author: javadadi
@@ -29,23 +34,90 @@ import java.util.Objects;
  * @ClassName: UserLoginServiceImpl
  */
 @Service
-public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> implements UserLoginService  {
+public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> implements UserLoginService {
     @Resource
     private PnUserMapper userMapper;
 
     @Resource
     private RedisCache redisCache;
 
+    @Resource
+    private PnUserOauthMapper userOauthMapper;
+    @Resource
+    private PnUserMapper pnUserMapper;
 
     /**
      * 登陆--常规实现
      */
     @Override
     public String doLogin(String username, String password, String code) {
-        PnUser pnUser = checkPreLogin(username, password,code);
-        checkPassword(username,password);
+        PnUser pnUser = checkPreLogin(username, password, code);
+        checkPassword(username, password);
         //校验通过，设置登陆标志
-        UserVo userVo = UserVo.builder()
+        UserVo userVo = getUserVo(pnUser);
+        String jsonStr = JSONUtil.toJsonStr(userVo);
+        redisCache.set(PNUserCenterConstant.USER_LOGIN + pnUser.getId() + pnUser.getUsername(), jsonStr);
+        Map<String, String> map = new HashMap<>();
+        map.put("userAccount", userVo.getUsername());
+        String token = JWTUtil.sign(map);
+        return token;
+    }
+
+    /**
+     * 第三方登陆
+     *
+     * @param authUser
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String doLogin(AuthUser authUser) {
+        UserVo userVo = null;
+        String uuid = authUser.getUuid();
+        String source = authUser.getSource();
+        PnUserOauth oAuthUser = userOauthMapper.getByUuidAndSource(uuid, source);
+        //不是第一次登陆
+        if (Objects.nonNull(oAuthUser)) {
+            Long userId = oAuthUser.getUserId();
+            //上次登陆可能出现异常，初始化用户账号
+            if (Objects.equals(userId, 0L)) {
+                PnUser pnUser = initUser(authUser);
+                pnUserMapper.addUser(pnUser);
+                oAuthUser.setUserId(pnUser.getId());
+                userOauthMapper.updateById(oAuthUser);
+                userVo = getUserVo(pnUser);
+            } else{
+                //已经绑定有本平台账号
+                PnUser pnUser = pnUserMapper.selectById(oAuthUser.getUserId());
+                userVo =  getUserVo(pnUser);
+            }
+        } else {
+            //第一次登陆本平台账号
+            PnUserOauth pnUserOauth = initOauthUser(authUser);
+            PnUser pnUser = initUser(authUser);
+            pnUserMapper.addUser(pnUser);
+            pnUserOauth.setUserId(pnUser.getId());
+            userOauthMapper.insert(pnUserOauth);
+            userVo = getUserVo(pnUser);
+        }
+        String jsonStr = JSONUtil.toJsonStr(userVo);
+        redisCache.set(PNUserCenterConstant.USER_LOGIN + userVo.getId() + userVo.getUsername(), jsonStr);
+        Map<String, String> map = new HashMap<>();
+        map.put("userAccount", userVo.getUsername());
+        String token = JWTUtil.sign(map);
+        return token;
+    }
+
+    private PnUserOauth initOauthUser(AuthUser authUser) {
+        PnUserOauth oAuthUser = new PnUserOauth();
+        oAuthUser.setUuid(authUser.getUuid());
+        oAuthUser.setSource(authUser.getSource());
+        oAuthUser.setPlatformUsername(authUser.getNickname());
+        oAuthUser.setAvatarUrl(authUser.getAvatar());
+        return  oAuthUser;
+    }
+
+    private UserVo getUserVo(PnUser pnUser) {
+        return UserVo.builder()
                 .id(pnUser.getId())
                 .username(pnUser.getUsername())
                 .fullName(pnUser.getFullName())
@@ -54,39 +126,46 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
                 .isAdmin(pnUser.getIsAdmin())
                 .lastLoginDate(pnUser.getLastLoginDate())
                 .build();
-        String jsonStr = JSONUtil.toJsonStr(userVo);
-        redisCache.set(PNUserCenterConstant.USER_LOGIN+ pnUser.getId()+pnUser.getUsername(),jsonStr);
-        Map<String, String> map = new HashMap<>();
-        map.put("userAccount", userVo.getUsername());
-        String token = JWTUtil.sign(map);
-        return token;
     }
 
-    private PnUser checkPreLogin(String username, String password,String code){
+    private PnUser initUser(AuthUser authUser) {
+        PnUser pnUser = new PnUser();
+        String username = UUID.randomUUID().toString().substring(0, 15);
+        //密码默认就是用户名
+        String password = DigestUtil.md5Hex((PNUserCenterConstant.USER_PASSWORD_SLOT + username).getBytes());
+        pnUser.setUsername(username);
+        pnUser.setPassword(password);
+        pnUser.setFullName(authUser.getNickname());
+        pnUser.setEmail(authUser.getEmail());
+        pnUser.setAvatar(authUser.getAvatar());
+        return pnUser;
+    }
+
+    private PnUser checkPreLogin(String username, String password, String code) {
         boolean isAccount = RegularUtil.isAccount(username);
         boolean isPassword = RegularUtil.isPassword(password);
-        if (BooleanUtils.isFalse(isAccount && isPassword)){
+        if (BooleanUtils.isFalse(isAccount && isPassword)) {
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
-        if (StringUtils.isEmpty(code) || !redisCache.hasKey(PNUserCenterConstant.CODE_TAG+username)){
+        if (StringUtils.isEmpty(code) || !redisCache.hasKey(PNUserCenterConstant.CODE_TAG + username)) {
             throw new BizException(StatusCode.CAPTCHA_ERROR);
         }
         String redisCode = (String) redisCache.get(PNUserCenterConstant.CODE_TAG + username);
-        if (!code.equalsIgnoreCase(redisCode)){
+        if (!code.equalsIgnoreCase(redisCode)) {
             throw new BizException(StatusCode.CAPTCHA_ERROR);
         }
         PnUser user = userMapper.getUserByUsername(username);
-        if (Objects.isNull(user)){
+        if (Objects.isNull(user)) {
             throw new BizException(StatusCode.USER_NO_REGISTERING);
         }
         return user;
     }
 
-    private void checkPassword(String username,String password){
+    private void checkPassword(String username, String password) {
         UsernamePasswordDTO user = userMapper.getByUsername(username);
         String realPassword = user.getPassword();
-        String currentPassword  = DigestUtil.md5Hex((PNUserCenterConstant.USER_PASSWORD_SLOT+password).getBytes());
-        if (!realPassword.equals(currentPassword)){
+        String currentPassword = DigestUtil.md5Hex((PNUserCenterConstant.USER_PASSWORD_SLOT + password).getBytes());
+        if (!realPassword.equals(currentPassword)) {
             throw new BizException(StatusCode.PASSWORD_ERROR);
         }
     }

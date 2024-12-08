@@ -28,6 +28,7 @@ public enum StatusCode {
     NO_SUCH_PERMISSION_MESSAGE(1012, "没有该授权信息"),
     PASSWORD_NOT_EQUALS(1013,"两次密码不相同"),
     CONNECT_TIME_OUE(1014,"连接超时"),
+    LOGIN_FAILED(1015,"登陆失败"),
     /**
      * 系统相关
      */

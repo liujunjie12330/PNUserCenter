@@ -76,7 +76,7 @@ public class LoginController {
             throw new BizException(StatusCode.CONNECT_TIME_OUE);
         }
         if (!authResponse.ok()) {
-            throw new BizException(StatusCode.SYSTEM_ERROR);
+            throw new BizException(StatusCode.LOGIN_FAILED);
         }
         AuthUser data = authResponse.getData();
         String token = loginService.doLogin(data);

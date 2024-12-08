@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pn.dao.mapper.PnUserOauthMapper">
+    <resultMap id="BaseResultMap" type="com.pn.dao.entity.PnUserOauth">
+        <!--@mbg.generated-->
+        <!--@Table pn_user_oauth-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="source" jdbcType="VARCHAR" property="source"/>
+        <result column="uuid" jdbcType="VARCHAR" property="uuid"/>
+        <result column="platform_username" jdbcType="VARCHAR" property="platformUsername"/>
+        <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl"/>
+        <result column="authorized_at" jdbcType="TIMESTAMP" property="authorizedAt"/>
+        <result column="is_deleted" jdbcType="BOOLEAN" property="isDeleted"/>
+        <result column="update_at" jdbcType="TIMESTAMP" property="updateAt"/>
+        <result column="create_at" jdbcType="TIMESTAMP" property="createAt"/>
+        <result column="create_by" jdbcType="BIGINT" property="createBy"/>
+        <result column="update_by" jdbcType="BIGINT" property="updateBy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id,
+        user_id,
+        source,
+        uuid,
+        platform_username,
+        avatar_url,
+        authorized_at,
+        is_deleted,
+        update_at,
+        create_at,
+        create_by,
+        update_by
+    </sql>
+
+    <select id="getByUuidAndSource" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pn_user_oauth
+        where `is_deleted` = 0
+          and `uuid` = #{uuid}
+          and `source` = #{source}
+    </select>
+</mapper>

@@ -69,7 +69,12 @@ public class LoginController {
     @GetMapping("/login/{resource}")
     public BaseResponse<String> login(@PathVariable("resource") String resource, AuthCallback callback, HttpServletResponse response) throws IOException {
         AuthRequest authRequest = auth.getAuthRequest(resource);
-        AuthResponse<AuthUser> authResponse = authRequest.login(callback);
+        AuthResponse<AuthUser> authResponse = null;
+        try {
+            authResponse = authRequest.login(callback);
+        } catch (Exception e) {
+            throw new BizException(StatusCode.CONNECT_TIME_OUE);
+        }
         if (!authResponse.ok()) {
             throw new BizException(StatusCode.SYSTEM_ERROR);
         }

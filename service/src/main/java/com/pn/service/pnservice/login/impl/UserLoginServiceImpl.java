@@ -130,7 +130,7 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
 
     private PnUser initUser(AuthUser authUser) {
         PnUser pnUser = new PnUser();
-        String username = UUID.randomUUID().toString().substring(0, 15);
+        String username = UUID.randomUUID().toString().substring(0, 15).replace("-","");
         //密码默认就是用户名
         String password = DigestUtil.md5Hex((PNUserCenterConstant.USER_PASSWORD_SLOT + username).getBytes());
         pnUser.setUsername(username);

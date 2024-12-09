@@ -51,22 +51,28 @@ public class LoginController {
         return ResultUtils.success("ok");
     }
 
-    @GetMapping("login/byGitee")
+    @GetMapping("/login/byGitee")
     public void loginByGitee(HttpServletResponse response) throws IOException {
         AuthRequest authRequest = auth.getAuthRequest(AuthEnum.GITEE.getName());
         String authorizeUrl = authRequest.authorize(AuthStateUtils.createState());
         response.sendRedirect(authorizeUrl);
     }
 
-    @GetMapping("login/byGithub")
+    @GetMapping("/login/byGithub")
     public void loginByGithub(HttpServletResponse response) throws IOException {
         AuthRequest authRequest = auth.getAuthRequest(AuthEnum.GITHUB.getName());
         String authorizeUrl = authRequest.authorize(AuthStateUtils.createState());
         response.sendRedirect(authorizeUrl);
     }
 
+    @GetMapping("/login/byGitlab")
+    public void loginBylab(HttpServletResponse response) throws IOException {
+        AuthRequest authRequest = auth.getAuthRequest(AuthEnum.GITLAB.getName());
+        String authorizeUrl = authRequest.authorize(AuthStateUtils.createState());
+        response.sendRedirect(authorizeUrl);
+    }
 
-    @GetMapping("/login/{resource}")
+    @GetMapping("callback/login/{resource}")
     public BaseResponse<String> login(@PathVariable("resource") String resource, AuthCallback callback, HttpServletResponse response) throws IOException {
         AuthRequest authRequest = auth.getAuthRequest(resource);
         AuthResponse<AuthUser> authResponse = null;

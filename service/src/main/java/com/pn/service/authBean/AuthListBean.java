@@ -3,6 +3,7 @@ package com.pn.service.authBean;
 import me.zhyd.oauth.cache.AuthStateCache;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.enums.scope.AuthGiteeScope;
+import me.zhyd.oauth.enums.scope.AuthGitlabScope;
 import me.zhyd.oauth.request.*;
 import me.zhyd.oauth.utils.AuthScopeUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +38,16 @@ public class AuthListBean {
     @Value("${gitee.callback_url}")
     private String giteeCallbackUrl;
 
+    //gitlab
+    @Value("${gitlab.client_id}")
+    private String gitlabClientId;
+
+    @Value("${gitlab.client_secret}")
+    private String gitlabClientSecret;
+
+    @Value("${gitlab.callback_url}")
+    private String gitlabCallbackUrl;
+
     public AuthRequest getAuthRequest(String source) {
         AuthRequest authRequest = null;
         switch (source.toLowerCase()) {
@@ -54,6 +65,14 @@ public class AuthListBean {
                         .redirectUri(giteeCallbackUrl)
                         .scopes(AuthScopeUtils.getScopes(AuthGiteeScope.USER_INFO, AuthGiteeScope.EMAILS))
                         .build(), authStateCache);
+                break;
+            case"gitlab":
+                authRequest = new AuthGitlabRequest(AuthConfig.builder()
+                        .clientId(gitlabClientId)
+                        .clientSecret(gitlabClientSecret)
+                        .redirectUri(gitlabCallbackUrl)
+                        .scopes(AuthScopeUtils.getScopes(AuthGitlabScope.READ_USER,AuthGitlabScope.EMAIL))
+                        .build());
                 break;
             default:
                 break;

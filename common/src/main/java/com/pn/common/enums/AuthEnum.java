@@ -12,7 +12,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum AuthEnum {
     GITHUB("github","github"),
-    GITEE("gitee","gitee");
+    GITEE("gitee","gitee"),
+    GITLAB("gitlab","gitlab");
     private final String name;
     private final String description;
 }

@@ -1,4 +1,4 @@
-package com.pn.common.params.register;
+package com.pn.common.reqParams.register;
 
 import lombok.Data;
 

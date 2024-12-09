@@ -1,4 +1,4 @@
-package com.pn.common.params.login;
+package com.pn.common.reqParams.login;
 
 import lombok.Data;
 

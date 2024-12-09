@@ -1,4 +1,4 @@
-package com.pn.dao.dto.login;
+package com.pn.dao.bo.login;
 
 import lombok.Data;
 
@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @ClassName: UsernamePasswordDTO
  */
 @Data
-public class UsernamePasswordDTO implements Serializable {
+public class UsernamePasswordBO implements Serializable {
     private static final long serialVersionUID = 5870480485130488016L;
     private String username;
     private String password;

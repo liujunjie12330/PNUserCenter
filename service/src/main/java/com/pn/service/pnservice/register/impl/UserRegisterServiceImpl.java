@@ -5,49 +5,49 @@ import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.constant.RedisKeyConstant;
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
-import com.pn.common.params.register.UserDeletionReqParam;
-import com.pn.common.params.register.UserRegisterParam;
-import com.pn.common.utils.RegularUtil;
-import com.pn.common.vos.register.UserRegisterRespVo;
+import com.pn.common.reqParams.register.UserRegisterParam;
 import com.pn.dao.entity.PnUser;
 import com.pn.dao.mapper.PnUserMapper;
 import com.pn.service.pnservice.register.UserRegisterService;
+import com.pn.service.utils.RedisCache;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
+import static com.pn.common.utils.RegularUtil.isAccount;
+import static com.pn.common.utils.RegularUtil.isPassword;
+
 @Service
 public class UserRegisterServiceImpl implements UserRegisterService {
 
     @Resource
-    private  RedissonClient redissonClient;
+    private RedissonClient redissonClient;
     @Resource
-    private  PnUserMapper userMapper;
+    private PnUserMapper userMapper;
     @Resource
-    private  RBloomFilter<String> userRegisterBloomFilter;
+    private RBloomFilter<String> userRegisterBloomFilter;
     @Resource
-    private  StringRedisTemplate stringRedisTemplate;
+    private RedisCache redisCache;
 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public UserRegisterRespVo register(UserRegisterParam userRegisterParam) {
+    public void register(UserRegisterParam userRegisterParam) {
         Boolean hasUsername = hasUsername(userRegisterParam.getUsername());
-        if(!hasUsername){
+        if (!hasUsername) {
             throw new BizException(StatusCode.USER_ALREADY_EXIST);
         }
         //用户名，用户密码规范校验
-        boolean isUsername = RegularUtil.isAccount(userRegisterParam.getUsername());
-        boolean isPassword = RegularUtil.isPassword(userRegisterParam.getPassword());
-        if(BooleanUtils.isFalse(isUsername && isPassword)){
+        boolean isUsername = isAccount(userRegisterParam.getUsername());
+        boolean isPassword = isPassword(userRegisterParam.getPassword());
+        if (BooleanUtils.isFalse(isUsername && isPassword)) {
             throw new BizException(StatusCode.FORMAT_ERROR);
         }
         RLock lock = redissonClient.getLock(RedisKeyConstant.LOCK_USER_REGISTER + userRegisterParam.getUsername());
@@ -64,7 +64,7 @@ public class UserRegisterServiceImpl implements UserRegisterService {
             }
             //用户注销之后,原本所持有的用户名则会被放到redis中可复用的集合中重新拿来使用。
             //使用则删除分片中的用户名
-            stringRedisTemplate.opsForSet().remove(RedisKeyConstant.USER_REGISTER_REUSE, userRegisterParam.getUsername());
+            redisCache.delSetCache(RedisKeyConstant.USER_REGISTER_REUSE, userRegisterParam.getUsername());
             //布隆过滤器防止用户重复注册，缓存穿透
             userRegisterBloomFilter.add(userRegisterParam.getUsername());
         } catch (InterruptedException e) {
@@ -75,21 +75,19 @@ public class UserRegisterServiceImpl implements UserRegisterService {
                 lock.unlock();
             }
         }
-        return mapToUserRegisterRespDTO(userRegisterParam);
-
     }
 
     @Override
     public Boolean hasUsername(String username) {
         boolean contains = userRegisterBloomFilter.contains(username);
-        if (contains){
-          return stringRedisTemplate.opsForSet().isMember(RedisKeyConstant.LOCK_USER_REGISTER,username);
+        if (contains) {
+            return redisCache.hasSetKey(RedisKeyConstant.LOCK_USER_REGISTER, username);
         }
         return true;
     }
 
     /**
-     * 将 UserRegisterDTO 映射为 PnUser 实体类
+     * 将 UserRegisterParam 映射为 PnUser 实体类
      */
     private PnUser mapToPnUser(UserRegisterParam userRegisterParam) {
         PnUser pnUser = new PnUser();
@@ -102,31 +100,21 @@ public class UserRegisterServiceImpl implements UserRegisterService {
         return pnUser;
     }
 
-    /**
-     * 构建 UserRegisterRespDTO 返回对象
-     */
-    private UserRegisterRespVo mapToUserRegisterRespDTO(UserRegisterParam userRegisterParam) {
-        UserRegisterRespVo respDTO = new UserRegisterRespVo();
-        respDTO.setUsername(userRegisterParam.getUsername());
-        respDTO.setPhone(userRegisterParam.getPhone());
-        respDTO.setEmail(userRegisterParam.getEmail());
-        return respDTO;
-    }
-
     @Override
+    @Deprecated
     public void deletion(UserRegisterParam param) {
-        if (StringUtils.isAnyBlank(param.getUsername())){
+        if (StringUtils.isAnyBlank(param.getUsername())) {
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
         //添加ThreadLocal之后比对注销用户是否一致
-        RLock lock=redissonClient.getLock(RedisKeyConstant.USER_DELETION+ param.getUsername());
+        RLock lock = redissonClient.getLock(RedisKeyConstant.USER_DELETION + param.getUsername());
         lock.lock();
-        try{
-            PnUser pnUser=new PnUser();
+        try {
+            PnUser pnUser = new PnUser();
             pnUser.setUsername(param.getUsername());
             userMapper.deletionUser(pnUser);
             //todo 登陆状态的删除
-        }finally {
+        } finally {
             lock.unlock();
         }
     }

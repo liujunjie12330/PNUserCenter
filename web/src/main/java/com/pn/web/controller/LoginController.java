@@ -1,12 +1,11 @@
 package com.pn.web.controller;
 
-import com.google.gson.Gson;
 import com.pn.common.base.BaseResponse;
 import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.enums.AuthEnum;
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
-import com.pn.common.params.login.UserLoginParams;
+import com.pn.common.reqParams.login.UserLoginParams;
 import com.pn.common.utils.ResultUtils;
 import com.pn.service.authBean.AuthListBean;
 import com.pn.service.pnservice.login.UserLoginService;

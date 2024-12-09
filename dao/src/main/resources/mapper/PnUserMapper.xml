@@ -39,7 +39,7 @@
         avatar
     </sql>
 
-    <select id="getByUsername" resultType="com.pn.dao.dto.login.UsernamePasswordDTO">
+    <select id="getByUsername" resultType="com.pn.dao.bo.login.UsernamePasswordBO">
         select `id`, `username`, `password`, `full_name`
         from `pn_user`
         where `is_deleted` = 0

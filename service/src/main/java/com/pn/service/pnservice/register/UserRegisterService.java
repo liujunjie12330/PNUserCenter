@@ -1,7 +1,7 @@
 package com.pn.service.pnservice.register;
 
-import com.pn.common.params.register.UserRegisterParam;
-import com.pn.common.vos.register.UserRegisterRespVo;
+import com.pn.common.reqParams.register.UserRegisterParam;
+
 
 public interface UserRegisterService {
 
@@ -10,7 +10,7 @@ public interface UserRegisterService {
      * @param userRegisterParam
      * @return
      */
-    UserRegisterRespVo register(UserRegisterParam userRegisterParam);
+    void register(UserRegisterParam userRegisterParam);
     /**
      * 用户名是否存在
      *
@@ -19,5 +19,9 @@ public interface UserRegisterService {
      */
     Boolean hasUsername(String username);
 
+    /**
+     * 用户注销
+     * @param param
+     */
     void deletion(UserRegisterParam param);
 }

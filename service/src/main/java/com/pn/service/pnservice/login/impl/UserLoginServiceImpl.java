@@ -4,23 +4,28 @@ import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.pn.common.constant.PNUserCenterConstant;
+import com.pn.common.constant.RedisKeyConstant;
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
-import com.pn.common.utils.RegularUtil;
 import com.pn.common.vos.login.UserVo;
-import com.pn.dao.dto.login.UsernamePasswordDTO;
+import com.pn.dao.bo.login.UsernamePasswordBO;
 import com.pn.dao.entity.PnUser;
 import com.pn.dao.entity.PnUserOauth;
 import com.pn.dao.mapper.PnUserMapper;
 import com.pn.dao.mapper.PnUserOauthMapper;
 import com.pn.service.pnservice.login.UserLoginService;
-import com.pn.service.utils.JWTUtil;
+import com.pn.service.pnservice.register.UserRegisterService;
 import com.pn.service.utils.RedisCache;
 import me.zhyd.oauth.model.AuthUser;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.redisson.api.RBloomFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.pn.common.utils.RegularUtil.isAccount;
+import static com.pn.common.utils.RegularUtil.isPassword;
+import static com.pn.service.utils.JWTUtil.sign;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -43,8 +48,15 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
 
     @Resource
     private PnUserOauthMapper userOauthMapper;
+
     @Resource
     private PnUserMapper pnUserMapper;
+
+    @Resource
+    private UserRegisterService registerService;
+
+    @Resource
+    private RBloomFilter<String> userRegisterBloomFilter;;
 
     /**
      * 登陆--常规实现
@@ -59,7 +71,7 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
         redisCache.set(PNUserCenterConstant.USER_LOGIN + pnUser.getId() + pnUser.getUsername(), jsonStr);
         Map<String, String> map = new HashMap<>();
         map.put("userAccount", userVo.getUsername());
-        String token = JWTUtil.sign(map);
+        String token = sign(map);
         return token;
     }
 
@@ -103,7 +115,7 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
         redisCache.set(PNUserCenterConstant.USER_LOGIN + userVo.getId() + userVo.getUsername(), jsonStr);
         Map<String, String> map = new HashMap<>();
         map.put("userAccount", userVo.getUsername());
-        String token = JWTUtil.sign(map);
+        String token = sign(map);
         return token;
     }
 
@@ -130,7 +142,15 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
 
     private PnUser initUser(AuthUser authUser) {
         PnUser pnUser = new PnUser();
-        String username = UUID.randomUUID().toString().substring(0, 15).replace("-","");
+        String username = "";
+        boolean hasUsername = true;
+        while(hasUsername){
+           username  = UUID.randomUUID().toString().substring(0, 15).replace("-","");
+           hasUsername = registerService.hasUsername(username);
+        }
+        redisCache.delSetCache(RedisKeyConstant.USER_REGISTER_REUSE, username);
+        //布隆过滤器防止用户重复注册，缓存穿透
+        userRegisterBloomFilter.add(username);
         //密码默认就是用户名
         String password = DigestUtil.md5Hex((PNUserCenterConstant.USER_PASSWORD_SLOT + username).getBytes());
         pnUser.setUsername(username);
@@ -142,8 +162,8 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
     }
 
     private PnUser checkPreLogin(String username, String password, String code) {
-        boolean isAccount = RegularUtil.isAccount(username);
-        boolean isPassword = RegularUtil.isPassword(password);
+        boolean isAccount = isAccount(username);
+        boolean isPassword = isPassword(password);
         if (BooleanUtils.isFalse(isAccount && isPassword)) {
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
@@ -162,7 +182,7 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
     }
 
     private void checkPassword(String username, String password) {
-        UsernamePasswordDTO user = userMapper.getByUsername(username);
+        UsernamePasswordBO user = userMapper.getByUsername(username);
         String realPassword = user.getPassword();
         String currentPassword = DigestUtil.md5Hex((PNUserCenterConstant.USER_PASSWORD_SLOT + password).getBytes());
         if (!realPassword.equals(currentPassword)) {

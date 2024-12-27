@@ -11,6 +11,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * 第三方登陆信息表
+ */
 @Data
 @EqualsAndHashCode(callSuper=true)
 @Builder
@@ -18,6 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @TableName(value = "pn_user_oauth")
 public class PnUserOauth extends BaseModel {
+    private static final long serialVersionUID = -4606924606676392787L;
     /**
      * 自增id
      */
@@ -53,6 +57,12 @@ public class PnUserOauth extends BaseModel {
      */
     @TableField(value = "avatar_url")
     private String avatarUrl;
+
+    /**
+     * 授权token
+     */
+    @TableField(value = "token")
+    private String token;
 
     /**
      * 用户授权时间

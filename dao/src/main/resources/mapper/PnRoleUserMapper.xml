@@ -9,7 +9,7 @@
         <result column="update_at" jdbcType="TIMESTAMP" property="updateAt"/>
         <result column="create_by" jdbcType="BIGINT" property="createBy"/>
         <result column="update_by" jdbcType="BIGINT" property="updateBy"/>
-        <result column="is_deleted" jdbcType="BOOLEAN" property="isDeleted"/>
+        <result column="is_deleted" jdbcType="INTEGER" property="isDeleted"/>
         <result column="role_id" jdbcType="BIGINT" property="roleId"/>
         <result column="user_id" jdbcType="BIGINT" property="userId"/>
     </resultMap>

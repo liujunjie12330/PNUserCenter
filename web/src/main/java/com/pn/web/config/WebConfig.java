@@ -23,7 +23,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
-                .addPathPatterns("/v1/easyapi/server/**")
+                .addPathPatterns("/v1/usercenter/server/**")
                 .excludePathPatterns(PNUserCenterConstant.EXCLUDE_PATH);
         super.addInterceptors(registry);
     }

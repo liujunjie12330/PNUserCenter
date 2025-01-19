@@ -45,5 +45,6 @@ public interface PNUserCenterConstant {
     public static final List<String> EXCLUDE_PATH = Arrays.asList(
             "/v1/usercenter/server/user/register",
             "/v1/usercenter/server/user/login/*",
-            "/v1/usercenter/server/user/getCode");
+            "/v1/usercenter/server/user/getCode",
+            "/v1/usercenter/server/user/callback/login/*");
 }

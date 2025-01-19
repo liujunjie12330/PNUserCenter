@@ -1,12 +1,14 @@
 package com.pn.web.controller;
 
 import com.pn.common.base.BaseResponse;
+import com.pn.common.base.UserTokenThreadHolder;
 import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.enums.AuthEnum;
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
 import com.pn.common.reqParams.login.UserLoginParams;
 import com.pn.common.utils.ResultUtils;
+import com.pn.common.vos.login.UserVo;
 import com.pn.service.authBean.AuthListBean;
 import com.pn.service.pnservice.login.UserLoginService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * @author: javadadi
@@ -50,6 +53,15 @@ public class LoginController {
         return ResultUtils.success("ok");
     }
 
+    @GetMapping("/currentUser")
+    public BaseResponse<UserVo> getCurrentUser(){
+        UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
+        if (Objects.isNull(currentUser)){
+            throw new BizException(StatusCode.USER_NO_LOGIN);
+        }
+        return ResultUtils.success(currentUser);
+    }
+
     @GetMapping("/login/byGitee")
     public void loginByGitee(HttpServletResponse response) throws IOException {
         AuthRequest authRequest = auth.getAuthRequest(AuthEnum.GITEE.getName());
@@ -71,8 +83,8 @@ public class LoginController {
         response.sendRedirect(authorizeUrl);
     }
 
-    @GetMapping("callback/login/{resource}")
-    public BaseResponse<String> login(@PathVariable("resource") String resource, AuthCallback callback, HttpServletResponse response) throws IOException {
+    @GetMapping("/callback/login/{resource}")
+    public void login(@PathVariable("resource") String resource, AuthCallback callback, HttpServletResponse response) throws IOException {
         AuthRequest authRequest = auth.getAuthRequest(resource);
         AuthResponse<AuthUser> authResponse = null;
         try {
@@ -86,7 +98,7 @@ public class LoginController {
         AuthUser data = authResponse.getData();
         String token = loginService.doLogin(data);
         response.setHeader("token", token);
-        return ResultUtils.success("ok");
+        response.sendRedirect("http://localhost:8000/");
     }
 
 

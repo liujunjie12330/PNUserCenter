@@ -37,7 +37,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (expired) {
             throw new BizException(StatusCode.USER_NO_LOGIN);
         }
-        //没有过期就检查ip是否变动
+        // todo 没有过期就检查ip是否变动
         Claim claim = JWTUtil.getClaims(token).get("map");
         Map map = claim.as(Map.class);
         String id = (String) map.get("userId");

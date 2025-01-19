@@ -60,7 +60,7 @@ public class RedisCache {
      */
     public boolean hasKey(String redisKey) {
         try {
-            return redisTemplate.hasKey(redisKey);
+            return Boolean.TRUE.equals(redisTemplate.hasKey(redisKey));
         } catch (Exception e) {
             log.error(redisKey, e.getMessage());
             return false;

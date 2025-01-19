@@ -10,6 +10,7 @@ import java.io.IOException;
 
 /**
  * 项目跨域配置
+ *
  * @author liujunjie
  */
 @Component
@@ -22,12 +23,12 @@ public class PassHttpFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        HttpServletRequest  httpServletRequest = (HttpServletRequest) servletRequest;
+        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         //解决跨域的问题
-        response.setHeader("Access-Control-Allow-Origin",httpServletRequest.getHeader("origin"));
-        response.setHeader("Access-Control-Allow-Credentials","true");
+        response.setHeader("Access-Control-Allow-Origin", httpServletRequest.getHeader("origin"));
+        response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With,X-App-Id, X-Token");
-        response.setHeader("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+        response.setHeader("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
         response.setHeader("Access-Control-Max-Age", "3600");
         filterChain.doFilter(servletRequest, response);
     }

@@ -13,7 +13,7 @@ public interface PNUserCenterConstant {
     /**
      * 基本请求路径
      */
-    static final String BASE_URL = "/v1/usercenter/server/";
+    static final String BASE_URL = "/v1/usercenter/server";
     /**
      * 用户登陆标识
      */
@@ -44,7 +44,7 @@ public interface PNUserCenterConstant {
      */
     public static final List<String> EXCLUDE_PATH = Arrays.asList(
             "/v1/usercenter/server/user/register",
-            "/v1/usercenter/server/user/login/*",
-            "/v1/usercenter/server/user/getCode",
-            "/v1/usercenter/server/user/callback/login/*");
+            "/v1/usercenter/server/user/login/**",
+            "/v1/usercenter/server/captcha/getCode/**",
+            "/v1/usercenter/server/user/callback/login/**");
 }

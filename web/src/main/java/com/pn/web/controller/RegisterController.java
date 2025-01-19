@@ -21,7 +21,7 @@ import javax.annotation.Resource;
  * @ClassName: RegisterController
  */
 @RestController
-@RequestMapping(PNUserCenterConstant.BASE_URL + "user")
+@RequestMapping(PNUserCenterConstant.BASE_URL + "/user")
 public class RegisterController {
 
     @Resource
@@ -33,7 +33,7 @@ public class RegisterController {
      * @param param
      * @return
      */
-    @PostMapping(PNUserCenterConstant.BASE_URL + "/register")
+    @PostMapping("/register")
     public BaseResponse<String> register(@RequestBody UserRegisterParam param) {
         String username = param.getUsername();
         String password = param.getPassword();

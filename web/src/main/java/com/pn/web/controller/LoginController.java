@@ -31,7 +31,7 @@ import java.util.Objects;
  * @ClassName: LoginController
  */
 @RestController
-@RequestMapping(PNUserCenterConstant.BASE_URL + "user")
+@RequestMapping(PNUserCenterConstant.BASE_URL + "/user")
 @Slf4j
 public class LoginController {
     @Resource
@@ -97,8 +97,8 @@ public class LoginController {
         }
         AuthUser data = authResponse.getData();
         String token = loginService.doLogin(data);
-        response.setHeader("token", token);
-        response.sendRedirect("http://localhost:8000/");
+        String redirectUrl = "http://localhost:8000/welcome?token=" + token;
+        response.sendRedirect(redirectUrl);
     }
 
 

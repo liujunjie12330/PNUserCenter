@@ -70,7 +70,8 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
         String jsonStr = JSONUtil.toJsonStr(userVo);
         redisCache.set(PNUserCenterConstant.USER_LOGIN + pnUser.getId() + pnUser.getUsername(), jsonStr);
         Map<String, String> map = new HashMap<>();
-        map.put("userAccount", userVo.getUsername());
+        map.put("username", userVo.getUsername());
+        map.put("userId", String.valueOf(userVo.getId()));
         String token = sign(map);
         return token;
     }
@@ -114,7 +115,8 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
         String jsonStr = JSONUtil.toJsonStr(userVo);
         redisCache.set(PNUserCenterConstant.USER_LOGIN + userVo.getId() + userVo.getUsername(), jsonStr);
         Map<String, String> map = new HashMap<>();
-        map.put("userAccount", userVo.getUsername());
+        map.put("username", userVo.getUsername());
+        map.put("userId", String.valueOf(userVo.getId()));
         String token = sign(map);
         return token;
     }

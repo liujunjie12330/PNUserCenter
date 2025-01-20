@@ -41,9 +41,17 @@
         <caffeine.version>2.9.2</caffeine.version>
         <nacos.version>2021.0.5.0</nacos.version>
         <justAuth.version>1.16.6</justAuth.version>
+        <minio.version>8.4.0</minio.version>
     </properties>
     <dependencyManagement>
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/io.minio/minio -->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>${minio.version}</version>
+        </dependency>
+
         <!--nacos discovery-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>

@@ -20,17 +20,17 @@
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
         id,
+        update_at,
+        create_at,
+        create_by,
+        update_by,
+        is_deleted,
         user_id,
         source,
         uuid,
         platform_username,
         avatar_url,
-        authorized_at,
-        is_deleted,
-        update_at,
-        create_at,
-        create_by,
-        update_by
+        authorized_at
     </sql>
 
     <select id="getByUuidAndSource" resultMap="BaseResultMap">

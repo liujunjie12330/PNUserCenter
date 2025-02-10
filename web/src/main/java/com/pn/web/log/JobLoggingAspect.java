@@ -1,4 +1,4 @@
-package com.pn.service.log;
+package com.pn.web.log;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

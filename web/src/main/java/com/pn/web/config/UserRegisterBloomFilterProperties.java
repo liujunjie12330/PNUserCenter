@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.pn.service.config;
+package com.pn.web.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

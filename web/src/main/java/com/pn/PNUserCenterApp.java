@@ -1,7 +1,7 @@
-package com.pn.web;
+package com.pn;
 
-import com.pn.service.config.UserRegisterBloomFilterProperties;
-import org.mybatis.spring.annotation.MapperScan;
+
+import com.pn.web.config.UserRegisterBloomFilterProperties;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,8 +14,6 @@ import org.springframework.context.annotation.ComponentScan;
  * @ClassName: PNUserCenterApp
  */
 @SpringBootApplication
-@MapperScan("com.pn.dao.mapper")
-@ComponentScan("com.pn")
 @EnableConfigurationProperties(UserRegisterBloomFilterProperties.class)  // Register your properties class
 public class PNUserCenterApp {
     public static void main(String[] args) {

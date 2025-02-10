@@ -1,4 +1,4 @@
-package com.pn.service.config;
+package com.pn.web.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

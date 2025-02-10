@@ -1,4 +1,4 @@
-package com.pn.service.config;
+package com.pn.web.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;

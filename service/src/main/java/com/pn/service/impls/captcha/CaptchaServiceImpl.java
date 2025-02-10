@@ -1,4 +1,4 @@
-package com.pn.service.pnservice.captcha;
+package com.pn.service.impls.captcha;
 
 
 import cn.hutool.captcha.CaptchaUtil;
@@ -7,6 +7,7 @@ import cn.hutool.captcha.generator.RandomGenerator;
 import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
+import com.pn.service.CaptchaService;
 import com.pn.service.utils.RedisCache;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

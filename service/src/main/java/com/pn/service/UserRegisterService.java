@@ -1,4 +1,4 @@
-package com.pn.service.pnservice.register;
+package com.pn.service;
 
 import com.pn.common.reqParams.register.UserRegisterParam;
 

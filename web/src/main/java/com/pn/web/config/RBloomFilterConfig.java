@@ -1,4 +1,5 @@
-package com.pn.service.config;
+package com.pn.web.config;
+
 
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RedissonClient;

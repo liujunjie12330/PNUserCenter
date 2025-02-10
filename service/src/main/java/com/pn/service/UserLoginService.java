@@ -1,4 +1,4 @@
-package com.pn.service.pnservice.login;
+package com.pn.service;
 
 import me.zhyd.oauth.model.AuthUser;
 

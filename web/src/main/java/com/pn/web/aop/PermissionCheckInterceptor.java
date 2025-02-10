@@ -1,4 +1,4 @@
-package com.pn.service.aop;
+package com.pn.web.aop;
 
 
 import com.pn.common.annotation.AuthCheck;

@@ -1,4 +1,4 @@
-package com.pn.service.pnservice.captcha;
+package com.pn.service;
 
 
 

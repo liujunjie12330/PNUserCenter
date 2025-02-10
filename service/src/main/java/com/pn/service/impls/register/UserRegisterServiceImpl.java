@@ -1,4 +1,4 @@
-package com.pn.service.pnservice.register.impl;
+package com.pn.service.impls.register;
 
 import cn.hutool.crypto.digest.DigestUtil;
 import com.pn.common.constant.PNUserCenterConstant;
@@ -8,7 +8,7 @@ import com.pn.common.exception.BizException;
 import com.pn.common.reqParams.register.UserRegisterParam;
 import com.pn.dao.entity.PnUser;
 import com.pn.dao.mapper.PnUserMapper;
-import com.pn.service.pnservice.register.UserRegisterService;
+import com.pn.service.UserRegisterService;
 import com.pn.service.utils.RedisCache;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;

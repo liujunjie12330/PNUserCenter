@@ -1,4 +1,4 @@
-package com.pn.service.pnservice.login.impl;
+package com.pn.service.impls.login;
 
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.json.JSONUtil;
@@ -13,8 +13,8 @@ import com.pn.dao.entity.PnUser;
 import com.pn.dao.entity.PnUserOauth;
 import com.pn.dao.mapper.PnUserMapper;
 import com.pn.dao.mapper.PnUserOauthMapper;
-import com.pn.service.pnservice.login.UserLoginService;
-import com.pn.service.pnservice.register.UserRegisterService;
+import com.pn.service.UserLoginService;
+import com.pn.service.UserRegisterService;
 import com.pn.service.utils.RedisCache;
 import me.zhyd.oauth.model.AuthUser;
 import org.apache.commons.lang3.BooleanUtils;

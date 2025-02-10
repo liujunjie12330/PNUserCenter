@@ -114,7 +114,7 @@
     </logger>
 
 <!--自定义日志打印-->
-    <logger name="com.pn.service.log.JobLoggingAspect"  level="info" additivity="false">
+    <logger name="com.pn.web.log.JobLoggingAspect" level="info" additivity="false">
         <appender-ref ref="CUSTOMIZE"/>
     </logger>
 

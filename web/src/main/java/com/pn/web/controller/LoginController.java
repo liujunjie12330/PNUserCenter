@@ -10,7 +10,7 @@ import com.pn.common.reqParams.login.UserLoginParams;
 import com.pn.common.utils.ResultUtils;
 import com.pn.common.vos.login.UserVo;
 import com.pn.service.authBean.AuthListBean;
-import com.pn.service.pnservice.login.UserLoginService;
+import com.pn.service.UserLoginService;
 import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.model.AuthCallback;
 import me.zhyd.oauth.model.AuthResponse;

@@ -1,4 +1,4 @@
-package com.pn.service.config;
+package com.pn.web.config;
 
 
 import io.swagger.annotations.Api;

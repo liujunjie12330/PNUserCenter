@@ -6,7 +6,7 @@ import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
 import com.pn.common.utils.ResultUtils;
 import com.pn.common.reqParams.register.UserRegisterParam;
-import com.pn.service.pnservice.register.UserRegisterService;
+import com.pn.service.UserRegisterService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -5,7 +5,7 @@ import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
 import com.pn.common.utils.ResultUtils;
-import com.pn.service.pnservice.captcha.CaptchaService;
+import com.pn.service.CaptchaService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

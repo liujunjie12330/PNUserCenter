@@ -2,7 +2,7 @@ package com.pn.web.config;
 
 
 import com.pn.common.constant.PNUserCenterConstant;
-import com.pn.service.filter.LoginInterceptor;
+import com.pn.web.filters.LoginInterceptor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

@@ -1,5 +1,6 @@
 package com.pn.web.controller;
 
+import com.pn.common.utils.UrlUtils;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
@@ -20,11 +21,14 @@ public class CaptchaControllerTest {
     }
 
     public static void main(String[] args) throws Exception {
-        MinioClient minioClient = MinioClient.builder()
-                .endpoint("121.40.157.239",9001,false)
-                .credentials("sllh", "adminsllh")
-                .build();
-        createBucket(minioClient);
+//        MinioClient minioClient = MinioClient.builder()
+//                .endpoint("121.40.157.239",9001,false)
+//                .credentials("sllh", "adminsllh")
+//                .build();
+//        createBucket(minioClient);
+
+        String s = UrlUtils.coverToUrlByNameSpace("https","www.baidu.com");
+        System.out.println(s);
     }
 
     private static void createBucket(MinioClient minioClient) throws Exception {
@@ -35,6 +39,8 @@ public class CaptchaControllerTest {
         }
         minioClient.makeBucket(MakeBucketArgs.builder().bucket("miniofile").build());
     }
+
+
 
 
 }

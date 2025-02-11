@@ -28,6 +28,10 @@ public class MinioUtil {
     @Resource
     private  MinioClient minioClient;
 
+    public MinioClient getMinioClient() {
+        return minioClient;
+    }
+
     /******************************  Operate Bucket Start  ******************************/
 
     /**

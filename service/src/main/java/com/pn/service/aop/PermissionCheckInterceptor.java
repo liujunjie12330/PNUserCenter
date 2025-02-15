@@ -28,7 +28,6 @@ import java.util.List;
 @Aspect
 @Slf4j
 public class PermissionCheckInterceptor {
-
     @Around("@annotation(authCheck)")
     public Object permissionCheck(ProceedingJoinPoint joinPoint, AuthCheck authCheck) {
         try {

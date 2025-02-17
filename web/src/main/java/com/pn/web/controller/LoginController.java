@@ -9,8 +9,8 @@ import com.pn.common.exception.BizException;
 import com.pn.common.reqParams.login.UserLoginParams;
 import com.pn.common.utils.ResultUtils;
 import com.pn.common.vos.login.UserVo;
-import com.pn.service.authBean.AuthListBean;
 import com.pn.service.UserLoginService;
+import com.pn.service.bean.AuthListBean;
 import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.model.AuthCallback;
 import me.zhyd.oauth.model.AuthResponse;
@@ -26,14 +26,13 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * @author: javadadi
- * @Time: 19:12
- * @ClassName: LoginController
+ * 登陆控制器
  */
 @RestController
 @RequestMapping(PNUserCenterConstant.BASE_URL + "/user")
 @Slf4j
 public class LoginController {
+
     @Resource
     private UserLoginService loginService;
 
@@ -100,6 +99,5 @@ public class LoginController {
         String redirectUrl = "http://localhost:8000/welcome?token=" + token;
         response.sendRedirect(redirectUrl);
     }
-
 
 }

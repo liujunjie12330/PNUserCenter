@@ -1,4 +1,4 @@
-package com.pn.service.authBean;
+package com.pn.service.bean;
 
 import me.zhyd.oauth.cache.AuthStateCache;
 import me.zhyd.oauth.config.AuthConfig;

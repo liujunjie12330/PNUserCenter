@@ -23,9 +23,7 @@ import java.util.Date;
 import java.util.Objects;
 
 /**
- * @author: javadadi
- * @Time: 12:36
- * @ClassName: CaptchaServiceImpl
+ * 验证码实现类
  */
 @Service
 @Slf4j
@@ -49,6 +47,7 @@ public class CaptchaServiceImpl implements CaptchaService {
         try {
             String code = lineCaptcha.getCode();
             redisCache.set(PNUserCenterConstant.CODE_TAG+username, code, PNUserCenterConstant.CAPTCHA_EXPIRE_TIME);
+            //在写入redis过后写一次本地缓存，方便快速查找
             BufferedImage image = lineCaptcha.getImage();
             outputStream = new ByteArrayOutputStream();
             ImageIO.write(image, "png", outputStream);

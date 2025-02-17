@@ -21,15 +21,6 @@ import java.util.Date;
 public class PnUser extends BaseModel implements Serializable {
     private static final long serialVersionUID = -8305370453007829239L;
 
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
-
-    /**
-     * 是否删除（0,1）
-     */
-    @TableField(value = "is_deleted")
-    private Integer isDeleted;
-
     /**
      * 用户名
      */

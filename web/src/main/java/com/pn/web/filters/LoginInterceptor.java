@@ -51,7 +51,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             String sign = JWTUtil.sign(map);
             response.setHeader("token", sign);
         }
-        //存入threadlocal
+        //存入thread local
         if (!redisCache.hasKey(PNUserCenterConstant.USER_LOGIN + id + username)) {
             throw new BizException(StatusCode.USER_NO_LOGIN);
         }

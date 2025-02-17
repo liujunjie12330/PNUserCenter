@@ -22,17 +22,6 @@ import lombok.NoArgsConstructor;
 @TableName(value = "pn_permission")
 public class PnPermission extends BaseModel {
     private static final long serialVersionUID = -984244843203302668L;
-    /**
-     * id
-     */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
-
-    /**
-     * 是否删除1--删除
-     */
-    @TableField(value = "is_deleted")
-    private Boolean isDeleted;
 
     /**
      * 权限CODE

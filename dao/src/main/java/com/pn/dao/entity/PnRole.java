@@ -23,18 +23,6 @@ import lombok.NoArgsConstructor;
 public class PnRole extends BaseModel {
     private static final long serialVersionUID = 1222430275650395208L;
     /**
-     * id
-     */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
-
-    /**
-     * 是否删除1--删除
-     */
-    @TableField(value = "is_deleted")
-    private Boolean isDeleted;
-
-    /**
      * 角色名称
      */
     @TableField(value = "role_name")

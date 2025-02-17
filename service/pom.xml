@@ -17,6 +17,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
+        <!--支付宝沙箱-->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+        </dependency>
         <!--图床集成-->
         <!-- https://mvnrepository.com/artifact/io.minio/minio -->
         <dependency>

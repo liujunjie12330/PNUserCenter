@@ -1,6 +1,5 @@
 package com.pn.web.handler;
 
-
 import com.pn.common.base.BaseResponse;
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
@@ -10,33 +9,36 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * @author:liujunjie
- * @version:1.0 Time:16:50
- * CreatedBy:IntelliJ IDEA
- * ClassName:GlobalExceptionHandler
  * 全局异常处理
  */
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
     /**
-     * 自定义异常处理
-     *
-     * @param e
-     * @return
+     * 处理自定义异常 BizException
      */
     @ExceptionHandler(BizException.class)
-    public BaseResponse BizException(BizException e) {
-        log.info(e.getMessage());
+    public BaseResponse handleBizException(BizException e) {
+        log.error("Business exception occurred: {}", e.getMessage(), e);
         return ResultUtils.error(e.getCode(), e.getMessage());
     }
 
     /**
-     * 服务器内部错误处理
+     * 处理运行时异常 RuntimeException
      */
-    @ExceptionHandler({RuntimeException.class})
-    public BaseResponse runtimeException(RuntimeException e) {
-        log.info(e.getMessage());
-        return ResultUtils.error(null,500,e.getMessage());
+    @ExceptionHandler(RuntimeException.class)
+    public BaseResponse handleRuntimeException(RuntimeException e) {
+        log.error("Runtime exception occurred: {}", e.getMessage(), e);
+        return ResultUtils.error(StatusCode.SYSTEM_ERROR.getCode(),  e.getMessage());
+    }
+
+    /**
+     * 处理所有其他未处理的异常
+     */
+    @ExceptionHandler(Exception.class)
+    public BaseResponse handleException(Exception e) {
+        log.error("Unexpected exception occurred: {}", e.getMessage(), e);
+        return ResultUtils.error(StatusCode.SYSTEM_ERROR.getCode(), "An unexpected error occurred.");
     }
 }

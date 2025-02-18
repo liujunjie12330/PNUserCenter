@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @ClassName: PictureOperationService
  */
 public interface FileOperationService {
+    
     /**
      * 通用文件上传接口
      */
@@ -17,6 +18,7 @@ public interface FileOperationService {
        throw new  BizException(StatusCode.SYSTEM_ERROR);
    }
 
+   default void uploadAvatar(MultipartFile file){throw new BizException(StatusCode.SYSTEM_ERROR);}
     /**
      * 通用文件下载接口
      */

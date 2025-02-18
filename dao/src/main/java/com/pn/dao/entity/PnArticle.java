@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=true)
 @TableName(value = "pn_article")
 public class PnArticle extends BaseModel {
-    private static final long serialVersionUID = 3974221729194735357L;
+    private static final long serialVersionUID = -5547072042795866401L;
     /**
      * 用户ID
      */
@@ -56,13 +56,13 @@ public class PnArticle extends BaseModel {
      * 文章类型
      */
     @TableField(value = "article_type_id")
-    private Long articleTypeId;
+    private Integer articleTypeId;
 
     /**
      * 来源：1-转载，2-原创，3-翻译
      */
     @TableField(value = "`source`")
-    private Byte source;
+    private Integer source;
 
     /**
      * 原文链接
@@ -74,17 +74,35 @@ public class PnArticle extends BaseModel {
      * 官方状态：0-非官方，1-官方
      */
     @TableField(value = "offical_stat")
-    private Byte officalStat;
+    private Integer officalStat;
 
     /**
      * 置顶状态：0-不置顶，1-置顶
      */
     @TableField(value = "topping_stat")
-    private Byte toppingStat;
+    private Integer toppingStat;
 
     /**
      * 状态：0-未发布，1-待审核,2-待发布
      */
     @TableField(value = "`status`")
-    private Byte status;
+    private Integer status;
+
+    /**
+     * 支付金额，小数点两位
+     */
+    @TableField(value = "pay_amount")
+    private String payAmount;
+
+    /**
+     * 支付方式，1-积分支付，2-支付宝支付,3-付款码支付
+     */
+    @TableField(value = "pay_way")
+    private Integer payWay;
+
+    /**
+     * 打赏的收款码截图
+     */
+    @TableField(value = "pay_image_url")
+    private String payImageUrl;
 }

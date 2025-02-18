@@ -17,16 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 
 /**
- * @author: javadadi
- * @Time: 12:51
- * @ClassName: AvatarPictureImpl
+ * mini文件上传-->项目默认的文件上传路径
  */
-@Service("userAvatarService")
+@Service("minioImageOperation")
 @Slf4j
-public class UserAvatarOperation implements FileOperationService {
+public class MinioImageOperation implements FileOperationService {
     @Resource
     private MinioUtil minioUtil;
 
@@ -36,12 +35,20 @@ public class UserAvatarOperation implements FileOperationService {
     @Value("${minio.bucketName}")
     private String bucketName;
 
+    @Value("${file.access}")
+    private List<String> fileAccess;
+
     @Resource
     private PnUserMapper userMapper;
 
+    /**
+     * 用户上传头像
+     *
+     * @param file
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void upload(MultipartFile file) {
+    public void uploadAvatar(MultipartFile file) {
         UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
         if (Objects.isNull(currentUser)) {
             throw new BizException(StatusCode.USER_NO_LOGIN);
@@ -53,12 +60,17 @@ public class UserAvatarOperation implements FileOperationService {
             throw new RuntimeException(e);
         }
         PnUser pnUser = userMapper.selectById(currentUser.getId());
-        if (Objects.isNull(pnUser)){
+        if (Objects.isNull(pnUser)) {
             throw new BizException(StatusCode.SYSTEM_ERROR);
         }
-        String avatarUrl = UrlUtils.coverToUrlByIp("http",minioProperties.getEndPoint(),minioProperties.getPort(),minioProperties.getBucketName(),avatarName);
-        log.info("avatarUrl==>{}",avatarUrl);
+        String avatarUrl = UrlUtils.coverToUrlByIp("http", minioProperties.getEndPoint(), minioProperties.getPort(), minioProperties.getBucketName(), avatarName);
+        log.info("avatarUrl==>{}", avatarUrl);
         pnUser.setAvatar(avatarUrl);
         userMapper.updateById(pnUser);
     }
+
+    /**
+     * 通用文件上传，能够上传 pdf,md,png,jpg文件，暂时不允许上传zip文件
+     */
+
 }

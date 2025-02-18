@@ -11,6 +11,10 @@ import java.util.List;
  */
 public interface PNUserCenterConstant {
     /**
+     * 文章的三种操作
+     */
+    static final List<String> ARTICLE_OPERATE = Arrays.asList("POST","SAVE","DELETE");
+    /**
      * 基本请求路径
      */
     static final String BASE_URL = "/v1/usercenter/server";

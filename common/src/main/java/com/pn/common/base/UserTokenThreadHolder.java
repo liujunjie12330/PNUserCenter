@@ -1,7 +1,11 @@
 package com.pn.common.base;
 
 
+import com.pn.common.enums.StatusCode;
+import com.pn.common.exception.BizException;
 import com.pn.common.vos.login.UserVo;
+
+import java.util.Objects;
 
 public class UserTokenThreadHolder {
 
@@ -27,7 +31,11 @@ public class UserTokenThreadHolder {
     }
 
     public static UserVo getCurrentUser() {
-        return userThreadLocal.get();
+        UserVo userVo = userThreadLocal.get();
+        if (Objects.isNull(userVo)) {
+            throw new BizException(StatusCode.USER_NO_LOGIN);
+        }
+        return userVo;
     }
 
 

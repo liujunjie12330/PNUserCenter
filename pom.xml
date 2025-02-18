@@ -44,9 +44,16 @@
         <justAuth.version>1.16.6</justAuth.version>
         <minio.version>8.2.1</minio.version>
         <alipay.version>4.34.0.ALL</alipay.version>
+        <sensitive.version>0.2.0</sensitive.version>
     </properties>
     <dependencyManagement>
         <dependencies>
+            <!--敏感词过滤实现-->
+            <dependency>
+                <groupId>com.github.houbb</groupId>
+                <artifactId>sensitive-word</artifactId>
+                <version>${sensitive.version}</version>
+            </dependency>
             <!--支付宝沙箱-->
             <dependency>
                 <groupId>com.alipay.sdk</groupId>

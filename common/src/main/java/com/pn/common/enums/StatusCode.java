@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
-* @author: zhuyu
-* @Time: 13:00
-* @ClassName: StatusCode
-*/
+ * @author: zhuyu
+ * @Time: 13:00
+ * @ClassName: StatusCode
+ */
 @AllArgsConstructor
 @Getter
 public enum StatusCode {
@@ -26,9 +26,9 @@ public enum StatusCode {
     NO_SUCH_ROLE(1010, "没有该角色"),
     NO_SUCH_PERMISSION(1011, "没有该权限"),
     NO_SUCH_PERMISSION_MESSAGE(1012, "没有该授权信息"),
-    PASSWORD_NOT_EQUALS(1013,"两次密码不相同"),
-    CONNECT_TIME_OUE(1014,"连接超时"),
-    LOGIN_FAILED(1015,"登陆失败"),
+    PASSWORD_NOT_EQUALS(1013, "两次密码不相同"),
+    CONNECT_TIME_OUE(1014, "连接超时"),
+    LOGIN_FAILED(1015, "登陆失败"),
     /**
      * 系统相关
      */
@@ -37,7 +37,12 @@ public enum StatusCode {
     /**
      * 成果
      */
-    SUCCESS(200, "success");
+    SUCCESS(200, "success"),
+    /**
+     * 文章相关
+     */
+    ARTICLE_IS_REVIEWING(3000, "文章正在审核中!"),
+    article_has_sensitive_word(3001, "文本含有敏感字!");
     /**
      * 状态码
      */

@@ -1,5 +1,6 @@
 package com.pn.service.utils;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
  * @Time: 17:52
  * @ClassName: MinioProperties
  */
+@Getter
 @Component
 public class MinioProperties {
     @Value("${minio.endpoint}")
@@ -17,16 +19,5 @@ public class MinioProperties {
     @Value("${minio.bucketName}")
     private String bucketName;
 
-    public String getEndPoint() {
-        return endPoint;
-    }
-
-    public String getPort() {
-        return port;
-    }
-
-    public String getBucketName() {
-        return bucketName;
-    }
 }
 

@@ -1,53 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pn.dao.mapper.PnArticleMapper">
-  <resultMap id="BaseResultMap" type="com.pn.dao.entity.PnArticle">
-    <!--@mbg.generated-->
-    <!--@Table pn_article-->
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
-    <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
-    <result column="create_by" jdbcType="BIGINT" property="createBy" />
-    <result column="update_by" jdbcType="BIGINT" property="updateBy" />
-    <result column="is_deleted" jdbcType="INTEGER" property="isDeleted" />
-    <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="short_title" jdbcType="VARCHAR" property="shortTitle" />
-    <result column="picture" jdbcType="VARCHAR" property="picture" />
-    <result column="summary" jdbcType="VARCHAR" property="summary" />
-    <result column="catalog_id" jdbcType="BIGINT" property="catalogId" />
-    <result column="article_type_id" jdbcType="INTEGER" property="articleTypeId" />
-    <result column="source" jdbcType="TINYINT" property="source" />
-    <result column="source_url" jdbcType="VARCHAR" property="sourceUrl" />
-    <result column="offical_stat" jdbcType="TINYINT" property="officalStat" />
-    <result column="topping_stat" jdbcType="TINYINT" property="toppingStat" />
-    <result column="status" jdbcType="TINYINT" property="status" />
-    <result column="pay_amount" jdbcType="VARCHAR" property="payAmount" />
-    <result column="pay_way" jdbcType="TINYINT" property="payWay" />
-    <result column="pay_image_url" jdbcType="VARCHAR" property="payImageUrl" />
-  </resultMap>
-  <sql id="Base_Column_List">
-      <!--@mbg.generated-->
-      id,
-      create_at,
-      update_at,
-      create_by,
-      update_by,
-      is_deleted,
-      user_id,
-      title,
-      short_title,
-      picture,
-      summary,
-      catalog_id,
-      article_type_id,
-      `source`,
-      source_url,
-      offical_stat,
-      topping_stat,
-      `status`,
-      pay_amount,
-      pay_way,
-      pay_image_url
-  </sql>
+    <resultMap id="BaseResultMap" type="com.pn.dao.entity.PnArticle">
+        <!--@mbg.generated-->
+        <!--@Table pn_article-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="create_at" jdbcType="TIMESTAMP" property="createAt"/>
+        <result column="update_at" jdbcType="TIMESTAMP" property="updateAt"/>
+        <result column="create_by" jdbcType="BIGINT" property="createBy"/>
+        <result column="update_by" jdbcType="BIGINT" property="updateBy"/>
+        <result column="is_deleted" jdbcType="INTEGER" property="isDeleted"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="short_title" jdbcType="VARCHAR" property="shortTitle"/>
+        <result column="picture" jdbcType="VARCHAR" property="picture"/>
+        <result column="summary" jdbcType="VARCHAR" property="summary"/>
+        <result column="catalog_id" jdbcType="BIGINT" property="catalogId"/>
+        <result column="article_type_id" jdbcType="INTEGER" property="articleTypeId"/>
+        <result column="source" jdbcType="TINYINT" property="source"/>
+        <result column="source_url" jdbcType="VARCHAR" property="sourceUrl"/>
+        <result column="offical_stat" jdbcType="TINYINT" property="officalStat"/>
+        <result column="topping_stat" jdbcType="TINYINT" property="toppingStat"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="pay_amount" jdbcType="VARCHAR" property="payAmount"/>
+        <result column="pay_way" jdbcType="TINYINT" property="payWay"/>
+        <result column="pay_image_url" jdbcType="VARCHAR" property="payImageUrl"/>
+        <result column="recommend" jdbcType="INTEGER" property="recommend"/>
+    </resultMap>
+    <resultMap id="ArticleBoResultMap" type="com.pn.dao.bo.article.PnArticleBo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="create_at" jdbcType="TIMESTAMP" property="createAt"/>
+        <result column="update_at" jdbcType="TIMESTAMP" property="updateAt"/>
+        <result column="create_by" jdbcType="BIGINT" property="createBy"/>
+        <result column="update_by" jdbcType="BIGINT" property="updateBy"/>
+        <result column="is_deleted" jdbcType="INTEGER" property="isDeleted"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="short_title" jdbcType="VARCHAR" property="shortTitle"/>
+        <result column="picture" jdbcType="VARCHAR" property="picture"/>
+        <result column="summary" jdbcType="VARCHAR" property="summary"/>
+        <result column="catalog_id" jdbcType="BIGINT" property="catalogId"/>
+        <result column="article_type_id" jdbcType="INTEGER" property="articleTypeId"/>
+        <result column="source" jdbcType="TINYINT" property="source"/>
+        <result column="source_url" jdbcType="VARCHAR" property="sourceUrl"/>
+        <result column="offical_stat" jdbcType="TINYINT" property="officalStat"/>
+        <result column="topping_stat" jdbcType="TINYINT" property="toppingStat"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="pay_amount" jdbcType="VARCHAR" property="payAmount"/>
+        <result column="pay_way" jdbcType="TINYINT" property="payWay"/>
+        <result column="pay_image_url" jdbcType="VARCHAR" property="payImageUrl"/>
+        <result column="recommend" jdbcType="INTEGER" property="recommend"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id,
+        create_at,
+        update_at,
+        create_by,
+        update_by,
+        is_deleted,
+        user_id,
+        title,
+        short_title,
+        picture,
+        summary,
+        catalog_id,
+        article_type_id,
+        `source`,
+        source_url,
+        offical_stat,
+        topping_stat,
+        `status`,
+        pay_amount,
+        pay_way,
+        pay_image_url,
+        recommend
+    </sql>
+
+    <select id="page" resultMap="ArticleBoResultMap">
+        select A.id,
+               A.create_at,
+               A.update_at,
+               A.create_by,
+               A.update_by,
+               A.is_deleted,
+               A.user_id,
+               A.title,
+               A.short_title,
+               A.picture,
+               A.summary,
+               A.catalog_id,
+               A.article_type_id,
+               A.`source`,
+               A.source_url,
+               A.offical_stat,
+               A.topping_stat,
+               A.`status`,
+               A.pay_amount,
+               A.pay_way,
+               A.pay_image_url,
+               A.recommend
+        from pn_article as A
+                 left join pndb.pn_user P
+                           on A.user_id = P.id
+        <where>
+            <if test="param.authorId != null">
+                and A.id = #{param.articleId}
+            </if>
+            <if test="param.authorId != null">
+                and A.user_id = #{param.authorId}
+            </if>
+            <if test="param.authorName != null and param.authorName != ''">
+                and P.username like concat('%'
+                    , #{param.authorName}
+                    , '%')
+            </if>
+            <if test="param.status != null">
+                and A.status = #{param.status}
+            </if>
+            <if test="param.title != null and param.title != ''">
+                and A.title like concat('%'
+                    , #{param.title}
+                    , '%')
+            </if>
+            <if test="param.officalStat != null">
+                and A.offical_stat = #{param.officalStat}
+            </if>
+            <if test="param.updateTime != null">
+                and A.update_at
+                    &lt; #{param.updateTime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
 </mapper>

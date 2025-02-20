@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.pn.dao.mapper.PnCatalogMapper">
-    <resultMap id="BaseResultMap" type="com.pn.dao.entity.PnCatalog">
+<mapper namespace="com.pn.dao.mapper.PnColumnArticleMapper">
+    <resultMap id="BaseResultMap" type="com.pn.dao.entity.PnColumnArticle">
         <!--@mbg.generated-->
-        <!--@Table pn_catalog-->
+        <!--@Table pn_column_article-->
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="create_at" jdbcType="TIMESTAMP" property="createAt"/>
         <result column="update_at" jdbcType="TIMESTAMP" property="updateAt"/>
         <result column="create_by" jdbcType="BIGINT" property="createBy"/>
         <result column="update_by" jdbcType="BIGINT" property="updateBy"/>
         <result column="is_deleted" jdbcType="INTEGER" property="isDeleted"/>
-        <result column="category_name" jdbcType="VARCHAR" property="categoryName"/>
-        <result column="status" jdbcType="INTEGER" property="status"/>
-        <result column="rank" jdbcType="INTEGER" property="rank"/>
+        <result column="column_id" jdbcType="BIGINT" property="columnId"/>
+        <result column="article_id" jdbcType="BIGINT" property="articleId"/>
+        <result column="section" jdbcType="INTEGER" property="section"/>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
@@ -22,8 +22,8 @@
         create_by,
         update_by,
         is_deleted,
-        category_name,
-        `status`,
-        `rank`
+        column_id,
+        article_id,
+        `section`
     </sql>
 </mapper>

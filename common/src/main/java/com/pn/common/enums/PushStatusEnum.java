@@ -11,17 +11,19 @@ import lombok.Getter;
 @Getter
 public enum PushStatusEnum {
 
-    OFFLINE(0, "未发布"),
-    ONLINE(1,"已发布"),
-    REVIEW(2, "审核");
+    OFFLINE(0, "offline", "未发布"),
+    ONLINE(1, "online", "已发布"),
+    REVIEW(2, "review", "审核");
 
-    PushStatusEnum(int code, String desc) {
+    PushStatusEnum(int code, String action, String desc) {
         this.code = code;
         this.desc = desc;
+        this.action = action;
     }
 
     private final int code;
     private final String desc;
+    private final String action;
 
     public static PushStatusEnum formCode(int code) {
         for (PushStatusEnum yesOrNoEnum : PushStatusEnum.values()) {

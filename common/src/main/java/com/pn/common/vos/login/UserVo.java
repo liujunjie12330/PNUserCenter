@@ -28,6 +28,10 @@ public class UserVo {
      * 用户全名
      */
     private String fullName;
+    /**
+     * 用户头像
+     */
+    private String avatar;
 
     /**
      * 手机号

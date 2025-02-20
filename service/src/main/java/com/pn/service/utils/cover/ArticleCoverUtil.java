@@ -1,14 +1,14 @@
 package com.pn.service.utils.cover;
 
 import com.pn.common.reqParams.article.ArticleSaveParams;
+import com.pn.common.reqParams.article.ColumnParam;
 import com.pn.dao.entity.PnArticle;
 import com.pn.dao.entity.PnArticleDetail;
-import com.pn.dao.entity.PnArticleTag;
+import com.pn.dao.entity.PnColumnArticle;
+import com.pn.dao.entity.PnColumnInfo;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * 文章转换工具
@@ -49,6 +49,34 @@ public class ArticleCoverUtil {
         articleDetail.setVersion(0);
         articleDetail.setContent(params.getContent());
         return articleDetail;
+    }
+
+    public static PnColumnInfo paramCoverToColumnInfo(PnColumnInfo columnInfo, ColumnParam param, Long userId) {
+        if (Objects.isNull(columnInfo)) {
+            columnInfo = new PnColumnInfo();
+        }
+        columnInfo.setColumnName(columnInfo.getColumnName());
+        columnInfo.setUserId(columnInfo.getUserId());
+        columnInfo.setIntroduction(columnInfo.getIntroduction());
+        columnInfo.setCover(columnInfo.getCover());
+        columnInfo.setState(columnInfo.getState());
+        columnInfo.setSection(columnInfo.getSection());
+        columnInfo.setNums(columnInfo.getNums());
+        columnInfo.setType(columnInfo.getType());
+        columnInfo.setFreeStartTime(columnInfo.getFreeStartTime());
+        columnInfo.setFreeEndTime(columnInfo.getFreeEndTime());
+        columnInfo.setCreateBy(userId);
+        columnInfo.setUpdateBy(userId);
+        columnInfo.setIsDeleted(columnInfo.getIsDeleted());
+        columnInfo.setId(columnInfo.getId());
+        return columnInfo;
+    }
+
+    public static PnColumnArticle paramCoverToCA(Long articleId, Long columnId) {
+        PnColumnArticle pnColumnArticle = new PnColumnArticle();
+        pnColumnArticle.setColumnId(columnId);
+        pnColumnArticle.setArticleId(articleId);
+        return pnColumnArticle;
     }
 
 }

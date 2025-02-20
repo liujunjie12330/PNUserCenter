@@ -42,7 +42,8 @@ public enum StatusCode {
      * 文章相关
      */
     ARTICLE_IS_REVIEWING(3000, "文章正在审核中!"),
-    article_has_sensitive_word(3001, "文本含有敏感字!");
+    ARTICLE_HAS_SENSITIVE_WORD(3001, "文本含有敏感字!"),
+    COLUMN_HAS_ARTICLE(3002, "专栏下含有文章！");
     /**
      * 状态码
      */

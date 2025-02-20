@@ -11,8 +11,8 @@
         <result column="update_by" jdbcType="BIGINT" property="updateBy"/>
         <result column="is_deleted" jdbcType="INTEGER" property="isDeleted"/>
         <result column="tag_name" jdbcType="VARCHAR" property="tagName"/>
-        <result column="tag_type" jdbcType="TINYINT" property="tagType"/>
-        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="tag_type" jdbcType="INTEGER" property="tagType"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->

@@ -9,27 +9,27 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 标签管理表
+ * 专栏文章表
  */
 @Data
 @EqualsAndHashCode(callSuper=true)
-@TableName(value = "pn_tag")
-public class PnTag extends BaseModel {
+@TableName(value = "pn_column_article")
+public class PnColumnArticle extends BaseModel {
     /**
-     * 标签名称
+     * 专栏ID
      */
-    @TableField(value = "tag_name")
-    private String tagName;
+    @TableField(value = "column_id")
+    private Long columnId;
 
     /**
-     * 标签类型：1-系统标签，2-自定义标签
+     * 文章ID
      */
-    @TableField(value = "tag_type")
-    private Integer tagType;
+    @TableField(value = "article_id")
+    private Long articleId;
 
     /**
-     * 状态：0-未发布，1-已发布
+     * 章节顺序，越小越靠前
      */
-    @TableField(value = "`status`")
-    private Integer status;
+    @TableField(value = "`section`")
+    private Integer section;
 }

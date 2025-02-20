@@ -52,6 +52,13 @@ public class LoginController {
         return ResultUtils.success("ok");
     }
 
+    @PostMapping("/out/login")
+    public BaseResponse<String> outLogin(HttpServletResponse response){
+        loginService.outLogin();
+        response.setHeader("token","-");
+        return ResultUtils.success("ok");
+    }
+
     @GetMapping("/currentUser")
     public BaseResponse<UserVo> getCurrentUser(){
         UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
@@ -99,5 +106,4 @@ public class LoginController {
         String redirectUrl = "http://localhost:8000/welcome?token=" + token;
         response.sendRedirect(redirectUrl);
     }
-
 }

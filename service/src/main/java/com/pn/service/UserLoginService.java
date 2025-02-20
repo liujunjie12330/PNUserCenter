@@ -13,4 +13,5 @@ public interface UserLoginService {
 
     String doLogin(AuthUser authUser);
 
+    void outLogin();
 }

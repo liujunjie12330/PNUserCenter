@@ -3,6 +3,7 @@ package com.pn.service.impls.login;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.pn.common.base.UserTokenThreadHolder;
 import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.constant.RedisKeyConstant;
 import com.pn.common.enums.StatusCode;
@@ -16,6 +17,7 @@ import com.pn.dao.mapper.PnUserOauthMapper;
 import com.pn.service.UserLoginService;
 import com.pn.service.UserRegisterService;
 import com.pn.service.utils.RedisCache;
+import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.model.AuthUser;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,15 +25,12 @@ import org.redisson.api.RBloomFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+import java.util.*;
+
 import static com.pn.common.utils.RegularUtil.isAccount;
 import static com.pn.common.utils.RegularUtil.isPassword;
 import static com.pn.service.utils.JWTUtil.sign;
-
-import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
 
 /**
  * @author: javadadi
@@ -39,6 +38,7 @@ import java.util.UUID;
  * @ClassName: UserLoginServiceImpl
  */
 @Service
+@Slf4j
 public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> implements UserLoginService {
     @Resource
     private PnUserMapper userMapper;
@@ -56,7 +56,8 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
     private UserRegisterService registerService;
 
     @Resource
-    private RBloomFilter<String> userRegisterBloomFilter;;
+    private RBloomFilter<String> userRegisterBloomFilter;
+    ;
 
     /**
      * 登陆--常规实现
@@ -98,10 +99,10 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
                 oAuthUser.setUserId(pnUser.getId());
                 userOauthMapper.updateById(oAuthUser);
                 userVo = getUserVo(pnUser);
-            } else{
+            } else {
                 //已经绑定有本平台账号
                 PnUser pnUser = pnUserMapper.selectById(oAuthUser.getUserId());
-                userVo =  getUserVo(pnUser);
+                userVo = getUserVo(pnUser);
             }
         } else {
             //第一次登陆本平台账号
@@ -121,13 +122,24 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
         return token;
     }
 
+    /**
+     * 用户退出登陆
+     */
+    @Override
+    public void outLogin() {
+        UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
+        redisCache.del(PNUserCenterConstant.USER_LOGIN + currentUser.getId() + currentUser.getUsername());
+        UserTokenThreadHolder.remove();
+        log.info("用户=={}退出登陆,time=={}", currentUser.getUsername(), new Date());
+    }
+
     private PnUserOauth initOauthUser(AuthUser authUser) {
         PnUserOauth oAuthUser = new PnUserOauth();
         oAuthUser.setUuid(authUser.getUuid());
         oAuthUser.setSource(authUser.getSource());
         oAuthUser.setPlatformUsername(authUser.getNickname());
         oAuthUser.setAvatarUrl(authUser.getAvatar());
-        return  oAuthUser;
+        return oAuthUser;
     }
 
     private UserVo getUserVo(PnUser pnUser) {
@@ -138,6 +150,7 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
                 .email(pnUser.getEmail())
                 .phone(pnUser.getPhone())
                 .isAdmin(pnUser.getIsAdmin())
+                .avatar(pnUser.getAvatar())
                 .lastLoginDate(pnUser.getLastLoginDate())
                 .build();
     }
@@ -146,9 +159,9 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
         PnUser pnUser = new PnUser();
         String username = "";
         boolean hasUsername = true;
-        while(hasUsername){
-           username  = UUID.randomUUID().toString().substring(0, 15).replace("-","");
-           hasUsername = registerService.hasUsername(username);
+        while (hasUsername) {
+            username = UUID.randomUUID().toString().substring(0, 15).replace("-", "");
+            hasUsername = registerService.hasUsername(username);
         }
         redisCache.delSetCache(RedisKeyConstant.USER_REGISTER_REUSE, username);
         //布隆过滤器防止用户重复注册，缓存穿透

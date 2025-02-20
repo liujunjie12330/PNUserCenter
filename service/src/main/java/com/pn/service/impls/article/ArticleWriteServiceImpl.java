@@ -62,6 +62,13 @@ public class ArticleWriteServiceImpl extends ServiceImpl<PnArticleMapper, PnArti
         return articleId;
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(Long articleId) {
+        PnArticle byId = getById(articleId);
+
+    }
+
     /**
      * 插入文章 首次保存草稿或者发布文章
      */
@@ -76,7 +83,7 @@ public class ArticleWriteServiceImpl extends ServiceImpl<PnArticleMapper, PnArti
             pnArticle.setStatus(PushStatusEnum.OFFLINE.getCode());
         }
         //查看是否为官方账号
-        if (needToReview()) {
+        if (isOffice()) {
             pnArticle.setOfficalStat(1);
         }
         save(pnArticle);
@@ -96,16 +103,16 @@ public class ArticleWriteServiceImpl extends ServiceImpl<PnArticleMapper, PnArti
         PnArticle article = getById(params.getArticleId());
         UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
         //只能够修改自己的文章
-        if (Objects.equals(currentUser.getId(),article.getUserId())){
+        if (Objects.equals(currentUser.getId(), article.getUserId())) {
             throw new BizException(StatusCode.NO_SUCH_PERMISSION);
         }
         //正在审核的文章不能修改
-        if (Objects.equals(article.getStatus(),PushStatusEnum.REVIEW.getCode())){
+        if (Objects.equals(article.getStatus(), PushStatusEnum.REVIEW.getCode())) {
             throw new BizException(StatusCode.ARTICLE_IS_REVIEWING);
         }
-        article =  paramCoverToPnArticle(article,params,currentUser.getId());
+        article = paramCoverToPnArticle(article, params, currentUser.getId());
         //查看是否为官方账号
-        if (needToReview()) {
+        if (isOffice()) {
             article.setOfficalStat(1);
         }
         //是否需要进行审核
@@ -153,14 +160,14 @@ public class ArticleWriteServiceImpl extends ServiceImpl<PnArticleMapper, PnArti
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
         if (SensitiveUtil.check(title) || SensitiveUtil.check(shortTitle)) {
-            throw new BizException(StatusCode.article_has_sensitive_word);
+            throw new BizException(StatusCode.ARTICLE_HAS_SENSITIVE_WORD);
         }
         String summary = params.getSummary();
         if (summary.length() > 255) {
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
         if (SensitiveUtil.check(summary)) {
-            throw new BizException(StatusCode.article_has_sensitive_word);
+            throw new BizException(StatusCode.ARTICLE_HAS_SENSITIVE_WORD);
         }
         String content = params.getContent();
         if (StringUtils.isNotEmpty(content)) {

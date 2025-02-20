@@ -1,10 +1,7 @@
 package com.pn.dao.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,9 +9,10 @@ import lombok.EqualsAndHashCode;
  * 类目管理表
  */
 @Data
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
 @TableName(value = "pn_catalog")
 public class PnCatalog extends BaseModel {
+    private static final long serialVersionUID = -7901244407632945451L;
     /**
      * 类目名称
      */
@@ -25,7 +23,7 @@ public class PnCatalog extends BaseModel {
      * 状态：0-未发布，1-已发布
      */
     @TableField(value = "`status`")
-    private Byte status;
+    private Integer status;
 
     /**
      * 排序

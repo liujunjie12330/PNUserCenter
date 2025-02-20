@@ -5,10 +5,9 @@ import com.pn.common.reqParams.article.ArticleSaveParams;
 import com.pn.dao.entity.PnArticle;
 
 /**
- * @author: javadadi
- * @Time: 13:41
- * @ClassName: ArticleWriteService
+ *文章保存类
  */
 public interface ArticleWriteService extends IService<PnArticle> {
     Long save(ArticleSaveParams params);
+    void delete(Long articleId);
 }

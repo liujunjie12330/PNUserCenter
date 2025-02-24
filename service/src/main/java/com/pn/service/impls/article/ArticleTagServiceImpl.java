@@ -80,7 +80,7 @@ public class ArticleTagServiceImpl extends ServiceImpl<PnArticleTagMapper, PnArt
         Page<PnTag> page = new Page<>(param.getCurrent(), param.getSize());
         LambdaQueryWrapper<PnTag> wrapper = new LambdaQueryWrapper<PnTag>()
                 .eq(Objects.nonNull(param.getTagId()), PnTag::getId, param.getTagId())
-                .like(StringUtils.isNotEmpty(param.getTag()), PnTag::getTagName, param.getTag());
+                .like(StringUtils.isNotEmpty(param.getTagName()), PnTag::getTagName, param.getTagName());
         Page<PnTag> sourcePage = pnTagMapper.selectPage(page, wrapper);
         Page<TagVo> tagVoPage = PageUtil.coverToPageVo(sourcePage, tag -> TagVo.builder()
                 .tagName(tag.getTagName())
@@ -105,7 +105,7 @@ public class ArticleTagServiceImpl extends ServiceImpl<PnArticleTagMapper, PnArt
         if (Objects.isNull(tag)) {
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
-        tag.setTagName(param.getTag());
+        tag.setTagName(param.getTagName());
         pnTagMapper.updateById(tag);
         return tag.getId();
     }

@@ -17,11 +17,20 @@ public class TagParam extends PageParam {
     private Long tagId;
 
     /**
+     * article Id
+     */
+    private Long articleId;
+
+    /**
      * 标签名称
      */
-    private String tag;
+    private String tagName;
     /**
      * 上下线的操作
      */
     private String action;
+    /**
+     * 状态
+     */
+    private Integer status;
 }

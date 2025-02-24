@@ -11,4 +11,6 @@ public interface ColumnSettingService extends IService<PnColumnInfo> {
     Long save(ColumnParam param);
 
     Long saveArticleColumn(Long columnId, Long articleId);
+
+    void delete(Long columnId);
 }

@@ -1,11 +1,10 @@
 package com.pn.service.utils.cover;
 
+import com.pn.common.enums.PushStatusEnum;
 import com.pn.common.reqParams.article.ArticleSaveParams;
 import com.pn.common.reqParams.article.ColumnParam;
-import com.pn.dao.entity.PnArticle;
-import com.pn.dao.entity.PnArticleDetail;
-import com.pn.dao.entity.PnColumnArticle;
-import com.pn.dao.entity.PnColumnInfo;
+import com.pn.common.reqParams.article.TagParam;
+import com.pn.dao.entity.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
@@ -77,6 +76,16 @@ public class ArticleCoverUtil {
         pnColumnArticle.setColumnId(columnId);
         pnColumnArticle.setArticleId(articleId);
         return pnColumnArticle;
+    }
+
+    public static PnTag paramCoverToPNTag(PnTag pnTag, TagParam param, Long userId) {
+        if (Objects.isNull(param)) {
+            pnTag = new PnTag();
+        }
+        pnTag.setTagName(param.getTagName());
+        pnTag.setStatus(PushStatusEnum.OFFLINE.getCode());
+        pnTag.setTagType(2);
+        return pnTag;
     }
 
 }

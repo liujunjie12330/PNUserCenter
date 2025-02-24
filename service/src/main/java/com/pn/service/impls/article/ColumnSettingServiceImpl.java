@@ -1,15 +1,19 @@
 package com.pn.service.impls.article;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.pn.common.base.UserTokenThreadHolder;
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
 import com.pn.common.reqParams.article.ColumnParam;
+import com.pn.common.reqParams.article.TagParam;
+import com.pn.common.vos.article.TagVo;
 import com.pn.common.vos.login.UserVo;
 import com.pn.dao.entity.PnArticle;
 import com.pn.dao.entity.PnColumnArticle;
 import com.pn.dao.entity.PnColumnInfo;
+import com.pn.dao.entity.PnTag;
 import com.pn.dao.mapper.PnArticleMapper;
 import com.pn.dao.mapper.PnColumnArticleMapper;
 import com.pn.dao.mapper.PnColumnInfoMapper;
@@ -65,6 +69,7 @@ public class ColumnSettingServiceImpl extends ServiceImpl<PnColumnInfoMapper, Pn
         return pnColumnArticle.getArticleId();
     }
 
+    @Override
     public void delete(Long columnId) {
         PnColumnInfo columnInfo = getById(columnId);
         if (Objects.isNull(columnInfo)) {
@@ -82,6 +87,9 @@ public class ColumnSettingServiceImpl extends ServiceImpl<PnColumnInfoMapper, Pn
         }
         removeById(columnId);
     }
+
+
+
 
     private Long insert(ColumnParam param) {
         UserVo currentUser = UserTokenThreadHolder.getCurrentUser();

@@ -52,6 +52,27 @@
         <result column="recommend" jdbcType="INTEGER" property="recommend"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
     </resultMap>
+    <resultMap id="ArticleIndexBo" type="com.pn.dao.bo.article.ArticleIndexBo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_id" jdbcType="TIMESTAMP" property="authorId"/>
+        <result column="user_name" jdbcType="TIMESTAMP" property="authorName"/>
+        <result column="avatar" jdbcType="BIGINT" property="authorAvatar"/>
+        <result column="title" jdbcType="BIGINT" property="title"/>
+        <result column="short_title" jdbcType="VARCHAR" property="shortTitle"/>
+        <result column="picture" jdbcType="VARCHAR" property="cover"/>
+        <result column="offical_stat" jdbcType="INTEGER" property="officalStat"/>
+        <result column="topping_stat" jdbcType="INTEGER" property="toppingStat"/>
+        <result column="recommend" jdbcType="INTEGER" property="recommend"/>
+        <result column="update_at" jdbcType="DATE" property="updateTime"/>
+        <result column="column_id" jdbcType="BIGINT" property="columnId"/>
+        <result column="column_name" jdbcType="VARCHAR" property="columnName"/>
+        <result column="catalog_name" jdbcType="VARCHAR" property="catalogName"/>
+        <result column="catalog_id" jdbcType="BIGINT" property="catalogId"/>
+        <collection property="tagVos" ofType="com.pn.common.vos.article.TagVo">
+            <result column="tag_id" jdbcType="BIGINT" property="tagId"/>
+            <result column="tag_name" jdbcType="VARCHAR" property="tagName"/>
+        </collection>
+    </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
         id,
@@ -132,5 +153,9 @@
                     &lt; #{param.updateTime,jdbcType=TIMESTAMP}
             </if>
         </where>
+    </select>
+
+    <select id="indexPage" resultMap="ArticleIndexBo">
+
     </select>
 </mapper>

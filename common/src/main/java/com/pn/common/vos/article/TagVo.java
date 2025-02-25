@@ -14,6 +14,10 @@ import lombok.*;
 public class TagVo extends BaseModelVo {
     private static final long serialVersionUID = -7389535239366845165L;
     /**
+     * 标签id
+     */
+    private  Long tagId;
+    /**
      * 标签名称
      */
     private String tagName;

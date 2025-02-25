@@ -32,8 +32,14 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper,PnArticl
 
     }
 
+    /**
+     * 直接搜索显示的文章---关联性优先
+     * @param search
+     * @param articlePage
+     * @return
+     */
     @SuppressWarnings("all")
-    private Page<PnArticle> searchPage(String search,Page<PnArticle> articlePage){
+    private Page<ArticleIndexVo> searchPage(String search,Page<PnArticle> articlePage){
 
     }
  }

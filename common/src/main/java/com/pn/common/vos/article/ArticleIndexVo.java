@@ -20,7 +20,10 @@ public class ArticleIndexVo extends PageParam {
      * 文章id
      */
     private Long articleId;
-
+    /**
+     * 文章摘要
+     */
+    private String summary;
     /**
      * 作者uid
      */

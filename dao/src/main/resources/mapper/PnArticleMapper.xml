@@ -54,7 +54,7 @@
     </resultMap>
 
     <resultMap id="ArticleIndexBo" type="com.pn.dao.bo.article.ArticleIndexBo">
-        <id column="id" jdbcType="BIGINT" property="id"/>
+        <id column="article_id" jdbcType="BIGINT" property="articleId"/>
         <result column="user_id" jdbcType="TIMESTAMP" property="authorId"/>
         <result column="user_name" jdbcType="TIMESTAMP" property="authorName"/>
         <result column="avatar" jdbcType="BIGINT" property="authorAvatar"/>
@@ -158,13 +158,13 @@
 
     <select id="indexPage" resultMap="ArticleIndexBo">
         select
-        article.id  as id,
+        article.id  as article_id,
         article.user_id as user_id,
         user.avatar as avatar,
         article.title as title,
         article.short_title as short_title,
         article.picture as picture,
-        article.pffical_stat as pffical_stat,
+        article.offical_stat as offical_stat,
         article.topping_stat as topping_stat,
         article.recommend as recommend,
         article.update_at as update_at,

@@ -1,23 +1,21 @@
 package com.pn.common.vos.article;
 
-import com.pn.common.base.BaseModelVo;
+import com.pn.common.base.PageParam;
 import lombok.*;
 
 import java.util.Date;
 import java.util.List;
 
 /**
- * 精要文章vo
- *
- * @author javadadi
+ * 文章首页列表vo
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ArticleAdminVo extends BaseModelVo {
-    private static final long serialVersionUID = 1492677654651773859L;
+public class ArticleIndexVo extends PageParam {
+    private static final long serialVersionUID = 4634216001172442707L;
     private Long articleId;
 
     /**
@@ -40,7 +38,7 @@ public class ArticleAdminVo extends BaseModelVo {
     private String title;
 
     /**
-     * 短标题
+     * 短标题--教程名称
      */
     private String shortTitle;
 
@@ -48,11 +46,6 @@ public class ArticleAdminVo extends BaseModelVo {
      * 封面
      */
     private String cover;
-
-    /**
-     * 0 未发布 1 已发布
-     */
-    private Integer status;
 
     /**
      * 是否官方
@@ -73,4 +66,28 @@ public class ArticleAdminVo extends BaseModelVo {
      * 更新时间
      */
     private Date updateTime;
+    /**
+     * 文章统计信息
+     */
+    private ArticleFootCountDTO articleFootCountDTO;
+    /**
+     * 标签信息
+     */
+    private List<TagVo> tagVos;
+    /**
+     * 教程id
+     */
+    private Long columnId;
+    /**
+     * 教程名称
+     */
+    private Long columnName;
+    /**
+     * 分类名称
+     */
+    private String  catalogName;
+    /**
+     * 分类id
+     */
+    private Long catalogId;
 }

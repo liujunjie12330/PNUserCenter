@@ -14,14 +14,11 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 分类接口
+ * 分类前台接口
  */
 @RestController
-@RequestMapping(PNUserCenterConstant.BASE_URL + "/catalog")
+@RequestMapping(PNUserCenterConstant.BASE_URL + "/catalog/index")
 public class CatalogController {
-    @Resource
-    private CatalogSettingService catalogSettingService;
-
     @Resource
     private CatalogService catalogService;
 

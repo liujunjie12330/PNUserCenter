@@ -16,6 +16,9 @@ import java.util.List;
 @Builder
 public class ArticleIndexVo extends PageParam {
     private static final long serialVersionUID = 4634216001172442707L;
+    /**
+     * 文章id
+     */
     private Long articleId;
 
     /**

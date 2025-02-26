@@ -7,7 +7,7 @@ import com.pn.common.exception.BizException;
 import com.pn.common.reqParams.user.PermissionSaveParam;
 import com.pn.dao.entity.PnPermission;
 import com.pn.dao.mapper.PnPermissionMapper;
-import com.pn.service.PermissionService;
+import com.pn.service.PermissionSettingService;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -19,7 +19,7 @@ import java.util.Objects;
  * @Descirption xxx
  */
 @Service
-public class PermissionServiceIml extends ServiceImpl<PnPermissionMapper, PnPermission> implements PermissionService {
+public class PermissionSettingServiceIml extends ServiceImpl<PnPermissionMapper, PnPermission> implements PermissionSettingService {
 
     @Override
     public Long save(PermissionSaveParam param) {
@@ -30,8 +30,8 @@ public class PermissionServiceIml extends ServiceImpl<PnPermissionMapper, PnPerm
         return update(param);
     }
 
-    @Override
-    public Long insert(PermissionSaveParam param) {
+
+    private Long insert(PermissionSaveParam param) {
         PnPermission pnPermission = new PnPermission();
         pnPermission.setCode(param.getCode());
         pnPermission.setName(param.getName());
@@ -43,8 +43,8 @@ public class PermissionServiceIml extends ServiceImpl<PnPermissionMapper, PnPerm
         return param.getId();
     }
 
-    @Override
-    public Long update(PermissionSaveParam param) {
+
+    private Long update(PermissionSaveParam param) {
         PnPermission pnPermission = getById(param.getId());
         if(Objects.isNull(pnPermission)) {
             throw new BizException(StatusCode.PARAMS_ERROR);
@@ -67,6 +67,5 @@ public class PermissionServiceIml extends ServiceImpl<PnPermissionMapper, PnPerm
         if(Objects.isNull(code) || Objects.isNull(name) || Objects.isNull(display)) {
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
-
     }
 }

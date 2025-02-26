@@ -13,6 +13,8 @@
         <result column="role_id" jdbcType="BIGINT" property="roleId"/>
         <result column="user_id" jdbcType="BIGINT" property="userId"/>
     </resultMap>
+
+
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
         id,
@@ -24,4 +26,75 @@
         role_id,
         user_id
     </sql>
+
+    <resultMap id="SearchRoleResultBoMap" type="com.pn.dao.bo.user.SearchUserPermissionBo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="full_name" jdbcType="VARCHAR" property="fullName"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="is_admin" jdbcType="INTEGER" property="isAdmin"/>
+        <result column="last_login_date" jdbcType="TIMESTAMP" property="lastLoginDate"/>
+        <result column="update_last_time" jdbcType="TIMESTAMP" property="updateLastTime"/>
+        <result column="avatar" jdbcType="VARCHAR" property="avatar"/>
+        <result column="role_id" jdbcType="INTEGER" property="roleId"/>
+        <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
+        <result column="role_type" jdbcType="INTEGER" property="roleType"/>
+        <result column="role_value" jdbcType="VARCHAR" property="roleValue"/>
+        <result column="role_desc" jdbcType="VARCHAR" property="roleDesc"/>
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="display" jdbcType="VARCHAR" property="display" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+    </resultMap>
+    <select id="searchUserPermission" resultMap="SearchRoleResultBoMap">
+        select
+            U.id,
+            U.create_by,
+            U.update_by,
+            U.create_at,
+            U.update_at,
+            U.is_deleted,
+            U.username,
+            U.full_name,
+            U.phone,
+            U.email,
+            U.is_admin,
+            U.last_login_date,
+            U.update_last_time,
+            U.avatar,
+            RU.role_id,
+            PR.role_name,
+            PR.role_desc,
+            PR.role_type,
+            PR.role_value,
+            PRP.permission_id,
+            PP.code,
+            PP.name,
+            PP.display,
+            PP.status
+        from pn_user as U
+                 left join pn_role_user as RU
+                           on U.id = RU.user_id
+                 left join pn_role as PR
+                           on RU.role_id = PR.id
+                 left join  pn_role_permission as PRP
+                            on PR.id = PRP.role_id
+                 left join  pn_permission as PP
+                            on PRP.permission_id = PP.id
+        <where>
+            <if test="param.userId != null" >
+            and U.id = #{param.userId}
+            </if>
+
+            <if test="param.roleId != null">
+            and RU.role_id = #{param.id}
+            </if>
+
+            <if test = "param.roleName != null">
+                and PR.role_name like concat ('%',#{param},'%')
+            </if>
+        </where>
+    </select>
 </mapper>

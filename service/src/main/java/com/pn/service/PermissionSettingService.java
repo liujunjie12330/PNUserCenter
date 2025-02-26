@@ -8,10 +8,7 @@ import com.pn.common.reqParams.user.PermissionSaveParam;
  * @Date：2025/2/25 17:11
  * @Descirption xxx
  */
-public interface PermissionService {
+public interface PermissionSettingService {
     Long save(PermissionSaveParam param);
 
-    Long insert(PermissionSaveParam param);
-
-    Long update(PermissionSaveParam param);
 }

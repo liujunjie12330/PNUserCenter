@@ -8,7 +8,17 @@ import java.io.Serializable;
 public class RoleSaveParam implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private Long roleId;
+    private long id ;
+
+    //角色id
+    Long roleId;
+
+    //用户id
+    Long userId;
+
+    //权限id
+    Long permissionId;
+
     //角色名
     String roleName;
     //角色描述

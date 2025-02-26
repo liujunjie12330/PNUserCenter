@@ -27,6 +27,7 @@
         <result column="pay_image_url" jdbcType="VARCHAR" property="payImageUrl"/>
         <result column="recommend" jdbcType="INTEGER" property="recommend"/>
     </resultMap>
+
     <resultMap id="ArticleBoResultMap" type="com.pn.dao.bo.article.PnArticleBo">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="create_at" jdbcType="TIMESTAMP" property="createAt"/>
@@ -204,4 +205,5 @@
             </if>
         </where>
     </select>
+
 </mapper>

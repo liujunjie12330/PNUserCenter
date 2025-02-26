@@ -1,6 +1,5 @@
 package com.pn.dao.bo.article;
 
-import com.pn.common.vos.article.ArticleFootCountDTO;
 import com.pn.common.vos.article.TagVo;
 import lombok.Data;
 

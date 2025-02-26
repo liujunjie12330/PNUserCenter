@@ -61,6 +61,5 @@ public class RoleSettingServiceImpl extends ServiceImpl<PnRoleMapper, PnRole> im
         if (Objects.isNull(roleName) || Objects.isNull(roleDesc)) {
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
-
     }
 }

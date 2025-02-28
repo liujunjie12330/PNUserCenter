@@ -93,6 +93,7 @@ public class ArticleWriteServiceImpl extends ServiceImpl<PnArticleMapper, PnArti
         articleDetailMapper.insert(pnArticleDetail);
         //保存文章的标签
         articleTagService.saveBatch(articleId, params.getTagIds());
+        //todo 这里要初始化这个文章的相关信息
         return articleId;
     }
 
@@ -155,11 +156,10 @@ public class ArticleWriteServiceImpl extends ServiceImpl<PnArticleMapper, PnArti
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
         String title = params.getTitle();
-        String shortTitle = params.getShortTitle();
-        if (title.length() > 255 || shortTitle.length() > 255) {
+        if (title.length() > 255) {
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
-        if (SensitiveUtil.check(title) || SensitiveUtil.check(shortTitle)) {
+        if (SensitiveUtil.check(title)) {
             throw new BizException(StatusCode.ARTICLE_HAS_SENSITIVE_WORD);
         }
         String summary = params.getSummary();
@@ -175,7 +175,7 @@ public class ArticleWriteServiceImpl extends ServiceImpl<PnArticleMapper, PnArti
             params.setContent(content);
         }
         Integer status = params.getStatus();
-        if (status >= 3) {
+        if (Objects.nonNull(status) && status >= 3) {
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
         String actionType = params.getActionType();

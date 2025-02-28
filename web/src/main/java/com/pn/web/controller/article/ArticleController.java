@@ -29,12 +29,12 @@ public class ArticleController {
     private ArticleWriteService articleWriteService;
 
     @PostMapping("/page")
-    public BaseResponse<Page<ArticleIndexVo>> page(@RequestBody ArticleIndexParam param) {
+    public BaseResponse<Page<ArticleIndexVo>> pageArticle(@RequestBody ArticleIndexParam param) {
         return ResultUtils.success(readService.page(param));
     }
 
     @PostMapping("/save")
-    public BaseResponse<Long> save(@RequestBody ArticleSaveParams param){
+    public BaseResponse<Long> saveArticle(@RequestBody ArticleSaveParams param){
         return ResultUtils.success(articleWriteService.save(param));
     }
 }

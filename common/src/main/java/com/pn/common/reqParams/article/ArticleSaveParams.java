@@ -66,7 +66,7 @@ public class ArticleSaveParams implements Serializable {
      *
      * @see ArticleTypeEnum
      */
-    private Integer articleTypeId;
+    private Integer articleType;
 
 
     /**

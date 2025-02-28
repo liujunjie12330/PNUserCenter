@@ -23,6 +23,10 @@ public class ArticleIndexBo  implements Serializable {
      */
     private Long authorId;
     /**
+     * 文章简介
+     */
+    private String summary;
+    /**
      * 作者名
      */
     private String authorName;

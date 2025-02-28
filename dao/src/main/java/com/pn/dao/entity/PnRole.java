@@ -32,7 +32,7 @@ public class PnRole extends BaseModel {
      * 角色类型 0--系统内置，1--自定义
      */
     @TableField(value = "role_type")
-    private Boolean roleType;
+    private Integer roleType;
 
     /**
      * role_value-->admin-->000

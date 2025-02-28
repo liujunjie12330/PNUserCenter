@@ -30,7 +30,7 @@ public class ArticleCoverUtil {
         article.setPicture(params.getCover());
         article.setSummary(params.getSummary());
         article.setCatalogId(params.getCategoryId());
-        article.setArticleTypeId(params.getArticleTypeId());
+        article.setArticleTypeId(params.getArticleType());
         article.setSource(params.getSource());
         article.setSourceUrl(params.getSourceUrl());
         article.setStatus(params.getStatus());

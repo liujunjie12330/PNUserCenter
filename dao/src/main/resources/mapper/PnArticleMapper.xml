@@ -57,9 +57,10 @@
     <resultMap id="ArticleIndexBo" type="com.pn.dao.bo.article.ArticleIndexBo">
         <id column="article_id" jdbcType="BIGINT" property="articleId"/>
         <result column="user_id" jdbcType="TIMESTAMP" property="authorId"/>
-        <result column="user_name" jdbcType="TIMESTAMP" property="authorName"/>
+        <result column="username" jdbcType="TIMESTAMP" property="authorName"/>
         <result column="avatar" jdbcType="BIGINT" property="authorAvatar"/>
         <result column="title" jdbcType="BIGINT" property="title"/>
+        <result column="summary" jdbcType="VARCHAR" property="summary"/>
         <result column="short_title" jdbcType="VARCHAR" property="shortTitle"/>
         <result column="picture" jdbcType="VARCHAR" property="cover"/>
         <result column="offical_stat" jdbcType="INTEGER" property="officalStat"/>
@@ -162,7 +163,9 @@
         article.id  as article_id,
         article.user_id as user_id,
         user.avatar as avatar,
+        user.full_name as username,
         article.title as title,
+        article.summary as summary,
         article.short_title as short_title,
         article.picture as picture,
         article.offical_stat as offical_stat,

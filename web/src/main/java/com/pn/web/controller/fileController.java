@@ -3,8 +3,9 @@ package com.pn.web.controller;
 import com.pn.common.base.BaseResponse;
 import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.utils.ResultUtils;
-import com.pn.service.FileOperationService;
+import com.pn.service.UserAvatarService;
 import com.pn.service.impls.image.MinioImageOperation;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,10 +20,10 @@ import javax.annotation.Resource;
  * @ClassName: PictureController
  */
 @RestController
-@RequestMapping(PNUserCenterConstant.BASE_URL + "/picture")
+@RequestMapping(PNUserCenterConstant.BASE_URL + "/file")
 public class fileController {
     @Resource(type = MinioImageOperation.class)
-    private FileOperationService avatarService;
+    private MinioImageOperation avatarService;
 
     /**
      * 用户上传头像
@@ -33,5 +34,10 @@ public class fileController {
     public BaseResponse<String> uploadAvatar(@RequestParam("avatar")MultipartFile file){
         avatarService.uploadAvatar(file);
         return ResultUtils.success("ok");
+    }
+
+    @PostMapping("/upload/articleImage")
+    public BaseResponse<String> uploadArticleImage(@Param("image")MultipartFile file){
+        return ResultUtils.success(avatarService.uploadImage(file));
     }
 }

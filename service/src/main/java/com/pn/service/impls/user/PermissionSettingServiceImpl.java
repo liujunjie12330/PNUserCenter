@@ -12,14 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
-/**
- * @version 1.0
- * @Author：alex
- * @Date：2025/2/25 17:06
- * @Descirption xxx
- */
+
 @Service
-public class PermissionSettingServiceIml extends ServiceImpl<PnPermissionMapper, PnPermission> implements PermissionSettingService {
+public class PermissionSettingServiceImpl extends ServiceImpl<PnPermissionMapper, PnPermission> implements PermissionSettingService {
 
     @Override
     public Long save(PermissionSaveParam param) {

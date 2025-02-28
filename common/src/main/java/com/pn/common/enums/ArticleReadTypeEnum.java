@@ -12,8 +12,7 @@ public enum ArticleReadTypeEnum {
     NORMAL(0, "直接阅读"),
     LOGIN(1, "登录阅读"),
     TIME_READ(2, "限时阅读"),
-    STAR_READ(3, "星球阅读"),
-    PAY_READ(4, "付费阅读"),
+    PAY_READ(3, "付费阅读"),
     ;
 
     private Integer type;

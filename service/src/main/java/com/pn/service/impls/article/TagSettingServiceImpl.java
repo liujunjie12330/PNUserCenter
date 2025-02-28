@@ -80,6 +80,7 @@ public class TagSettingServiceImpl extends ServiceImpl<PnTagMapper, PnTag> imple
         Page<PnTag> source = page(page, wrapper);
         Page<TagVo> tagVoPage = PageUtil.coverToPageVo(source, tag -> TagVo
                 .builder()
+                .tagId(tag.getId())
                 .tagType(tag.getTagType())
                 .tagName(tag.getTagName())
                 .status(tag.getStatus())

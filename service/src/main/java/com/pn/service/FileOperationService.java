@@ -2,27 +2,25 @@ package com.pn.service;
 
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.io.InputStream;
 
 /**
- * @author: javadadi
- * @Time: 12:51
- * @ClassName: PictureOperationService
+ * 通用文件操作类
  */
 public interface FileOperationService {
-    
+
     /**
      * 通用文件上传接口
      */
-   default void upload(MultipartFile file){
-       throw new  BizException(StatusCode.SYSTEM_ERROR);
-   }
+    default String upload(InputStream input, String fileName, String filetype) {
+        throw new BizException(StatusCode.SYSTEM_ERROR);
+    }
 
-   default void uploadAvatar(MultipartFile file){throw new BizException(StatusCode.SYSTEM_ERROR);}
     /**
      * 通用文件下载接口
      */
-   default void download(String filename){
-       throw new  BizException(StatusCode.SYSTEM_ERROR);
-   }
+    default void download(String filename) {
+        throw new BizException(StatusCode.SYSTEM_ERROR);
+    }
 }

@@ -249,13 +249,15 @@ public class MinioUtil {
      * 通过流上传文件
      *
      * @param bucketName 存储桶
+     * @param filetype 文件类型
      * @param objectName 文件对象
      * @param inputStream 文件流
      */
-    public  ObjectWriteResponse uploadFile(String bucketName, String objectName, InputStream inputStream) throws Exception {
+    public  ObjectWriteResponse uploadFile(String bucketName, String objectName, InputStream inputStream,String filetype) throws Exception {
         return minioClient.putObject(
                 PutObjectArgs.builder()
                         .bucket(bucketName)
+                        .contentType(filetype)
                         .object(objectName)
                         .stream(inputStream, inputStream.available(), -1)
                         .build());

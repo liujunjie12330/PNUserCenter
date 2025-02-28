@@ -7,7 +7,9 @@ import com.pn.common.utils.UrlUtils;
 import com.pn.common.vos.login.UserVo;
 import com.pn.dao.entity.PnUser;
 import com.pn.dao.mapper.PnUserMapper;
+import com.pn.service.ArticleImageService;
 import com.pn.service.FileOperationService;
+import com.pn.service.UserAvatarService;
 import com.pn.service.utils.MinioProperties;
 import com.pn.service.utils.MinioUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,7 +28,7 @@ import java.util.Objects;
  */
 @Service("minioImageOperation")
 @Slf4j
-public class MinioImageOperation implements FileOperationService {
+public class MinioImageOperation implements FileOperationService, UserAvatarService, ArticleImageService {
     @Resource
     private MinioUtil minioUtil;
 
@@ -43,16 +46,11 @@ public class MinioImageOperation implements FileOperationService {
 
     /**
      * 用户上传头像
-     *
-     * @param file
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void uploadAvatar(MultipartFile file) {
+    public String uploadAvatar(MultipartFile file) {
         UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
-        if (Objects.isNull(currentUser)) {
-            throw new BizException(StatusCode.USER_NO_LOGIN);
-        }
         String avatarName = currentUser.getUsername() + currentUser.getId();
         try {
             minioUtil.uploadFile(bucketName, file, avatarName, "png");
@@ -67,10 +65,28 @@ public class MinioImageOperation implements FileOperationService {
         log.info("avatarUrl==>{}", avatarUrl);
         pnUser.setAvatar(avatarUrl);
         userMapper.updateById(pnUser);
+        return avatarUrl;
     }
 
     /**
-     * 通用文件上传，能够上传 pdf,md,png,jpg文件，暂时不允许上传zip文件
+     * 文章图片上传
      */
+    @Override
+    public String uploadImage(MultipartFile file) {
+        //这里先吧图片放到缓存里面去，等整个文章上传完毕，在统一进行上传
+        String name = file.getOriginalFilename();
+        String contentType = file.getContentType();
+        log.info("文件上传,filename===>{},filetype===>{}", name, contentType);
+        return UrlUtils.coverToUrlByIp("http", "118.31.2.9", "3306", "pictures");
+    }
 
+    @Override
+    public void download(String filename) {
+
+    }
+
+    @Override
+    public String upload(InputStream input, String fileName, String filetype) {
+        return null;
+    }
 }

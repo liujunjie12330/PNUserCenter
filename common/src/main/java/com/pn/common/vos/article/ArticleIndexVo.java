@@ -25,6 +25,10 @@ public class ArticleIndexVo extends PageParam {
      */
     private String summary;
     /**
+     * 是否推荐
+     */
+    private Integer recommend;
+    /**
      * 作者uid
      */
     private Long authorId;

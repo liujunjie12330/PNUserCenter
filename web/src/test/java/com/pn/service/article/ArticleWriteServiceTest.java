@@ -51,7 +51,7 @@ public class ArticleWriteServiceTest {
         params.setSummary("sss");
         params.setContent("傻逼哦，sanacna9qn9q9as擦擦");
         params.setCover("ssss");
-        params.setArticleTypeId(1);
+        params.setArticleType(1);
         params.setSource(0);
         params.setStatus(0);
         params.setActionType("POST");

@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class UserSettingParam extends PageParam {
+public class UserRolePermissionSettingParam extends PageParam {
     private static final long serialVersionUID = 2206182507074232628L;
 
     /*用户相关*/
@@ -22,6 +22,17 @@ public class UserSettingParam extends PageParam {
      * 用户账户名称
      */
     private String username;
+
+    /**
+     * 创建人
+     */
+    private Long creatBy;
+
+    /**
+     * 创建人
+     */
+    private Long updateBy;
+
 
     /*角色相关*/
     /**
@@ -50,12 +61,29 @@ public class UserSettingParam extends PageParam {
      * 权限名称
      */
     private String permissionName;
+
+    /**
+     *权限code
+     */
+    private String permissionCode;
+
     /**
      *权限展示名称
      */
-    private String permissionDisplayName;
+    private String permissionDisplay;
     /**
      * 权限授权状态
      */
     private String permissionStatus;
+
+    /*角色关联权限表，用户关联角色表相关*/
+    /**
+     * role_user表id
+     */
+    private Long roleUserId;
+
+    /**
+     * role_permission表id
+     */
+    private Long rolePermissionId;
 }

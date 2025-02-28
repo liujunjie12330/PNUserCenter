@@ -1,6 +1,6 @@
 package com.pn.service;
 
-import com.pn.common.reqParams.user.RoleParam;
+import com.pn.common.reqParams.user.UserRolePermissionSettingParam;
 
 /**
  * @version 1.0
@@ -9,5 +9,6 @@ import com.pn.common.reqParams.user.RoleParam;
  * @Descirption xxx
  */
 public interface RolePermissionSettingService {
-    Long save(RoleParam param);
+
+    Long save(UserRolePermissionSettingParam param);
 }

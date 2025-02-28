@@ -89,11 +89,11 @@
             </if>
 
             <if test="param.roleId != null">
-            and RU.role_id = #{param.id}
+            and RU.role_id = #{param.roleId}
             </if>
 
             <if test = "param.roleName != null">
-                and PR.role_name like concat ('%',#{param},'%')
+                and PR.role_name like concat ('%',#{param.roleName},'%')
             </if>
         </where>
     </select>

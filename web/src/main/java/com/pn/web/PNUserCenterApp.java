@@ -1,6 +1,9 @@
 package com.pn.web;
 
 
+import com.pn.common.enums.NotifyEnum;
+import com.pn.common.vos.notify.NotifyMsgEvent;
+import com.pn.dao.entity.PnUserFoot;
 import com.pn.web.config.UserRegisterBloomFilterProperties;
 
 import org.mybatis.spring.annotation.MapperScan;

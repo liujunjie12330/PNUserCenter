@@ -18,7 +18,7 @@ public class ListUtil {
      * @param <T>
      * @param <V>
      */
-    public static <T, V> List<V> coverToPageVo(List<T> sourceList, Function<T, V> targetFunction) {
+    public static <T, V> List<V> coverToListVo(List<T> sourceList, Function<T, V> targetFunction) {
         return sourceList
                 .stream()
                 .map(targetFunction)

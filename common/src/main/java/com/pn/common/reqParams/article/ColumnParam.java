@@ -2,6 +2,7 @@ package com.pn.common.reqParams.article;
 
 import com.pn.common.base.PageParam;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
@@ -9,6 +10,7 @@ import java.util.Date;
  * 专栏（教程）请求参数
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class ColumnParam extends PageParam {
     private static final long serialVersionUID = 2486619738768693637L;
     /**

@@ -22,7 +22,7 @@ public class CatalogServiceImpl extends ServiceImpl<PnCatalogMapper, PnCatalog> 
     public List<CatalogPaveVo> listAllCatalog() {
         //后面更新从缓存里面获取
         List<PnCatalog> list = list();
-        List<CatalogPaveVo> vos = ListUtil.coverToPageVo(list, pnCatalog -> CatalogPaveVo.builder()
+        List<CatalogPaveVo> vos = ListUtil.coverToListVo(list, pnCatalog -> CatalogPaveVo.builder()
                 .categoryName(pnCatalog.getCategoryName())
                 .categoryId(pnCatalog.getId()).build());
         return vos;

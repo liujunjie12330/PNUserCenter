@@ -26,4 +26,13 @@
       version,
       content
   </sql>
+
+  <select id="getByArticleId" resultMap="BaseResultMap">
+      select
+      <include refid="Base_Column_List"/>
+      from pndb.pn_article_detail
+      where
+      is_deleted = 0
+      and article_id = #{articleId}
+    </select>
 </mapper>

@@ -12,11 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 扩展Redis版的state缓存
- *
- * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
- * @version 1.0
- * @date 2019/10/24 13:38
- * @since 1.8
  */
 @Component
 public class AuthStateRedisCache implements AuthStateCache {

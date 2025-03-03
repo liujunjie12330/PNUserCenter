@@ -16,6 +16,7 @@ import com.pn.dao.mapper.PnArticleMapper;
 import com.pn.service.ArticleTagService;
 import com.pn.service.ArticleWriteService;
 import com.pn.service.utils.SensitiveUtil;
+import com.pn.service.utils.id.IdUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,9 @@ public class ArticleWriteServiceImpl extends ServiceImpl<PnArticleMapper, PnArti
      * 插入文章 首次保存草稿或者发布文章
      */
     private Long insertArticle(ArticleSaveParams params, Long userId) {
-        //保存文章对象
+        //保存文章对象,首次创建文章，直接使用雪花算法生成文章的id
+        Long id = IdUtil.genId();
+        params.setArticleId(id);
         PnArticle pnArticle = paramCoverToPnArticle(null, params, userId);
         //是否需要进行审核
         if (needToReview() && StringUtils.equalsIgnoreCase(params.getActionType(), ArticleActionEnum.POST.getAction())) {

@@ -42,4 +42,29 @@
         free_start_time,
         free_end_time
     </sql>
+
+    <select id="getByArticleId" resultMap="BaseResultMap">
+        select column_info.id,
+               column_info.create_at,
+               column_info.update_at,
+               column_info.create_by,
+               column_info.update_by,
+               column_info.is_deleted,
+               column_info.column_name,
+               column_info.user_id,
+               column_info.introduction,
+               column_info.cover,
+               column_info.state,
+               column_info.publish_time,
+               column_info.section,
+               column_info.nums,
+               column_info.type,
+               column_info.free_start_time,
+               column_info.free_end_time
+        from pn_column_info as `column_info`
+                 left join pn_column_article as column_article
+                           on column_info.id = column_article.column_id
+        where column_info.is_deleted = 0
+          and column_article.article_id = #{articleId}
+    </select>
 </mapper>

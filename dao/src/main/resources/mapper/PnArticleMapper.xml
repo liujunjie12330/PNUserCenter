@@ -16,7 +16,8 @@
         <result column="picture" jdbcType="VARCHAR" property="picture"/>
         <result column="summary" jdbcType="VARCHAR" property="summary"/>
         <result column="catalog_id" jdbcType="BIGINT" property="catalogId"/>
-        <result column="article_type_id" jdbcType="INTEGER" property="articleTypeId"/>
+        <result column="article_type" jdbcType="INTEGER" property="articleType"/>
+        <result column="read_type" jdbcType="INTEGER" property="readType"/>
         <result column="source" jdbcType="TINYINT" property="source"/>
         <result column="source_url" jdbcType="VARCHAR" property="sourceUrl"/>
         <result column="offical_stat" jdbcType="TINYINT" property="officalStat"/>
@@ -41,7 +42,7 @@
         <result column="picture" jdbcType="VARCHAR" property="picture"/>
         <result column="summary" jdbcType="VARCHAR" property="summary"/>
         <result column="catalog_id" jdbcType="BIGINT" property="catalogId"/>
-        <result column="article_type_id" jdbcType="INTEGER" property="articleTypeId"/>
+        <result column="article_type" jdbcType="INTEGER" property="articleType"/>
         <result column="source" jdbcType="TINYINT" property="source"/>
         <result column="source_url" jdbcType="VARCHAR" property="sourceUrl"/>
         <result column="offical_stat" jdbcType="TINYINT" property="officalStat"/>
@@ -71,7 +72,7 @@
         <result column="column_name" jdbcType="VARCHAR" property="columnName"/>
         <result column="catalog_name" jdbcType="VARCHAR" property="catalogName"/>
         <result column="catalog_id" jdbcType="BIGINT" property="catalogId"/>
-        <collection property="tagVos" ofType="com.pn.common.vos.article.TagVo" >
+        <collection property="tagVos" ofType="com.pn.common.vos.article.TagVo">
             <result column="tag_id" jdbcType="BIGINT" property="tagId"/>
             <result column="tag_name" jdbcType="VARCHAR" property="tagName"/>
         </collection>
@@ -90,7 +91,8 @@
         picture,
         summary,
         catalog_id,
-        article_type_id,
+        article_type,
+        read_type,
         `source`,
         source_url,
         offical_stat,
@@ -115,7 +117,7 @@
                A.picture,
                A.summary,
                A.catalog_id,
-               A.article_type_id,
+               A.article_type,
                A.`source`,
                A.source_url,
                A.offical_stat,
@@ -159,25 +161,24 @@
     </select>
 
     <select id="indexPage" resultMap="ArticleIndexBo">
-        select
-        article.id  as article_id,
-        article.user_id as user_id,
-        user.avatar as avatar,
-        user.full_name as username,
-        article.title as title,
-        article.summary as summary,
-        article.short_title as short_title,
-        article.picture as picture,
-        article.offical_stat as offical_stat,
-        article.topping_stat as topping_stat,
-        article.recommend as recommend,
-        article.update_at as update_at,
-        column_info.id as column_id,
-        column_info.column_name as column_name,
-        catalog.id as catalog_id,
-        catalog.category_name as catalog_name,
-        tag.id as tag_id,
-        tag.tag_name = tag_name
+        select article.id              as article_id,
+               article.user_id         as user_id,
+               user.avatar             as avatar,
+               user.full_name          as username,
+               article.title           as title,
+               article.summary         as summary,
+               article.short_title     as short_title,
+               article.picture         as picture,
+               article.offical_stat    as offical_stat,
+               article.topping_stat    as topping_stat,
+               article.recommend       as recommend,
+               article.update_at       as update_at,
+               column_info.id          as column_id,
+               column_info.column_name as column_name,
+               catalog.id              as catalog_id,
+               catalog.category_name   as catalog_name,
+               tag.id                  as tag_id,
+               tag.tag_name = tag_name
         from pn_article as article
                  left join pn_user as user on article.user_id = user.id
                  left join pn_catalog as catalog on article.catalog_id = catalog.id
@@ -197,16 +198,15 @@
             <if test="param.articleId != null">
                 and article.id = #{param.articleId,jdbcType=BIGINT}
             </if>
-            <if test="param.catalogId!=null">
+            <if test="param.catalogId != null">
                 and catalog.id = #{param.catalogId}
             </if>
-            <if test="param.columnId!=null">
+            <if test="param.columnId != null">
                 and column_info.id = #{param.columnId}
             </if>
-            <if test="param.tagId!=null">
+            <if test="param.tagId != null">
                 and tag.id = #{param.tagId}
             </if>
         </where>
     </select>
-
 </mapper>

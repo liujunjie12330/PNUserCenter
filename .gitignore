@@ -40,3 +40,4 @@ build/
 /.idea/
 /logs/
 /web/logs/PNUserCenter__job.log
+/web/logs/

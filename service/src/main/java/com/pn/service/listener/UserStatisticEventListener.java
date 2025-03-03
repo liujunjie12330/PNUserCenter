@@ -1,16 +1,15 @@
-package com.pn.service.impls.listener;
+package com.pn.service.listener;
 
 
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
 import com.pn.common.vos.count.CommentDO;
-import com.pn.common.vos.notify.NotifyMsgEvent;
 import com.pn.dao.entity.PnUserFoot;
+import com.pn.service.bean.notify.NotifyMsgEvent;
 import com.pn.service.utils.RedisCache;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-
 import java.util.Objects;
 
 import static com.pn.common.constant.CountConstant.*;

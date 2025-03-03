@@ -3,16 +3,14 @@ package com.pn.service.listener;
 import com.pn.common.constant.CountConstant;
 import com.pn.common.enums.NotifyEnum;
 import com.pn.common.vos.count.CommentDO;
-import com.pn.common.vos.notify.NotifyMsgEvent;
+import com.pn.service.bean.notify.NotifyMsgEvent;
 import com.pn.dao.entity.PnUserFoot;
-import com.pn.service.impls.listener.UserStatisticEventListener;
 import com.pn.web.PNUserCenterApp;
 import java.util.Date;
 import javax.annotation.Resource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.test.context.junit4.SpringRunner;
 
 

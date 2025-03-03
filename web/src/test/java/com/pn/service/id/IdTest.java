@@ -1,7 +1,8 @@
 package com.pn.service.id;
 
 import cn.hutool.core.lang.Snowflake;
-import cn.hutool.core.util.IdUtil;
+import com.pn.service.utils.id.IdUtil;
+import io.github.classgraph.json.Id;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
@@ -12,11 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class IdTest {
     public static void main(String[] args) {
-        Snowflake snowflake = IdUtil.getSnowflake(1, 1);
-        long id = snowflake.nextId();
-        System.out.println(id);
-//简单使用
-        long s = IdUtil.getSnowflakeNextId();
-        System.out.println(s);
+        System.out.println(IdUtil.genId());
     }
 }

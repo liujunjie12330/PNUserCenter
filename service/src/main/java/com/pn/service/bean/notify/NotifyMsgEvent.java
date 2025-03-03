@@ -1,4 +1,4 @@
-package com.pn.common.vos.notify;
+package com.pn.service.bean.notify;
 
 import com.pn.common.enums.NotifyEnum;
 import lombok.Data;

@@ -52,8 +52,13 @@ public class PnArticle extends BaseModel {
     /**
      * 文章类型
      */
-    @TableField(value = "article_type_id")
-    private Integer articleTypeId;
+    @TableField(value = "article_type")
+    private Integer articleType;
+    /**
+     * 阅读类型
+     */
+    @TableField(value = "read_type")
+    private Integer readType;
 
     /**
      * 来源：1-转载，2-原创，3-翻译

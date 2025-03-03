@@ -18,6 +18,9 @@ import java.util.List;
 @Builder
 public class ArticleAdminVo extends BaseModelVo {
     private static final long serialVersionUID = 1492677654651773859L;
+    /**
+     * 文章id
+     */
     private Long articleId;
 
     /**

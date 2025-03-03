@@ -50,5 +50,6 @@ public interface PNUserCenterConstant {
             "/v1/usercenter/server/user/register",
             "/v1/usercenter/server/user/login/**",
             "/v1/usercenter/server/captcha/getCode/**",
-            "/v1/usercenter/server/user/callback/login/**");
+            "/v1/usercenter/server/user/callback/login/**",
+            "/v1/usercenter/server/alipay/**");
 }

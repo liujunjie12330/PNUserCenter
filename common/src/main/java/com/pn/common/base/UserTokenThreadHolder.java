@@ -38,6 +38,10 @@ public class UserTokenThreadHolder {
         return userVo;
     }
 
+    public static Boolean isLogin(){
+        return Objects.nonNull(userThreadLocal.get());
+    }
+
 
     /**
      * 防止内存泄漏

@@ -4,9 +4,11 @@ import com.pn.common.enums.PushStatusEnum;
 import com.pn.common.reqParams.article.ArticleSaveParams;
 import com.pn.common.reqParams.article.ColumnParam;
 import com.pn.common.reqParams.article.TagParam;
+import com.pn.common.vos.article.*;
 import com.pn.dao.entity.*;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -30,7 +32,7 @@ public class ArticleCoverUtil {
         article.setPicture(params.getCover());
         article.setSummary(params.getSummary());
         article.setCatalogId(params.getCategoryId());
-        article.setArticleTypeId(params.getArticleType());
+        article.setArticleType(params.getArticleType());
         article.setSource(params.getSource());
         article.setSourceUrl(params.getSourceUrl());
         article.setStatus(params.getStatus());
@@ -86,6 +88,44 @@ public class ArticleCoverUtil {
         pnTag.setStatus(PushStatusEnum.OFFLINE.getCode());
         pnTag.setTagType(2);
         return pnTag;
+    }
+
+    public static ArticleVO coverToArticleVo(PnArticle article,
+                                              PnArticleDetail articleDetail,
+                                              List<PnTag> tagList,
+                                              PnColumnInfo columnInfo,
+                                              PnCatalog catalog,
+                                              PnUser user) {
+        ArticleVO articleVO = new ArticleVO();
+        articleVO.setAuthorInfo(SimpleUserInfoDTO
+                .builder()
+                .userId(user.getId()).avatar(user.getAvatar())
+                .name(user.getFullName())
+                .build());
+        articleVO.setArticleId(article.getId());
+        articleVO.setTitle(article.getTitle());
+        articleVO.setShortTitle(article.getShortTitle());
+        articleVO.setCover(article.getPicture());
+        articleVO.setSummary(article.getSummary());
+        articleVO.setArticleType(article.getArticleType());
+        articleVO.setSource(article.getSource());
+        articleVO.setSourceUrl(article.getSourceUrl());
+        articleVO.setOfficalStat(article.getOfficalStat());
+        articleVO.setPayImageUrl(article.getPayImageUrl());
+        articleVO.setRecommend(article.getRecommend());
+        articleVO.setContext(articleDetail.getContent());
+        articleVO.setCountVo(null);
+        articleVO.setTags(ListUtil.coverToListVo(tagList, tag -> TagVo
+                .builder()
+                .tagId(tag.getId())
+                .tagName(tag.getTagName())
+                .build()));
+        articleVO.setCatalog(CatalogPaveVo
+                .builder()
+                .categoryId(catalog.getId())
+                .categoryName(catalog.getCategoryName())
+                .build());
+        return articleVO;
     }
 
 }

@@ -1,69 +1,50 @@
-package com.pn.service.paytest;
+package com.pn.web.controller.pay;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.AlipayConfig;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradePagePayModel;
-import com.alipay.api.domain.AlipayTradePayModel;
 import com.alipay.api.request.AlipayTradePagePayRequest;
-import com.alipay.api.request.AlipayTradePayRequest;
 import com.alipay.api.response.AlipayTradePagePayResponse;
-import com.alipay.api.response.AlipayTradePayResponse;
-import com.pn.web.PNUserCenterApp;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import com.pn.common.base.BaseResponse;
+import com.pn.common.constant.PNUserCenterConstant;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
-@SpringBootTest(classes = PNUserCenterApp.class)
-@RunWith(SpringRunner.class)
-public class AlipayTradePay {
+/**
+ * ali支付接口
+ */
+@RestController
+@RequestMapping(PNUserCenterConstant.BASE_URL+"/alipay")
+public class AliPayController {
 
     @Resource
     private AlipayConfig alipayConfig;
 
-    /**
-     * 付款码支付场景
-     *
-     * @throws AlipayApiException
-     */
-    @Test
-    public void test01() throws AlipayApiException {
-        AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig);
-        AlipayTradePayRequest request = new AlipayTradePayRequest();
-        AlipayTradePayModel model = new AlipayTradePayModel();
-        model.setOutTradeNo("20150320010101001");
-        model.setTotalAmount("88.88");
-        model.setSubject("Iphone6 16G");
-        //支付宝的付款码
-        model.setAuthCode("281071090222874589");
-        model.setScene("bar_code");
-        request.setBizModel(model);
-        AlipayTradePayResponse response = alipayClient.execute(request);
-        System.out.println(response.getBody());
-        if (response.isSuccess()) {
-            System.out.println("调用成功");
-        } else {
-            System.out.println("调用失败");
-            // sdk版本是"4.38.0.ALL"及以上,可以参考下面的示例获取诊断链接
-            // String diagnosisUrl = DiagnosisUtils.getDiagnosisUrl(response);
-            // System.out.println(diagnosisUrl);
-        }
-    }
+    @Value("${alipay.notifyUrl}")
+    private String notifyUrl;
 
-    @Test
-    public void test02() throws AlipayApiException {
+    @GetMapping("pay")
+    public void pay(HttpServletResponse httpServletResponse) throws AlipayApiException, IOException {
         AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig);
         // 构造请求参数以调用接口
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
         AlipayTradePagePayModel model = new AlipayTradePagePayModel();
-
+        request.setNotifyUrl(notifyUrl);
         // 设置商户订单号
         model.setOutTradeNo(generateOrderNumber("",256));
 
@@ -90,14 +71,17 @@ public class AlipayTradePay {
 
         System.out.println(pageRedirectionData);
 
-        if (response.isSuccess()) {
-            System.out.println("调用成功");
-        } else {
-            System.out.println("调用失败");
-            // sdk版本是"4.38.0.ALL"及以上,可以参考下面的示例获取诊断链接
-            // String diagnosisUrl = DiagnosisUtils.getDiagnosisUrl(response);
-            // System.out.println(diagnosisUrl);
+        httpServletResponse.sendRedirect(pageRedirectionData);
+    }
+
+    @PostMapping("/callback")
+    public BaseResponse<String> callback(HttpServletRequest request){
+        System.out.println(request);
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        for (Map.Entry<String, String[]> stringEntry : parameterMap.entrySet()) {
+            System.out.println(stringEntry.getKey()+"--------"+ Arrays.toString(stringEntry.getValue()));
         }
+        return null;
     }
 
     public static String generateOrderNumber(String merchantPrefix, int maxLength) {

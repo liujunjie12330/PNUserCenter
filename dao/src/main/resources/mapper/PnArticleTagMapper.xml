@@ -24,4 +24,11 @@
       article_id,
       tag_id
   </sql>
+
+  <select id="getTagIdsByArticleId" resultType="java.lang.Long">
+      select article_id
+      from pn_article_tag
+      where is_deleted = 0
+        and article_id = #{articleId}
+  </select>
 </mapper>

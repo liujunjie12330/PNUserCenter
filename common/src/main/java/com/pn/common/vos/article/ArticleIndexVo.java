@@ -10,7 +10,7 @@ import java.util.List;
  * 文章首页列表vo
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -79,7 +79,7 @@ public class ArticleIndexVo extends PageParam {
     /**
      * 文章统计信息
      */
-    private ArticleFootCountDTO articleFootCountDTO;
+    private ArticleFootCountVo articleFootCountVo;
     /**
      * 标签信息
      */

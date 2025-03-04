@@ -10,7 +10,7 @@ import com.pn.common.vos.login.UserVo;
 import com.pn.dao.entity.PnRole;
 import com.pn.dao.mapper.PnRoleMapper;
 import com.pn.service.RoleSettingService;
-import com.pn.service.utils.cover.UserRoleCoverUtil;
+import com.pn.service.utils.cover.UserCoverUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +37,7 @@ public class RoleSettingServiceImpl extends ServiceImpl<PnRoleMapper, PnRole> im
 
     private Long insert(UserRolePermissionSettingParam param) {
         UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
-        PnRole pnRole = UserRoleCoverUtil.paramCoverToPnRole(null, param, currentUser.getId());
+        PnRole pnRole = UserCoverUtil.paramCoverToPnRole(null, param, currentUser.getId());
         save(pnRole);
         return pnRole.getId();
     }
@@ -48,7 +48,7 @@ public class RoleSettingServiceImpl extends ServiceImpl<PnRoleMapper, PnRole> im
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
         UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
-        pnRole = UserRoleCoverUtil.paramCoverToPnRole(pnRole, param, currentUser.getId());
+        pnRole = UserCoverUtil.paramCoverToPnRole(pnRole, param, currentUser.getId());
         this.updateById(pnRole);
         return pnRole.getId();
     }

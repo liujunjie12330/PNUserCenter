@@ -1,5 +1,6 @@
 package com.pn.service.utils.cover;
 
+import com.alipay.api.response.AlipayUserInfoShareResponse;
 import com.pn.common.enums.PushStatusEnum;
 import com.pn.common.reqParams.article.ArticleSaveParams;
 import com.pn.common.reqParams.article.ColumnParam;
@@ -17,9 +18,6 @@ import java.util.Objects;
 public class ArticleCoverUtil {
     /**
      * 构建保存对象 params==>bean
-     *
-     * @param params
-     * @return
      */
     public static PnArticle paramCoverToPnArticle(PnArticle article, ArticleSaveParams params, Long userId) {
         if (Objects.isNull(article)) {
@@ -89,6 +87,8 @@ public class ArticleCoverUtil {
         pnTag.setTagType(2);
         return pnTag;
     }
+
+
 
     public static ArticleVO coverToArticleVo(PnArticle article,
                                               PnArticleDetail articleDetail,

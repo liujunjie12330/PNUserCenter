@@ -6,6 +6,6 @@ import com.pn.dao.entity.PnUser;
 /**
  * 用户操作
  */
-public interface UserSettingService extends IService<PnUser> {
-
+public interface UserSettingService  {
+    void bindUserAlipay(String authCode, Long userId);
 }

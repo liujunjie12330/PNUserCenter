@@ -74,15 +74,7 @@ public class AliPayController {
         httpServletResponse.sendRedirect(pageRedirectionData);
     }
 
-    @PostMapping("/callback")
-    public BaseResponse<String> callback(HttpServletRequest request){
-        System.out.println(request);
-        Map<String, String[]> parameterMap = request.getParameterMap();
-        for (Map.Entry<String, String[]> stringEntry : parameterMap.entrySet()) {
-            System.out.println(stringEntry.getKey()+"--------"+ Arrays.toString(stringEntry.getValue()));
-        }
-        return null;
-    }
+
 
     public static String generateOrderNumber(String merchantPrefix, int maxLength) {
         // 获取当前时间戳

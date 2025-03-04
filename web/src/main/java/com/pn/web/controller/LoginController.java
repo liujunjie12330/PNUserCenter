@@ -83,11 +83,13 @@ public class LoginController {
     }
 
     @GetMapping("/login/byGitlab")
-    public void loginBylab(HttpServletResponse response) throws IOException {
+    public void loginByGitlab(HttpServletResponse response) throws IOException {
         AuthRequest authRequest = auth.getAuthRequest(AuthEnum.GITLAB.getName());
         String authorizeUrl = authRequest.authorize(AuthStateUtils.createState());
         response.sendRedirect(authorizeUrl);
     }
+
+
 
     @GetMapping("/callback/login/{resource}")
     public void login(@PathVariable("resource") String resource, AuthCallback callback, HttpServletResponse response) throws IOException {
@@ -106,4 +108,6 @@ public class LoginController {
         String redirectUrl = "http://localhost:8000/welcome?token=" + token;
         response.sendRedirect(redirectUrl);
     }
+
+
 }

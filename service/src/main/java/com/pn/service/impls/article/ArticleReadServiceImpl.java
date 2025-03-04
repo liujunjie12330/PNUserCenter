@@ -107,6 +107,7 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
         if (UserTokenThreadHolder.isLogin()) {
             throw new BizException(StatusCode.USER_NO_LOGIN);
         }
+
         return null;
     }
 

@@ -9,7 +9,7 @@ import com.pn.common.vos.login.UserVo;
 import com.pn.dao.entity.PnRolePermission;
 import com.pn.dao.mapper.PnRolePermissionMapper;
 import com.pn.service.RolePermissionSettingService;
-import com.pn.service.utils.cover.UserRoleCoverUtil;
+import com.pn.service.utils.cover.UserCoverUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -29,7 +29,7 @@ public class RolePermissionSettingServiceIml extends ServiceImpl<PnRolePermissio
 
     private Long insert(UserRolePermissionSettingParam param){
         UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
-        PnRolePermission rolePermission = UserRoleCoverUtil.paramCoverToPnRolePermission(null, param, currentUser.getId());
+        PnRolePermission rolePermission = UserCoverUtil.paramCoverToPnRolePermission(null, param, currentUser.getId());
         this.baseMapper.insert(rolePermission);
         return rolePermission.getId();
     }
@@ -40,7 +40,7 @@ public class RolePermissionSettingServiceIml extends ServiceImpl<PnRolePermissio
         if(Objects.isNull(rolePermission)){
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
-        UserRoleCoverUtil.paramCoverToPnRolePermission(rolePermission, param, currentUser.getId());
+        UserCoverUtil.paramCoverToPnRolePermission(rolePermission, param, currentUser.getId());
         updateById(rolePermission);
         return rolePermission.getId() ;
     }

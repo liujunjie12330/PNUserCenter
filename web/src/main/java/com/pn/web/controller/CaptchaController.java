@@ -27,8 +27,6 @@ public class CaptchaController {
 
     /**
      * 验证码获取
-     * @param username
-     * @return
      */
     @GetMapping("/getCode/{username}")
     public BaseResponse<String> getCode(@PathVariable("username") String username) {

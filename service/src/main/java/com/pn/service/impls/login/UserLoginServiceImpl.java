@@ -31,11 +31,10 @@ import java.util.*;
 import static com.pn.common.utils.RegularUtil.isAccount;
 import static com.pn.common.utils.RegularUtil.isPassword;
 import static com.pn.service.utils.JWTUtil.sign;
+import static com.pn.service.utils.cover.UserCoverUtil.pnUserCoverToVo;
 
 /**
- * @author: javadadi
- * @Time: 19:27
- * @ClassName: UserLoginServiceImpl
+ * @author javadadi
  */
 @Service
 @Slf4j
@@ -67,20 +66,13 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
         PnUser pnUser = checkPreLogin(username, password, code);
         checkPassword(username, password);
         //校验通过，设置登陆标志
-        UserVo userVo = getUserVo(pnUser);
-        String jsonStr = JSONUtil.toJsonStr(userVo);
-        redisCache.set(PNUserCenterConstant.USER_LOGIN + pnUser.getId() + pnUser.getUsername(), jsonStr);
-        Map<String, String> map = new HashMap<>();
-        map.put("username", userVo.getUsername());
-        map.put("userId", String.valueOf(userVo.getId()));
-        String token = sign(map);
-        return token;
+        UserVo userVo = pnUserCoverToVo(pnUser);
+        return getToken(userVo);
     }
+
 
     /**
      * 第三方登陆
-     *
-     * @param authUser
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -93,17 +85,17 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
         if (Objects.nonNull(oAuthUser)) {
             Long userId = oAuthUser.getUserId();
             //上次登陆可能出现异常，初始化用户账号
+            PnUser pnUser;
             if (Objects.equals(userId, 0L)) {
-                PnUser pnUser = initUser(authUser);
+                pnUser = initUser(authUser);
                 pnUserMapper.addUser(pnUser);
                 oAuthUser.setUserId(pnUser.getId());
                 userOauthMapper.updateById(oAuthUser);
-                userVo = getUserVo(pnUser);
             } else {
                 //已经绑定有本平台账号
-                PnUser pnUser = pnUserMapper.selectById(oAuthUser.getUserId());
-                userVo = getUserVo(pnUser);
+                pnUser = pnUserMapper.selectById(oAuthUser.getUserId());
             }
+            userVo = pnUserCoverToVo(pnUser);
         } else {
             //第一次登陆本平台账号
             PnUserOauth pnUserOauth = initOauthUser(authUser);
@@ -111,15 +103,9 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
             pnUserMapper.addUser(pnUser);
             pnUserOauth.setUserId(pnUser.getId());
             userOauthMapper.insert(pnUserOauth);
-            userVo = getUserVo(pnUser);
+            userVo = pnUserCoverToVo(pnUser);
         }
-        String jsonStr = JSONUtil.toJsonStr(userVo);
-        redisCache.set(PNUserCenterConstant.USER_LOGIN + userVo.getId() + userVo.getUsername(), jsonStr);
-        Map<String, String> map = new HashMap<>();
-        map.put("username", userVo.getUsername());
-        map.put("userId", String.valueOf(userVo.getId()));
-        String token = sign(map);
-        return token;
+        return getToken(userVo);
     }
 
     /**
@@ -142,17 +128,14 @@ public class UserLoginServiceImpl extends ServiceImpl<PnUserMapper, PnUser> impl
         return oAuthUser;
     }
 
-    private UserVo getUserVo(PnUser pnUser) {
-        return UserVo.builder()
-                .id(pnUser.getId())
-                .username(pnUser.getUsername())
-                .fullName(pnUser.getFullName())
-                .email(pnUser.getEmail())
-                .phone(pnUser.getPhone())
-                .isAdmin(pnUser.getIsAdmin())
-                .avatar(pnUser.getAvatar())
-                .lastLoginDate(pnUser.getLastLoginDate())
-                .build();
+    private String getToken(UserVo userVo) {
+        String jsonStr = JSONUtil.toJsonStr(userVo);
+        redisCache.set(PNUserCenterConstant.USER_LOGIN + userVo.getId() + userVo.getUsername(), jsonStr);
+        Map<String, String> map = new HashMap<>();
+        map.put("username", userVo.getUsername());
+        map.put("userId", String.valueOf(userVo.getId()));
+        String token = sign(map);
+        return token;
     }
 
     private PnUser initUser(AuthUser authUser) {

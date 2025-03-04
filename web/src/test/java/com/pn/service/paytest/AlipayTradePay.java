@@ -10,6 +10,11 @@ import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.request.AlipayTradePayRequest;
 import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.alipay.api.response.AlipayTradePayResponse;
+import com.pn.dao.entity.PnAlipayUserInfo;
+import com.pn.dao.mapper.PnAlipayUserInfoMapper;
+import com.pn.service.impls.PayService;
+import com.pn.service.impls.pay.AliPayService;
+import com.pn.service.impls.pay.dto.AlipayToThirdUserDto;
 import com.pn.web.PNUserCenterApp;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +32,30 @@ public class AlipayTradePay {
 
     @Resource
     private AlipayConfig alipayConfig;
+
+    @Resource(type = AliPayService.class)
+    private PayService aliPayService;
+
+    @Test
+    public void payTest(){
+        AlipayToThirdUserDto alipayToThirdUserDto = new AlipayToThirdUserDto();
+        alipayToThirdUserDto.setArticleId(0L);
+        alipayToThirdUserDto.setAuthorId(1L);
+        alipayToThirdUserDto.setOutBizNo("126159111161561891998");
+        alipayToThirdUserDto.setTransAmount("0.88");
+        alipayToThirdUserDto.setTitle("转账测试");
+        alipayToThirdUserDto.setRemark("你好");
+
+        aliPayService.payToThirdUser(alipayToThirdUserDto);
+    }
+
+    @Resource
+    private PnAlipayUserInfoMapper infoMapper;
+    @Test
+    public void testMapper(){
+        PnAlipayUserInfo byUserId = infoMapper.getByUserId(1L);
+        System.out.println(byUserId);
+    }
 
     /**
      * 付款码支付场景

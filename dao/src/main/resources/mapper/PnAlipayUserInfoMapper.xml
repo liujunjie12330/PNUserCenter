@@ -68,4 +68,12 @@
     <select id="exist" resultType="java.lang.Boolean">
         SELECT EXISTS(SELECT 1 FROM pn_alipay_user_info WHERE alipay_uuid = #{uuid})
     </select>
+
+    <select id="getByUserId" resultType="com.pn.dao.entity.PnAlipayUserInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from pn_alipay_user_info
+        where is_deleted = 0
+        and pn_user_id = #{userId}
+    </select>
 </mapper>

@@ -11,6 +11,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum StatusCode {
+
     /**
      * 用户中心相关
      */
@@ -43,7 +44,12 @@ public enum StatusCode {
      */
     ARTICLE_IS_REVIEWING(3000, "文章正在审核中!"),
     ARTICLE_HAS_SENSITIVE_WORD(3001, "文本含有敏感字!"),
-    COLUMN_HAS_ARTICLE(3002, "专栏下含有文章！");
+    COLUMN_HAS_ARTICLE(3002, "专栏下含有文章！"),
+    /**
+     * 支付相关
+     */
+    UNBOUND_PAYMENT(4001,"没有绑定支付信息")
+    ;
     /**
      * 状态码
      */

@@ -1,6 +1,7 @@
 package com.pn.service.utils.cover;
 
 import com.alipay.api.response.AlipayUserInfoShareResponse;
+import com.pn.common.enums.PayTypeEnum;
 import com.pn.common.enums.PushStatusEnum;
 import com.pn.common.enums.ThirdPayWayEnum;
 import com.pn.common.reqParams.article.ArticleSaveParams;
@@ -138,6 +139,7 @@ public class ArticleCoverUtil {
         codeDto.setTransAmount(StringUtils.isEmpty(article.getPayAmount())?"0.88":article.getPayAmount());
         codeDto.setTitle(String.format("尊敬的用户,您正在支付文章:%s",article.getTitle()));
         codeDto.setRemark("本次支付的结果会以邮件或者平台消息通知您");
+        codeDto.setPayType(PayTypeEnum.ARTICLE.getType());
         return codeDto;
     }
 

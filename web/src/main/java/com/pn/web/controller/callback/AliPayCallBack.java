@@ -23,14 +23,13 @@ public class AliPayCallBack {
     @Resource
     private UserSettingService userSettingService;
 
+
+
     @RequestMapping("/payOrOauth")
     public BaseResponse<String> callback(HttpServletRequest request){
         Map<String, String[]> parameterMap = request.getParameterMap();
         /*支付回调 */
-        if (parameterMap.containsKey("payment_amount")||parameterMap.containsKey("transaction_id")){
-            for (Map.Entry<String, String[]> stringEntry : parameterMap.entrySet()) {
-                System.out.println(stringEntry.getKey()+"--------"+ Arrays.toString(stringEntry.getValue()));
-            }
+        if (parameterMap.containsKey("out_trade_no")||parameterMap.containsKey("trade_no")){
 
         } else {
             /*授权回调*/

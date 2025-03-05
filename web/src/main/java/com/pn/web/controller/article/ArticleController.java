@@ -6,14 +6,15 @@ import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.reqParams.article.ArticleIndexParam;
 import com.pn.common.reqParams.article.ArticleSaveParams;
 import com.pn.common.utils.ResultUtils;
-import com.pn.common.vos.article.ArticleVO;
 import com.pn.common.vos.article.ArticleIndexVo;
+import com.pn.common.vos.article.ArticleVO;
 import com.pn.service.ArticleReadService;
 import com.pn.service.ArticleWriteService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * 文章前台接口
@@ -30,8 +31,17 @@ public class ArticleController {
 
     @GetMapping("/read/{id}")
     public BaseResponse<ArticleVO> read(@PathVariable("id") Long id, HttpServletResponse response) {
-
-        return null;
+        ArticleVO read = readService.read(id);
+        if (read.isPaid()) {
+            try {
+                response.sendRedirect(read.getUrl());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            return ResultUtils.success(read);
+        }
+        return ResultUtils.success(null);
     }
 
     @PostMapping("/page")

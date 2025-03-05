@@ -46,8 +46,8 @@ public class UserSettingController {
         }
     }
 
-    @GetMapping("/existUserId")
-    public BaseResponse<Boolean> userExistAlipayUserInfo(HttpServletRequest request){
+    @GetMapping("/existAlipayUser")
+    public BaseResponse<Boolean> existAlipayUserInfo(HttpServletRequest request){
         UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
         Boolean res = pnAlipayUserInfoMapper.existUser(currentUser.getId());
         return ResultUtils.success(res);

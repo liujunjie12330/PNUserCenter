@@ -8,9 +8,10 @@ import com.pn.service.impls.pay.dto.AlipayToThirdUserDto;
 /**
  * 统一支付接口
  */
-public interface PayService extends IService<PnTransactions> {
+public interface PayService {
 
     void payToThirdUser(AlipayToThirdUserDto alipay);
 
     String payByQrCode(AlipayByQrCodeDto alipay);
+
 }

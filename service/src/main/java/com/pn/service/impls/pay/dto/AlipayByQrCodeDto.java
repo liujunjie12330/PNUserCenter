@@ -8,6 +8,10 @@ import java.io.Serializable;
 public class AlipayByQrCodeDto implements Serializable {
     private static final long serialVersionUID = 7968342473272268554L;
     /**
+     * 交易类型
+     */
+    private String payType;
+    /**
      * 系统生成的订单号
      */
     private String outBizNo;

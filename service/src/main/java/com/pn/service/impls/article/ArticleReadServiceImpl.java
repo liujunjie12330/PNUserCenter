@@ -110,7 +110,7 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
 
     private ArticleVO readPay(PnArticle article) {
         //首先查看登陆状态
-        if (UserTokenThreadHolder.isLogin()) {
+        if (!UserTokenThreadHolder.isLogin()) {
             throw new BizException(StatusCode.USER_NO_LOGIN);
         }
         //查询是否支付过
@@ -131,7 +131,7 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
 
     private ArticleVO readLogin(PnArticle article) {
         //首先查看登陆状态
-        if (UserTokenThreadHolder.isLogin()) {
+        if (!UserTokenThreadHolder.isLogin()) {
             throw new BizException(StatusCode.USER_NO_LOGIN);
         }
         return readNormal(article);

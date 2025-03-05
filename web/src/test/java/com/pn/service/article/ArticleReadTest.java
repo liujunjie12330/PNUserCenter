@@ -1,8 +1,10 @@
 package com.pn.service.article;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.pn.common.base.UserTokenThreadHolder;
 import com.pn.common.reqParams.article.ArticleIndexParam;
 import com.pn.common.vos.article.ArticleIndexVo;
+import com.pn.common.vos.login.UserVo;
 import com.pn.service.ArticleReadService;
 import com.pn.web.PNUserCenterApp;
 import org.junit.Test;
@@ -24,9 +26,16 @@ public class ArticleReadTest {
     private ArticleReadService readService;
 
     @Test
-    public void test(){
+    public void test() {
         Page<ArticleIndexVo> page =
                 readService.page(new ArticleIndexParam());
         System.out.println(page.getRecords());
+    }
+
+    @Test
+        public void testPayArticle() {
+        UserVo userVo = UserVo.builder().id(1L).build();
+        UserTokenThreadHolder.addCurrentUser(userVo);
+        readService.read(2506425347227649L);
     }
 }

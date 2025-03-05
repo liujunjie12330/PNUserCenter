@@ -11,6 +11,7 @@ import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
 import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.pn.common.enums.PayTypeEnum;
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
 import com.pn.dao.entity.PnAlipayUserInfo;
@@ -20,7 +21,9 @@ import com.pn.dao.mapper.PnTransactionsMapper;
 import com.pn.service.PayService;
 import com.pn.service.impls.pay.dto.AlipayByQrCodeDto;
 import com.pn.service.impls.pay.dto.AlipayToThirdUserDto;
+import com.pn.service.utils.RedisCache;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +32,7 @@ import java.util.Objects;
 
 @Service
 @Slf4j
-public class AliPayService extends ServiceImpl<PnTransactionsMapper, PnTransactions> implements PayService {
+public class AliPayService  implements PayService {
 
     @Resource
     private AlipayConfig alipayConfig;
@@ -37,6 +40,11 @@ public class AliPayService extends ServiceImpl<PnTransactionsMapper, PnTransacti
     @Resource
     private PnAlipayUserInfoMapper infoMapper;
 
+    @Resource
+    private RedisCache cache;
+
+    @Value("${alipay.notifyUrl}")
+    private String notifyUrl;
     /**
      * 向第三方用户转账===>一般用于文章支付观看
      */
@@ -56,6 +64,8 @@ public class AliPayService extends ServiceImpl<PnTransactionsMapper, PnTransacti
             AlipayFundTransToaccountTransferModel model = new AlipayFundTransToaccountTransferModel();
             //商户转账唯一订单号
             model.setOutBizNo(alipay.getOutBizNo());
+            //把支付类型存到redis里面
+            cache.set(PayTypeEnum.PAY_TO_THIRD.getType()+alipay.getOutBizNo(),PayTypeEnum.PAY_TO_THIRD.getType());
             //收款方账户类型。
             //1、PayeeType=ALIPAY_USERID：PayeeAccount传值pid ,以2088开头的16位纯数字组成。
             //2、PayeeType=ALIPAY_LOGONID：PayeeAccount传值支付宝登录号(邮箱或手机号)
@@ -91,7 +101,8 @@ public class AliPayService extends ServiceImpl<PnTransactionsMapper, PnTransacti
 
             // 设置商户订单号
             model.setOutTradeNo(alipay.getOutBizNo());
-
+            //付款类型存到redis
+            cache.set(PayTypeEnum.PAY_TO_THIRD.getType()+alipay.getOutBizNo(),PayTypeEnum.PAY_TO_THIRD.getType());
             // 设置订单总金额
             model.setTotalAmount(alipay.getTransAmount());
 
@@ -107,6 +118,7 @@ public class AliPayService extends ServiceImpl<PnTransactionsMapper, PnTransacti
             // 设置商户自定义二维码宽度
             model.setQrcodeWidth(100L);
             request.setBizModel(model);
+            request.setNotifyUrl(notifyUrl);
             AlipayTradePagePayResponse response = alipayClient.pageExecute(request, "GET");
             //拿到返回的url
             String pageRedirectionData = response.getBody();

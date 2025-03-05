@@ -38,12 +38,7 @@ public class AlipayTradePay {
 
     @Test
     public void payTest(){
-        AlipayByQrCodeDto alipayByQrCodeDto = new AlipayByQrCodeDto();
-        alipayByQrCodeDto.setOutBizNo("12235672345645242323425t");
-        alipayByQrCodeDto.setTransAmount("0.88");
-        alipayByQrCodeDto.setTitle("支付");
-        alipayByQrCodeDto.setRemark("收拾收拾");
-        aliPayService.payByQrCode(alipayByQrCodeDto);
+
 
     }
 

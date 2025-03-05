@@ -74,10 +74,10 @@ public class ArticleWriteServiceImpl extends ServiceImpl<PnArticleMapper, PnArti
      * 插入文章 首次保存草稿或者发布文章
      */
     private Long insertArticle(ArticleSaveParams params, Long userId) {
+        PnArticle pnArticle = paramCoverToPnArticle(null, params, userId);
         //保存文章对象,首次创建文章，直接使用雪花算法生成文章的id
         Long id = IdUtil.genId();
-        params.setArticleId(id);
-        PnArticle pnArticle = paramCoverToPnArticle(null, params, userId);
+        pnArticle.setId(id);
         //是否需要进行审核
         if (needToReview() && StringUtils.equalsIgnoreCase(params.getActionType(), ArticleActionEnum.POST.getAction())) {
             pnArticle.setStatus(PushStatusEnum.REVIEW.getCode());

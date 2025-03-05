@@ -8,6 +8,7 @@ import java.util.Objects;
  * 三方平台支付方式
  */
 public enum ThirdPayWayEnum {
+    ALI_QR("alipay","1001",25000),
     // // 官方说明有效期五分钟，我们这里设置一下有效期为四分之后，避免正好卡在失效的时间点
     WX_H5("wx_h5", "H5", 250_000) {
         @Override

@@ -1,7 +1,8 @@
-package com.pn.service.impls;
+package com.pn.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.pn.dao.entity.PnTransactions;
+import com.pn.service.impls.pay.dto.AlipayByQrCodeDto;
 import com.pn.service.impls.pay.dto.AlipayToThirdUserDto;
 
 /**
@@ -10,4 +11,6 @@ import com.pn.service.impls.pay.dto.AlipayToThirdUserDto;
 public interface PayService extends IService<PnTransactions> {
 
     void payToThirdUser(AlipayToThirdUserDto alipay);
+
+    String payByQrCode(AlipayByQrCodeDto alipay);
 }

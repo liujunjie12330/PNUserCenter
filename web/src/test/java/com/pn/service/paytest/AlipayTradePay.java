@@ -12,9 +12,9 @@ import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.alipay.api.response.AlipayTradePayResponse;
 import com.pn.dao.entity.PnAlipayUserInfo;
 import com.pn.dao.mapper.PnAlipayUserInfoMapper;
-import com.pn.service.impls.PayService;
+import com.pn.service.PayService;
 import com.pn.service.impls.pay.AliPayService;
-import com.pn.service.impls.pay.dto.AlipayToThirdUserDto;
+import com.pn.service.impls.pay.dto.AlipayByQrCodeDto;
 import com.pn.web.PNUserCenterApp;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,15 +38,13 @@ public class AlipayTradePay {
 
     @Test
     public void payTest(){
-        AlipayToThirdUserDto alipayToThirdUserDto = new AlipayToThirdUserDto();
-        alipayToThirdUserDto.setArticleId(0L);
-        alipayToThirdUserDto.setAuthorId(1L);
-        alipayToThirdUserDto.setOutBizNo("126159111161561891998");
-        alipayToThirdUserDto.setTransAmount("0.88");
-        alipayToThirdUserDto.setTitle("转账测试");
-        alipayToThirdUserDto.setRemark("你好");
+        AlipayByQrCodeDto alipayByQrCodeDto = new AlipayByQrCodeDto();
+        alipayByQrCodeDto.setOutBizNo("12235672345645242323425t");
+        alipayByQrCodeDto.setTransAmount("0.88");
+        alipayByQrCodeDto.setTitle("支付");
+        alipayByQrCodeDto.setRemark("收拾收拾");
+        aliPayService.payByQrCode(alipayByQrCodeDto);
 
-        aliPayService.payToThirdUser(alipayToThirdUserDto);
     }
 
     @Resource

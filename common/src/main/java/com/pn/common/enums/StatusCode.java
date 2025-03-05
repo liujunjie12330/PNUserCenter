@@ -45,11 +45,12 @@ public enum StatusCode {
     ARTICLE_IS_REVIEWING(3000, "文章正在审核中!"),
     ARTICLE_HAS_SENSITIVE_WORD(3001, "文本含有敏感字!"),
     COLUMN_HAS_ARTICLE(3002, "专栏下含有文章！"),
+    NO_SUCH_ARTICLE(3003,"没有该文章的信息"),
     /**
      * 支付相关
      */
-    UNBOUND_PAYMENT(4001,"没有绑定支付信息")
-    ;
+    UNBOUND_PAYMENT(4001, "没有绑定支付信息"),
+    PAYMENT_FAILED(4002, "支付失败");
     /**
      * 状态码
      */

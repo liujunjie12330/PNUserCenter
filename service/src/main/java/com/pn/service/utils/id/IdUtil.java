@@ -50,7 +50,7 @@ public class IdUtil {
             lastTime = now;
             INCR.set((int) (Math.random() * 500));
         }
-        return payWay.getPrefix() + String.format("%06d", INCR.addAndGet(1)) + "-" + id;
+        return payWay.getPrefix() + String.format("%06d", INCR.addAndGet(1)) + id;
     }
 
     /**

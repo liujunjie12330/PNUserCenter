@@ -2,11 +2,14 @@ package com.pn.service.utils.cover;
 
 import com.alipay.api.response.AlipayUserInfoShareResponse;
 import com.pn.common.enums.PushStatusEnum;
+import com.pn.common.enums.ThirdPayWayEnum;
 import com.pn.common.reqParams.article.ArticleSaveParams;
 import com.pn.common.reqParams.article.ColumnParam;
 import com.pn.common.reqParams.article.TagParam;
 import com.pn.common.vos.article.*;
 import com.pn.dao.entity.*;
+import com.pn.service.impls.pay.dto.AlipayByQrCodeDto;
+import com.pn.service.utils.id.IdUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -126,6 +129,16 @@ public class ArticleCoverUtil {
                 .categoryName(catalog.getCategoryName())
                 .build());
         return articleVO;
+    }
+
+
+    public static AlipayByQrCodeDto articleCoverToDto(PnArticle article){
+        AlipayByQrCodeDto codeDto = new AlipayByQrCodeDto();
+        codeDto.setOutBizNo(IdUtil.genPayCode(ThirdPayWayEnum.ALI_QR,article.getId()));
+        codeDto.setTransAmount(StringUtils.isEmpty(article.getPayAmount())?"0.88":article.getPayAmount());
+        codeDto.setTitle(String.format("尊敬的用户,您正在支付文章:%s",article.getTitle()));
+        codeDto.setRemark("本次支付的结果会以邮件或者平台消息通知您");
+        return codeDto;
     }
 
 }

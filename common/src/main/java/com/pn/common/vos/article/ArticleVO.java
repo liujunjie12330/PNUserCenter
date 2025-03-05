@@ -1,7 +1,6 @@
 package com.pn.common.vos.article;
 
 
-import com.pn.common.enums.ArticleReadTypeEnum;
 import com.pn.common.enums.ArticleTypeEnum;
 import com.pn.common.enums.SourceTypeEnum;
 import lombok.AllArgsConstructor;
@@ -54,12 +53,14 @@ public class ArticleVO implements Serializable {
 
     /**
      * 文章类型
-     *@see ArticleTypeEnum#getDesc()
+     *
+     * @see ArticleTypeEnum#getDesc()
      */
     private Integer articleType;
 
     /**
      * 来源：1-转载，2-原创，3-翻译
+     *
      * @see SourceTypeEnum#getDesc()
      */
     private Integer source;
@@ -104,4 +105,18 @@ public class ArticleVO implements Serializable {
      * 分类信息
      */
     private CatalogPaveVo catalog;
+    /*下面的是支付相关的信息*/
+    private volatile boolean isPaid = false;
+
+    private volatile String url = "";
+
+    public boolean isPaid() {
+        return isPaid;
+    }
+
+    public void setPaid(boolean paid) {
+        isPaid = paid;
+    }
+
+
 }

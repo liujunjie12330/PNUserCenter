@@ -8,25 +8,26 @@ import com.pn.common.base.UserTokenThreadHolder;
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
 import com.pn.common.reqParams.article.ArticleIndexParam;
-import com.pn.common.vos.article.ArticleFootCountVo;
 import com.pn.common.vos.article.ArticleIndexVo;
 import com.pn.common.vos.article.ArticleVO;
+import com.pn.common.vos.login.UserVo;
 import com.pn.dao.bo.article.ArticleIndexBo;
 import com.pn.dao.entity.*;
 import com.pn.dao.mapper.*;
+import com.pn.service.ArticlePayService;
 import com.pn.service.ArticleReadService;
 import com.pn.service.utils.cover.ArticleCoverUtil;
 import com.pn.service.utils.cover.PageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 
-import static com.pn.common.enums.ArticleReadTypeEnum.LOGIN;
-import static com.pn.common.enums.ArticleReadTypeEnum.NORMAL;
+import static com.pn.common.enums.ArticleReadTypeEnum.*;
 
 /**
  * 文章前台
@@ -56,6 +57,9 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
     @Resource
     private PnColumnInfoMapper columnInfoMapper;
 
+    @Resource
+    private ArticlePayService articlePayService;
+
     @Override
     public Page<ArticleIndexVo> page(ArticleIndexParam param) {
         Page<ArticleIndexBo> page = new Page<>(param.getCurrent(), param.getSize());
@@ -71,7 +75,7 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
         return pageVo;
     }
 
-
+    @Override
     public ArticleVO read(Long id) {
         //首先查找文章是否存在
         PnArticle article = getById(id);
@@ -98,17 +102,30 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
         /*
          * 付费阅读
          */
-
+        if (Objects.equals(readType, PAY_READ.getType())) {
+            return readPay(article);
+        }
         return null;
     }
 
-    private ArticleVO readPay(PnArticle article){
+    private ArticleVO readPay(PnArticle article) {
         //首先查看登陆状态
         if (UserTokenThreadHolder.isLogin()) {
             throw new BizException(StatusCode.USER_NO_LOGIN);
         }
-
-        return null;
+        //查询是否支付过
+        UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
+        if (articlePayService.isPaid(article.getId(), currentUser.getId())) {
+            return readNormal(article);
+        }
+        String url = articlePayService.payArticle(article.getId());
+        if (StringUtils.isEmpty(url)) {
+            throw new BizException(StatusCode.SYSTEM_ERROR);
+        }
+        ArticleVO vo = new ArticleVO();
+        vo.setUrl(url);
+        vo.setPaid(true);
+        return vo;
     }
 
 

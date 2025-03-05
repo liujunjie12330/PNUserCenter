@@ -8,5 +8,6 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface PnAlipayUserInfoMapper extends BaseMapper<PnAlipayUserInfo> {
     Boolean exist(@Param("uuid")String uuid);
+    Boolean existUser(@Param("pn_user_id") Long pnUserId);
     PnAlipayUserInfo getByUserId(@Param("userId") Long userId);
 }

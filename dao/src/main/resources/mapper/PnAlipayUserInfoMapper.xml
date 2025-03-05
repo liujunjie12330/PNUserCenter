@@ -76,4 +76,8 @@
         where is_deleted = 0
         and pn_user_id = #{userId}
     </select>
+
+    <select id="existUser" resultType="java.lang.Boolean">
+        SELECT EXISTS(SELECT 1 FROM pn_alipay_user_info WHERE pn_user_id = #{pn_user_id})
+    </select>
 </mapper>

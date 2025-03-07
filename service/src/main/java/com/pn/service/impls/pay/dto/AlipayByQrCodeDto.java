@@ -1,32 +1,18 @@
 package com.pn.service.impls.pay.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class AlipayByQrCodeDto implements Serializable {
+public class AlipayByQrCodeDto extends PayBaseDto implements Serializable {
     private static final long serialVersionUID = 7968342473272268554L;
     /**
      * 交易类型
      */
     private String payType;
-    /**
-     * 系统生成的订单号
-     */
-    private String outBizNo;
-    /**
-     * 金额
-     */
-    private String transAmount;
-    /**
-     * 交易标题
-     */
-    private String title;
-    /**
-     * 备注
-     */
-    private String remark;
     /**
      * 产品码
      */

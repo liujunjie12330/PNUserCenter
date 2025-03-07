@@ -15,18 +15,28 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=true)
 @TableName(value = "pn_article_pay_record")
 public class PnArticlePayRecord extends BaseModel {
+    private static final long serialVersionUID = -9182855168332817116L;
     /**
      * 支付用户
      */
     @TableField(value = "pay_user_id")
-    private Long payUserId;
-
+    private String payUserId;
+    /**
+     * 支付用户的平台id
+     */
+    @TableField(value = "pay_pn_user_id")
+    private Long payPnUserId;
     /**
      * 收款用户
      */
     @TableField(value = "receive_user_id")
-    private Long receiveUserId;
+    private String receiveUserId;
 
+    /**
+     * 收款用户的平台id
+     */
+    @TableField(value = "receive_pn_user_id")
+    private Long receivePnUserId;
     /**
      * 文章ID
      */
@@ -67,7 +77,7 @@ public class PnArticlePayRecord extends BaseModel {
      * 支付金额
      */
     @TableField(value = "pay_amount")
-    private Integer payAmount;
+    private String payAmount;
 
     /**
      * 预支付ID
@@ -98,4 +108,5 @@ public class PnArticlePayRecord extends BaseModel {
      */
     @TableField(value = "pay_callback_time")
     private Date payCallbackTime;
+
 }

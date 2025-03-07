@@ -2,6 +2,7 @@ package com.pn.web.controller.callback;
 
 import com.pn.common.base.BaseResponse;
 import com.pn.common.constant.PNUserCenterConstant;
+import com.pn.service.PayRecordService;
 import com.pn.service.UserSettingService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,14 +24,15 @@ public class AliPayCallBack {
     @Resource
     private UserSettingService userSettingService;
 
-
+    @Resource
+    private PayRecordService payRecordService;
 
     @RequestMapping("/payOrOauth")
     public BaseResponse<String> callback(HttpServletRequest request){
         Map<String, String[]> parameterMap = request.getParameterMap();
         /*支付回调 */
         if (parameterMap.containsKey("out_trade_no")||parameterMap.containsKey("trade_no")){
-
+            payRecordService.saveRecord(parameterMap);
         } else {
             /*授权回调*/
             for (Map.Entry<String, String[]> stringEntry : parameterMap.entrySet()) {

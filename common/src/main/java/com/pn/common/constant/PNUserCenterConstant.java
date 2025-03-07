@@ -11,6 +11,10 @@ import java.util.List;
  */
 public interface PNUserCenterConstant {
     /**
+     * 文章支付前缀
+     */
+    public static final String ARTICLE_PAID = "article_paid";
+    /**
      * 文章的三种操作
      */
     static final List<String> ARTICLE_OPERATE = Arrays.asList("POST","SAVE","DELETE");

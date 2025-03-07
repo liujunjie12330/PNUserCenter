@@ -1,6 +1,5 @@
 package com.pn.service.utils.cover;
 
-import com.alipay.api.response.AlipayUserInfoShareResponse;
 import com.pn.common.enums.PayTypeEnum;
 import com.pn.common.enums.PushStatusEnum;
 import com.pn.common.enums.ThirdPayWayEnum;

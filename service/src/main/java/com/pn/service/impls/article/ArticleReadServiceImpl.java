@@ -1,6 +1,7 @@
 package com.pn.service.impls.article;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.alipay.api.AlipayApiException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
@@ -76,7 +77,7 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
     }
 
     @Override
-    public ArticleVO read(Long id) {
+    public ArticleVO read(Long id) throws AlipayApiException {
         //首先查找文章是否存在
         PnArticle article = getById(id);
         if (Objects.isNull(article)) {
@@ -108,7 +109,7 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
         return null;
     }
 
-    private ArticleVO readPay(PnArticle article) {
+    private ArticleVO readPay(PnArticle article) throws AlipayApiException {
         //首先查看登陆状态
         if (!UserTokenThreadHolder.isLogin()) {
             throw new BizException(StatusCode.USER_NO_LOGIN);

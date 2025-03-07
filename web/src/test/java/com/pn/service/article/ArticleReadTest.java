@@ -1,5 +1,6 @@
 package com.pn.service.article;
 
+import com.alipay.api.AlipayApiException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pn.common.base.UserTokenThreadHolder;
 import com.pn.common.reqParams.article.ArticleIndexParam;
@@ -33,7 +34,7 @@ public class ArticleReadTest {
     }
 
     @Test
-        public void testPayArticle() {
+        public void testPayArticle() throws AlipayApiException {
         UserVo userVo = UserVo.builder().id(1L).build();
         UserTokenThreadHolder.addCurrentUser(userVo);
         readService.read(2506425347227649L);

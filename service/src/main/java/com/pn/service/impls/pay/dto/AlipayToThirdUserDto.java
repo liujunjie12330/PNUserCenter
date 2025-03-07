@@ -1,14 +1,16 @@
 package com.pn.service.impls.pay.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
 /**
  * 对第三方用户进行转账
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class AlipayToThirdUserDto implements Serializable {
+public class AlipayToThirdUserDto extends PayBaseDto implements Serializable {
     private static final long serialVersionUID = 7968342473272268554L;
     /**
      * articleId
@@ -18,22 +20,7 @@ public class AlipayToThirdUserDto implements Serializable {
      * authorId
      */
     private Long authorId;
-    /**
-     * 系统生成的订单号
-     */
-    private String outBizNo;
-    /**
-     * 金额
-     */
-    private String transAmount;
-    /**
-     * 交易标题
-     */
-    private String title;
-    /**
-     * 备注
-     */
-    private String remark;
+
 
     /*系统固定信息*/
     public static enum bizScene {

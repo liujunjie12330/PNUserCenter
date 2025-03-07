@@ -10,14 +10,12 @@ import com.alipay.api.request.AlipayFundTransToaccountTransferRequest;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
 import com.alipay.api.response.AlipayTradePagePayResponse;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.pn.common.annotation.AlipayLog;
 import com.pn.common.enums.PayTypeEnum;
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
 import com.pn.dao.entity.PnAlipayUserInfo;
-import com.pn.dao.entity.PnTransactions;
 import com.pn.dao.mapper.PnAlipayUserInfoMapper;
-import com.pn.dao.mapper.PnTransactionsMapper;
 import com.pn.service.PayService;
 import com.pn.service.impls.pay.dto.AlipayByQrCodeDto;
 import com.pn.service.impls.pay.dto.AlipayToThirdUserDto;
@@ -48,9 +46,10 @@ public class AliPayService  implements PayService {
     /**
      * 向第三方用户转账===>一般用于文章支付观看
      */
-    @Override
     @Transactional(rollbackFor = Exception.class)
-    public void payToThirdUser(AlipayToThirdUserDto alipay) {
+    @Override
+    @AlipayLog
+    public void payToThirdUser(AlipayToThirdUserDto alipay, PayTypeEnum typeEnum) {
         //首先查询转账目标账户的
         PnAlipayUserInfo alipayUserInfo = infoMapper.getByUserId(alipay.getAuthorId());
         if (Objects.isNull(alipayUserInfo)) {
@@ -64,8 +63,6 @@ public class AliPayService  implements PayService {
             AlipayFundTransToaccountTransferModel model = new AlipayFundTransToaccountTransferModel();
             //商户转账唯一订单号
             model.setOutBizNo(alipay.getOutBizNo());
-            //把支付类型存到redis里面
-            cache.set(PayTypeEnum.PAY_TO_THIRD.getType()+alipay.getOutBizNo(),PayTypeEnum.PAY_TO_THIRD.getType());
             //收款方账户类型。
             //1、PayeeType=ALIPAY_USERID：PayeeAccount传值pid ,以2088开头的16位纯数字组成。
             //2、PayeeType=ALIPAY_LOGONID：PayeeAccount传值支付宝登录号(邮箱或手机号)
@@ -92,8 +89,9 @@ public class AliPayService  implements PayService {
     }
 
     @Override
-    public String payByQrCode(AlipayByQrCodeDto alipay){
-        try {
+    @AlipayLog
+    public String payByQrCode(AlipayByQrCodeDto alipay, PayTypeEnum typeEnum) throws AlipayApiException
+    {
             AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig);
             // 构造请求参数以调用接口
             AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
@@ -101,8 +99,7 @@ public class AliPayService  implements PayService {
 
             // 设置商户订单号
             model.setOutTradeNo(alipay.getOutBizNo());
-            //付款类型存到redis
-            cache.set(PayTypeEnum.PAY_TO_THIRD.getType()+alipay.getOutBizNo(),PayTypeEnum.PAY_TO_THIRD.getType());
+
             // 设置订单总金额
             model.setTotalAmount(alipay.getTransAmount());
 
@@ -128,8 +125,5 @@ public class AliPayService  implements PayService {
             } else {
                 throw new BizException(StatusCode.PAYMENT_FAILED);
             }
-        } catch (AlipayApiException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

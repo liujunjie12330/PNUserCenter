@@ -50,14 +50,20 @@ public class IdUtil {
             lastTime = now;
             INCR.set((int) (Math.random() * 500));
         }
-        return payWay.getPrefix() + String.format("%06d", INCR.addAndGet(1)) + id;
+        // 生成唯一支付码
+        String uniqueCode = String.format("%06d", INCR.addAndGet(1));
+        return payWay.getPrefix() + uniqueCode + "_" + id;
     }
 
     /**
-     * 根据payCode 解析获取 payId
+     * 解析支付code中的 id
      */
-    public static Long getPayIdFromPayCode(String code) {
-        String[] str = StringUtils.split(code, "-");
-        return Long.valueOf(str[str.length - 1]);
+    public static Long parseIdFromPayCode(String payCode) {
+        if (payCode == null || !payCode.contains("_")) {
+            throw new IllegalArgumentException("非法的支付码格式");
+        }
+        // 提取最后的部分，即 id
+        String[] parts = payCode.split("_");
+        return Long.parseLong(parts[1]);
     }
 }

@@ -1,7 +1,9 @@
 package com.pn.service.impls.article;
 
+import com.alipay.api.AlipayApiException;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.pn.common.base.UserTokenThreadHolder;
+import com.pn.common.enums.PayTypeEnum;
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
 import com.pn.common.vos.login.UserVo;
@@ -13,9 +15,11 @@ import com.pn.service.ArticlePayService;
 import com.pn.service.PayService;
 import com.pn.service.impls.pay.AliPayService;
 import com.pn.service.impls.pay.dto.AlipayByQrCodeDto;
+import com.pn.service.utils.RedisCache;
 import com.pn.service.utils.cover.ArticleCoverUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -36,9 +40,11 @@ public class ArticlePayServiceImpl extends ServiceImpl<PnArticlePayRecordMapper,
 
     @Resource(type = AliPayService.class)
     private PayService payService;
+    @Autowired
+    private RedisCache redisCache;
 
     @Override
-    public String payArticle(Long articleId) {
+    public String payArticle(Long articleId) throws AlipayApiException {
         UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
         //查询文章是否被当前用户支付过
         if (isPaid(articleId, currentUser.getId())) {
@@ -50,7 +56,8 @@ public class ArticlePayServiceImpl extends ServiceImpl<PnArticlePayRecordMapper,
             throw new BizException(StatusCode.NO_SUCH_ARTICLE);
         }
         AlipayByQrCodeDto codeDto = ArticleCoverUtil.articleCoverToDto(article);
-        String url = payService.payByQrCode(codeDto);
+        redisCache.setHashCache(codeDto.getOutBizNo(),"articleId", articleId);
+        String url = payService.payByQrCode(codeDto, PayTypeEnum.ARTICLE);
         if (StringUtils.isEmpty(url)) {
             throw new BizException(StatusCode.SYSTEM_ERROR);
         }

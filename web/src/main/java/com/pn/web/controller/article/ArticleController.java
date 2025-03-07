@@ -1,5 +1,6 @@
 package com.pn.web.controller.article;
 
+import com.alipay.api.AlipayApiException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pn.common.base.BaseResponse;
 import com.pn.common.constant.PNUserCenterConstant;
@@ -30,7 +31,7 @@ public class ArticleController {
 
 
     @GetMapping("/read/{id}")
-    public BaseResponse<ArticleVO> read(@PathVariable("id") Long id, HttpServletResponse response) {
+    public BaseResponse<ArticleVO> read(@PathVariable("id") Long id, HttpServletResponse response) throws AlipayApiException {
         ArticleVO read = readService.read(id);
         if (read.isPaid()) {
             try {

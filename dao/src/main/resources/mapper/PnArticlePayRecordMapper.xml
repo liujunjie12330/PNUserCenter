@@ -15,7 +15,7 @@
         <result column="receive_user_id" jdbcType="VARCHAR" property="receiveUserId"/>
         <result column="receive_pn_user_id" jdbcType="BIGINT" property="receivePnUserId"/>
         <result column="article_id" jdbcType="BIGINT" property="articleId"/>
-        <result column="pay_status" jdbcType="INTEGER" property="payStatus"/>
+        <result column="pay_status" jdbcType="VARCHAR" property="payStatus"/>
         <result column="notify_time" jdbcType="TIMESTAMP" property="notifyTime"/>
         <result column="notify_cnt" jdbcType="INTEGER" property="notifyCnt"/>
         <result column="notes" jdbcType="VARCHAR" property="notes"/>

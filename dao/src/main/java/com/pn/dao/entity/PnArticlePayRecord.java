@@ -47,7 +47,7 @@ public class PnArticlePayRecord extends BaseModel {
      * 支付状态
      */
     @TableField(value = "pay_status")
-    private Integer payStatus;
+    private String payStatus;
 
     /**
      * 邮件通知用户的时间

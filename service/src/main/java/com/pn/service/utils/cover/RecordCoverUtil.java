@@ -64,7 +64,7 @@ public class RecordCoverUtil {
         payRecord.setReceiveUserId(receiveUuid);
         payRecord.setReceivePnUserId(receivePnUserId);
         payRecord.setArticleId(articleId);
-        payRecord.setPayStatus(Integer.valueOf(Objects.requireNonNull(getFirstValue(parameterMap, "trade_status"))));
+        payRecord.setPayStatus(getFirstValue(parameterMap, "trade_status"));
         payRecord.setNotifyTime(new Date());
         payRecord.setNotifyCnt(0);
         payRecord.setNotes("文章支付");

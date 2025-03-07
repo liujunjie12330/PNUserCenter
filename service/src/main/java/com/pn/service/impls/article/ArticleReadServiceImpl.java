@@ -17,11 +17,13 @@ import com.pn.dao.entity.*;
 import com.pn.dao.mapper.*;
 import com.pn.service.ArticlePayService;
 import com.pn.service.ArticleReadService;
+import com.pn.service.utils.RedisCache;
 import com.pn.service.utils.cover.ArticleCoverUtil;
 import com.pn.service.utils.cover.PageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -61,6 +63,7 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
     @Resource
     private ArticlePayService articlePayService;
 
+
     @Override
     public Page<ArticleIndexVo> page(ArticleIndexParam param) {
         Page<ArticleIndexBo> page = new Page<>(param.getCurrent(), param.getSize());
@@ -74,6 +77,13 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
             return articleIndexVo;
         });
         return pageVo;
+    }
+
+    @Override
+    public Boolean isPaid(Long articleId){
+        UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
+        //现在redis里面查存不存在
+        return  articlePayService.isPaid(articleId, currentUser.getId());
     }
 
     @Override
@@ -125,7 +135,7 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
         }
         ArticleVO vo = new ArticleVO();
         vo.setUrl(url);
-        vo.setPaid(true);
+        vo.setIsNeedTpPay(true);
         return vo;
     }
 

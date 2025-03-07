@@ -3,6 +3,7 @@ package com.pn.service.impls.article;
 import com.alipay.api.AlipayApiException;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.pn.common.base.UserTokenThreadHolder;
+import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.enums.PayTypeEnum;
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
@@ -18,6 +19,7 @@ import com.pn.service.impls.pay.dto.AlipayByQrCodeDto;
 import com.pn.service.utils.RedisCache;
 import com.pn.service.utils.cover.ArticleCoverUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,7 +58,7 @@ public class ArticlePayServiceImpl extends ServiceImpl<PnArticlePayRecordMapper,
             throw new BizException(StatusCode.NO_SUCH_ARTICLE);
         }
         AlipayByQrCodeDto codeDto = ArticleCoverUtil.articleCoverToDto(article);
-        redisCache.setHashCache(codeDto.getOutBizNo(),"articleId", articleId);
+        redisCache.setHashCache(codeDto.getOutBizNo(), "articleId", articleId);
         String url = payService.payByQrCode(codeDto, PayTypeEnum.ARTICLE);
         if (StringUtils.isEmpty(url)) {
             throw new BizException(StatusCode.SYSTEM_ERROR);
@@ -67,6 +69,15 @@ public class ArticlePayServiceImpl extends ServiceImpl<PnArticlePayRecordMapper,
 
     @Override
     public boolean isPaid(Long articleId, Long userId) {
-        return recordMapper.isPaid(articleId, userId);
+        //现在redis里面查一次
+        boolean key = redisCache.hasKey(PNUserCenterConstant.ARTICLE_PAID + userId + "_" + articleId);
+        if (BooleanUtils.isTrue(key)) {
+            return key;
+        }
+        boolean isPaid = recordMapper.isPaid(articleId, userId);
+        if (BooleanUtils.isTrue(isPaid)) {
+            redisCache.set(PNUserCenterConstant.ARTICLE_PAID + userId + "_" + articleId, articleId);
+        }
+        return isPaid;
     }
 }

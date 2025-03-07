@@ -44,7 +44,8 @@ public class PayRecordServiceImpl extends ServiceImpl<PnTransactionsMapper, PnTr
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveRecord(Map<String, String[]> parameterMap) {
+    public Long saveRecord(Map<String, String[]> parameterMap) {
+        Long reArticleId = 0L;
         String buyerId = parameterMap.get("buyer_id")[0];
         PnAlipayUserInfo userInfo = infoMapper.getByUuId(buyerId);
         PnTransactions transaction = RecordCoverUtil.parmaCoverToPT(parameterMap, userInfo.getPnUserId());
@@ -56,9 +57,8 @@ public class PayRecordServiceImpl extends ServiceImpl<PnTransactionsMapper, PnTr
         if (StringUtils.equalsIgnoreCase(transaction.getTradeStatus(), "1")) {
             //文章支付
             if (StringUtils.equalsIgnoreCase(paytype, PayTypeEnum.ARTICLE.getType())) {
-                Long articleId = (Long) redisCache.getHashCache(transaction.getOrderId(), "articleId");
-
-                redisCache.set(PNUserCenterConstant.ARTICLE_PAID + userInfo.getPnUserId() + "_" + articleId, "true");
+                Long articleId = reArticleId = (Long) redisCache.getHashCache(transaction.getOrderId(), "articleId");
+                redisCache.set(PNUserCenterConstant.ARTICLE_PAID + userInfo.getPnUserId() + "_" + articleId, articleId);
                 //把支付的相关信息存入到文章支付信息表,异步通知mq发起转账
                 PoolConfig.RUN_SYNC_JOB_POOL.submit(() -> {
                     try {
@@ -87,6 +87,7 @@ public class PayRecordServiceImpl extends ServiceImpl<PnTransactionsMapper, PnTr
                 }
             }
         });
+        return reArticleId;
     }
 
 }

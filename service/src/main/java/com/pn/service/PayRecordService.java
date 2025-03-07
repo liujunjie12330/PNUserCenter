@@ -9,5 +9,5 @@ import java.util.Map;
  * 支付记录
  */
 public interface PayRecordService extends IService<PnTransactions> {
-    void saveRecord(Map<String, String[]> parameterMap);
+    Long saveRecord(Map<String, String[]> parameterMap);
 }

@@ -64,9 +64,7 @@ public class SwaggerConfig {
                 // RequestHandlerSelectors.basePackage("net.xdclass.*")  指定包位置
                 // withMethodAnnotation(ApiOperation.class)标记有这个注解 ApiOperation
                 .apis(RequestHandlerSelectors.basePackage("com.pn.web.controller"))
-
                 .paths(PathSelectors.any())
-
                 .build();
     }
 

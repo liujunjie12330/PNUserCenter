@@ -17,6 +17,10 @@ public class ArticleIndexBo  implements Serializable {
      * 文章id
      */
     private Long articleId;
+    /**
+     * 阅读类型
+     */
+    private Integer readType;
 
     /**
      * 作者uid

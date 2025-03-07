@@ -14,5 +14,7 @@ import com.pn.dao.entity.PnArticle;
 public interface ArticleReadService extends IService<PnArticle> {
     Page<ArticleIndexVo> page(ArticleIndexParam param);
 
+    Boolean isPaid(Long articleId);
+
     ArticleVO read(Long id) throws AlipayApiException;
 }

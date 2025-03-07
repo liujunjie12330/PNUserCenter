@@ -35,11 +35,12 @@ public class UserSettingController {
 
     @GetMapping("/bindUserAlipay")
     public void bindAlipayAccount(HttpServletResponse response){
+        UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
         try {
             response.sendRedirect("https://openauth-sandbox.dl.alipaydev.com/oauth2/publicAppAuthorize.htm?"
                     +"app_id="+appid
                     +"&scope=auth_user,auth_base"
-                    +"&userId=1"
+                    +"&userId="+currentUser.getId()
                     +"&redirect_uri="+callBack);
         } catch (IOException e) {
             throw new RuntimeException(e);

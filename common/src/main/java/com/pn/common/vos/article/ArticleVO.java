@@ -106,16 +106,16 @@ public class ArticleVO implements Serializable {
      */
     private CatalogPaveVo catalog;
     /*下面的是支付相关的信息*/
-    private volatile boolean isPaid = false;
+    private volatile boolean isNeedTpPay = false;
 
     private volatile String url = "";
 
-    public boolean isPaid() {
-        return isPaid;
+    public boolean isNeedTpPay() {
+        return isNeedTpPay;
     }
 
-    public void setPaid(boolean paid) {
-        isPaid = paid;
+    public void setIsNeedTpPay(boolean paid) {
+        isNeedTpPay = paid;
     }
 
 

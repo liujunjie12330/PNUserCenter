@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -27,12 +29,14 @@ public class AliPayCallBack {
     @Resource
     private PayRecordService payRecordService;
 
+
     @RequestMapping("/payOrOauth")
-    public BaseResponse<String> callback(HttpServletRequest request){
+    public BaseResponse<String> callback(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map<String, String[]> parameterMap = request.getParameterMap();
         /*支付回调 */
         if (parameterMap.containsKey("out_trade_no")||parameterMap.containsKey("trade_no")){
-            payRecordService.saveRecord(parameterMap);
+           Long articleId =  payRecordService.saveRecord(parameterMap);
+            response.sendRedirect("http://localtost:8000/article/detial/"+articleId);
         } else {
             /*授权回调*/
             for (Map.Entry<String, String[]> stringEntry : parameterMap.entrySet()) {

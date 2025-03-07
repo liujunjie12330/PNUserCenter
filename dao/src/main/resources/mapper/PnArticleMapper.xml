@@ -63,6 +63,7 @@
         <result column="title" jdbcType="BIGINT" property="title"/>
         <result column="summary" jdbcType="VARCHAR" property="summary"/>
         <result column="short_title" jdbcType="VARCHAR" property="shortTitle"/>
+        <result column="readType" jdbcType="INTEGER" property="readType"/>
         <result column="picture" jdbcType="VARCHAR" property="cover"/>
         <result column="offical_stat" jdbcType="INTEGER" property="officalStat"/>
         <result column="topping_stat" jdbcType="INTEGER" property="toppingStat"/>
@@ -177,6 +178,7 @@
                column_info.column_name as column_name,
                catalog.id              as catalog_id,
                catalog.category_name   as catalog_name,
+               article.read_type       as readType,
                tag.id                  as tag_id,
                tag.tag_name = tag_name
         from pn_article as article

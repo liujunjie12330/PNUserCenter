@@ -43,18 +43,17 @@ public class AlipayLogInterceptor {
         try {
             // 执行原方法
             result = joinPoint.proceed();
-            log.info("【支付成功】返回结果: {}", result);
-            //支付成功,把支付相关信息放到redis里面
-            redisCache.setHashCache(dto.getOutBizNo(),"paytype",typeEnum.getType());
-            redisCache.setHashCache(dto.getOutBizNo(),"payInfo",args[0]);
-            redisCache.setHashCache(dto.getOutBizNo(),"paystatus",true);
+            log.info("【发起支付成功】返回结果: {}", result);
+            //发起支付成功,把支付相关信息放到redis里面
+            redisCache.setHashCache(dto.getOutBizNo(),"pay_type",typeEnum.getType());
+            redisCache.setHashCache(dto.getOutBizNo(),"to_pay_status",true);
         } catch (AlipayApiException e) {
-            //代表执行扣款错误,需要把支付的状态更改成false
-            log.error("【支付异常】错误信息: {}", e.getMessage(), e);
-            redisCache.delHashCache(dto.getOutBizNo(),"payinfo","paytype","paystatus");
+            //代表发起支付错误,需要把支付的状态更改成false
+            log.error("【发起支付异常】错误信息: {}", e.getMessage(), e);
+            redisCache.delHashCache(dto.getOutBizNo(),"pay_type","to_pay_status");
             throw new BizException(e.getMessage());
         } catch (Throwable e) {
-            //支付成功但是系统出现问题，需要额外处理
+            //发起支付成功但是系统出现问题，需要额外处理
             log.info("支付成功但是系统出现问题,{}",e.getMessage());
             throw new RuntimeException(e);
         } finally {

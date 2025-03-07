@@ -51,6 +51,10 @@ public class ArticleIndexVo extends PageParam {
      * 短标题--教程名称
      */
     private String shortTitle;
+    /**
+     * 阅读类型
+     */
+    private Integer readType;
 
     /**
      * 封面

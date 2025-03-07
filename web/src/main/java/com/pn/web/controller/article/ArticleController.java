@@ -4,6 +4,8 @@ import com.alipay.api.AlipayApiException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pn.common.base.BaseResponse;
 import com.pn.common.constant.PNUserCenterConstant;
+import com.pn.common.enums.StatusCode;
+import com.pn.common.exception.BizException;
 import com.pn.common.reqParams.article.ArticleIndexParam;
 import com.pn.common.reqParams.article.ArticleSaveParams;
 import com.pn.common.utils.ResultUtils;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.util.Objects;
 
 /**
  * 文章前台接口
@@ -33,16 +35,15 @@ public class ArticleController {
     @GetMapping("/read/{id}")
     public BaseResponse<ArticleVO> read(@PathVariable("id") Long id, HttpServletResponse response) throws AlipayApiException {
         ArticleVO read = readService.read(id);
-        if (read.isPaid()) {
-            try {
-                response.sendRedirect(read.getUrl());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            return ResultUtils.success(read);
+        return ResultUtils.success(read);
+    }
+
+    @GetMapping("/read/isPaid/{articleId}")
+    public BaseResponse<Boolean> isPaid(@PathVariable("articleId") Long articleId) {
+        if (Objects.isNull(articleId) || articleId <= 0) {
+            throw new BizException(StatusCode.PARAMS_ERROR);
         }
-        return ResultUtils.success(null);
+        return ResultUtils.success(readService.isPaid(articleId));
     }
 
     @PostMapping("/page")

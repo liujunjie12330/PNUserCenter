@@ -40,6 +40,7 @@ public class ArticleCoverUtil {
         article.setPayWay(params.getPayWay());
         article.setPayAmount(params.getPayAmount());
         article.setPayImageUrl(params.getPayImageUrl());
+        article.setCreateBy(userId);
         return article;
     }
 

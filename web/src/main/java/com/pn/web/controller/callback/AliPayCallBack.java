@@ -2,6 +2,7 @@ package com.pn.web.controller.callback;
 
 import com.pn.common.base.BaseResponse;
 import com.pn.common.constant.PNUserCenterConstant;
+import com.pn.common.utils.ResultUtils;
 import com.pn.service.PayRecordService;
 import com.pn.service.UserSettingService;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +34,7 @@ public class AliPayCallBack {
         Map<String, String[]> parameterMap = request.getParameterMap();
         /*支付回调 */
         if (parameterMap.containsKey("out_trade_no") || parameterMap.containsKey("trade_no")) {
-            Long articleId = payRecordService.saveRecord(parameterMap);
-            response.sendRedirect("http://localhost:8000/article/detial/" + articleId);
+            payRecordService.saveRecord(parameterMap);
         } else {
             /*授权回调*/
             for (Map.Entry<String, String[]> stringEntry : parameterMap.entrySet()) {
@@ -44,6 +44,6 @@ public class AliPayCallBack {
             Long userId = Long.valueOf(request.getParameter("userId"));
             userSettingService.bindUserAlipay(authCode, userId);
         }
-        return null;
+        return ResultUtils.success("ok");
     }
 }

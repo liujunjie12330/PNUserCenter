@@ -50,7 +50,8 @@ public enum StatusCode {
      * 支付相关
      */
     UNBOUND_PAYMENT(4001, "没有绑定支付信息"),
-    PAYMENT_FAILED(4002, "支付失败");
+    PAYMENT_FAILED(4002, "支付失败"),
+    REPEAT_BOUND(4003,"重复绑定");
     /**
      * 状态码
      */

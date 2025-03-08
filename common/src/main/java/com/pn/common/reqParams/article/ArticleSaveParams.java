@@ -66,7 +66,7 @@ public class ArticleSaveParams implements Serializable {
      *
      * @see ArticleTypeEnum
      */
-    private Integer articleType;
+    private Integer articleType = 0;
 
 
     /**
@@ -81,7 +81,7 @@ public class ArticleSaveParams implements Serializable {
      *
      * @see PushStatusEnum
      */
-    private Integer status;
+    private Integer status=0;
 
     /**
      * 原文地址
@@ -103,7 +103,7 @@ public class ArticleSaveParams implements Serializable {
      *
      * @see com.pn.common.enums.ArticleReadTypeEnum#getType()
      */
-    private Integer readType;
+    private Integer readType =0;
     /**
      * 当 ArticleReadTypeEnum 为 付费阅读时，这里记录具体的收款方式
      */

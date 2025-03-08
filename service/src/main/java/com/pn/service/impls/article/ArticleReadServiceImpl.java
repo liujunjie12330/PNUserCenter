@@ -17,13 +17,11 @@ import com.pn.dao.entity.*;
 import com.pn.dao.mapper.*;
 import com.pn.service.ArticlePayService;
 import com.pn.service.ArticleReadService;
-import com.pn.service.utils.RedisCache;
 import com.pn.service.utils.cover.ArticleCoverUtil;
 import com.pn.service.utils.cover.PageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -160,7 +158,7 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
         //拿到作者相关信息
-        PnUser pnUser = userMapper.selectById(article.getCreateBy());
+        PnUser pnUser = userMapper.selectById(article.getUserId());
         if (Objects.isNull(pnUser)) {
             throw new BizException(StatusCode.PARAMS_ERROR);
         }

@@ -12,6 +12,7 @@ import com.pn.service.FileOperationService;
 import com.pn.service.UserAvatarService;
 import com.pn.service.utils.MinioProperties;
 import com.pn.service.utils.MinioUtil;
+import io.minio.ObjectWriteResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
@@ -73,11 +75,18 @@ public class MinioImageOperation implements FileOperationService, UserAvatarServ
      */
     @Override
     public String uploadImage(MultipartFile file) {
-        //这里先吧图片放到缓存里面去，等整个文章上传完毕，在统一进行上传
+        //todo 先吧图片放到缓存里面去，等整个文章上传完毕，在统一进行上传
         String name = file.getOriginalFilename();
         String contentType = file.getContentType();
         log.info("文件上传,filename===>{},filetype===>{}", name, contentType);
-        return UrlUtils.coverToUrlByIp("http", "118.31.2.9", "3306", "pictures");
+        String upload;
+        try {
+            InputStream inputStream = file.getInputStream();
+            upload = upload(inputStream, name, contentType);
+        } catch (IOException e) {
+            throw new BizException(e.getMessage());
+        }
+        return upload;
     }
 
     @Override
@@ -87,6 +96,12 @@ public class MinioImageOperation implements FileOperationService, UserAvatarServ
 
     @Override
     public String upload(InputStream input, String fileName, String filetype) {
-        return null;
+        ObjectWriteResponse response;
+        try {
+            response = minioUtil.uploadFile(bucketName, fileName, input, filetype);
+        } catch (Exception e) {
+            throw new BizException(e.getMessage());
+        }
+        return UrlUtils.coverToUrlByIp("http", minioProperties.getEndPoint(), minioProperties.getPort(), minioProperties.getBucketName(), fileName);
     }
 }

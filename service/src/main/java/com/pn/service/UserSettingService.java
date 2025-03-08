@@ -8,4 +8,8 @@ import com.pn.dao.entity.PnUser;
  */
 public interface UserSettingService  {
     void bindUserAlipay(String authCode, Long userId);
+
+    String bindAlipayAccount();
+
+    Boolean existAlipayUserInfo();
 }

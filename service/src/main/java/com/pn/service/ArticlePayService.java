@@ -8,6 +8,7 @@ import com.pn.dao.entity.PnArticlePayRecord;
  * 文章支付
  */
 public interface ArticlePayService extends IService<PnArticlePayRecord> {
+
     String payArticle(Long articleId) throws AlipayApiException;
 
     boolean isPaid(Long articleId, Long userId);

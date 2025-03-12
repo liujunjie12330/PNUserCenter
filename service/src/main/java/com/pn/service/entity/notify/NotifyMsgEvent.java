@@ -1,7 +1,6 @@
-package com.pn.service.bean.notify;
+package com.pn.service.entity.notify;
 
 import com.pn.common.enums.NotifyEnum;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

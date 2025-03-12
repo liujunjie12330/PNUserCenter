@@ -31,6 +31,10 @@ public enum StatusCode {
     CONNECT_TIME_OUE(1014, "连接超时"),
     LOGIN_FAILED(1015, "登陆失败"),
     /**
+     * 邮件相关
+     */
+    SEND_FAILED(1016,"发送失败"),
+    /**
      * 系统相关
      */
     OPERATION_ERROR(5001, "操作失败"),

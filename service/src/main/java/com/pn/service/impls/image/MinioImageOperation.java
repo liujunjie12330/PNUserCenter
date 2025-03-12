@@ -10,7 +10,7 @@ import com.pn.dao.mapper.PnUserMapper;
 import com.pn.service.ArticleImageService;
 import com.pn.service.FileOperationService;
 import com.pn.service.UserAvatarService;
-import com.pn.service.utils.MinioProperties;
+import com.pn.service.entity.config.MinioProperties;
 import com.pn.service.utils.MinioUtil;
 import io.minio.ObjectWriteResponse;
 import lombok.extern.slf4j.Slf4j;

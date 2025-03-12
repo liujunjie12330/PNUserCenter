@@ -6,10 +6,13 @@ import com.alipay.api.AlipayConfig;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayFundTransToaccountTransferModel;
 import com.alipay.api.domain.AlipayTradePagePayModel;
+import com.alipay.api.domain.AlipayTradeQueryModel;
 import com.alipay.api.request.AlipayFundTransToaccountTransferRequest;
 import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
 import com.alipay.api.response.AlipayTradePagePayResponse;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.pn.common.annotation.AlipayLog;
 import com.pn.common.enums.PayTypeEnum;
 import com.pn.common.enums.StatusCode;
@@ -19,18 +22,20 @@ import com.pn.dao.mapper.PnAlipayUserInfoMapper;
 import com.pn.service.PayService;
 import com.pn.service.impls.pay.dto.AlipayByQrCodeDto;
 import com.pn.service.impls.pay.dto.AlipayToThirdUserDto;
-import com.pn.service.utils.RedisCache;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Service
 @Slf4j
-public class AliPayService  implements PayService {
+public class AliPayService implements PayService {
 
     @Resource
     private AlipayConfig alipayConfig;
@@ -38,17 +43,13 @@ public class AliPayService  implements PayService {
     @Resource
     private PnAlipayUserInfoMapper infoMapper;
 
-    @Resource
-    private RedisCache cache;
-
     @Value("${alipay.notifyUrl}")
     private String notifyUrl;
+
     /**
      * 向第三方用户转账===>一般用于文章支付观看
      */
-    @Transactional(rollbackFor = Exception.class)
     @Override
-    @AlipayLog
     public void payToThirdUser(AlipayToThirdUserDto alipay, PayTypeEnum typeEnum) {
         //首先查询转账目标账户的
         PnAlipayUserInfo alipayUserInfo = infoMapper.getByUserId(alipay.getAuthorId());
@@ -89,41 +90,75 @@ public class AliPayService  implements PayService {
     }
 
     @Override
-    @AlipayLog
-    public String payByQrCode(AlipayByQrCodeDto alipay, PayTypeEnum typeEnum) throws AlipayApiException
-    {
+    public AlipayTradeQueryResponse queryPay(String outBizNo, String tradeNo) {
+        try {
+            // 初始化SDK
             AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig);
+
             // 构造请求参数以调用接口
-            AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
-            AlipayTradePagePayModel model = new AlipayTradePagePayModel();
-
-            // 设置商户订单号
-            model.setOutTradeNo(alipay.getOutBizNo());
-
-            // 设置订单总金额
-            model.setTotalAmount(alipay.getTransAmount());
-
-            // 设置订单标题
-            model.setSubject(alipay.getTitle());
-
-            // 设置产品码
-            model.setProductCode(AlipayByQrCodeDto.PRODUCT_CODE);
-
-            // 设置PC扫码支付的方式
-            model.setQrPayMode("1");
-
-            // 设置商户自定义二维码宽度
-            model.setQrcodeWidth(100L);
-            request.setBizModel(model);
-            request.setNotifyUrl(notifyUrl);
-            AlipayTradePagePayResponse response = alipayClient.pageExecute(request, "GET");
-            //拿到返回的url
-            String pageRedirectionData = response.getBody();
-            log.info("pay url:{}",pageRedirectionData);
-            if (response.isSuccess()) {
-                return  pageRedirectionData;
-            } else {
-                throw new BizException(StatusCode.PAYMENT_FAILED);
+            AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
+            AlipayTradeQueryModel model = new AlipayTradeQueryModel();
+            if (StringUtils.isNotEmpty(outBizNo)) {
+                // 设置订单支付时传入的商户订单号
+                model.setOutTradeNo(outBizNo);
             }
+            if (StringUtils.isNotEmpty(tradeNo)) {
+                // 设置支付宝交易号
+                model.setTradeNo(tradeNo);
+            }
+            // 设置查询选项
+            List<String> queryOptions = new ArrayList<String>();
+            queryOptions.add("trade_settle_info");
+            model.setQueryOptions(queryOptions);
+
+            request.setBizModel(model);
+            AlipayTradeQueryResponse response = alipayClient.execute(request);
+            log.info("支付信息:{},查询时间:{}", response.getBody(), new Date());
+            if (response.isSuccess()) {
+                return response;
+            } else {
+                throw new AlipayApiException(response.getMsg());
+            }
+        } catch (AlipayApiException e) {
+            throw new BizException(e.getMessage());
+        }
+    }
+
+    @Override
+    @AlipayLog
+    public String payByQrCode(AlipayByQrCodeDto alipay, PayTypeEnum typeEnum) throws AlipayApiException {
+        AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig);
+        // 构造请求参数以调用接口
+        AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
+        AlipayTradePagePayModel model = new AlipayTradePagePayModel();
+
+        // 设置商户订单号
+        model.setOutTradeNo(alipay.getOutBizNo());
+
+        // 设置订单总金额
+        model.setTotalAmount(alipay.getTransAmount());
+
+        // 设置订单标题
+        model.setSubject(alipay.getTitle());
+
+        // 设置产品码
+        model.setProductCode(AlipayByQrCodeDto.PRODUCT_CODE);
+
+        // 设置PC扫码支付的方式
+        model.setQrPayMode("1");
+
+        // 设置商户自定义二维码宽度
+        model.setQrcodeWidth(100L);
+        request.setBizModel(model);
+        request.setNotifyUrl(notifyUrl);
+        AlipayTradePagePayResponse response = alipayClient.pageExecute(request, "GET");
+        //拿到返回的url
+        String pageRedirectionData = response.getBody();
+        log.info("pay url:{}", pageRedirectionData);
+        if (response.isSuccess()) {
+            return pageRedirectionData;
+        } else {
+            throw new BizException(StatusCode.PAYMENT_FAILED);
+        }
     }
 }

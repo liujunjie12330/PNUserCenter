@@ -1,12 +1,13 @@
-package com.pn.web.config;
+package com.pn.service.entity.config;
 
 import io.minio.MinioClient;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 @Configuration
+@PropertySource(value = "classpath:config/upload.properties")
 public class MinioConfig {
 
     @Value("${minio.endpoint}")

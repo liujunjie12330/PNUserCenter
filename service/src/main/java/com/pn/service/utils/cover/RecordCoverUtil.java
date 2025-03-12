@@ -1,13 +1,16 @@
 package com.pn.service.utils.cover;
 
+import com.pn.common.enums.PayTypeEnum;
 import com.pn.dao.entity.PnArticlePayRecord;
+import com.pn.dao.entity.PnOrder;
 import com.pn.dao.entity.PnTransactions;
+import com.pn.service.impls.pay.dto.PayBaseDto;
+import com.pn.service.utils.id.IdUtil;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * 支付回调转换工具
@@ -79,6 +82,25 @@ public class RecordCoverUtil {
         payRecord.setCreateBy(payPnUserId);
         payRecord.setUpdateBy(payPnUserId);
         return payRecord;
+    }
+
+    public static PnOrder coverToPnOrder(PayBaseDto dto, PayTypeEnum typeEnum,Long userId)
+    {
+        PnOrder pnOrder = new PnOrder();
+        pnOrder.setPayUserId(userId);
+        Long extraId = IdUtil.parseIdFromPayCode(dto.getOutBizNo());
+        pnOrder.setExtraId(extraId);
+        pnOrder.setOutBizNo(dto.getOutBizNo());
+        pnOrder.setTransAmount(dto.getTransAmount());
+        pnOrder.setTitle(dto.getTitle());
+        pnOrder.setRemark(dto.getRemark());
+        pnOrder.setType(typeEnum.getType());
+        pnOrder.setStatus(1);
+        pnOrder.setMsg("");
+        pnOrder.setBody("");
+        pnOrder.setCreateBy(userId);
+        pnOrder.setUpdateBy(userId);
+        return pnOrder;
     }
 
     /**

@@ -37,6 +37,12 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-test</artifactId>
         <scope>test</scope>
+        <exclusions>
+            <exclusion>
+                <artifactId>apiguardian-api</artifactId>
+                <groupId>org.apiguardian</groupId>
+            </exclusion>
+        </exclusions>
         <optional>true</optional>
     </dependency>
 </dependencies>

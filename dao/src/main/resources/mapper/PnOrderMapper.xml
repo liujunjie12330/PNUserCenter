@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pn.dao.mapper.PnOrderMapper">
+    <resultMap id="BaseResultMap" type="com.pn.dao.entity.PnOrder">
+        <!--@mbg.generated-->
+        <!--@Table pn_order-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="create_at" jdbcType="TIMESTAMP" property="createAt"/>
+        <result column="update_at" jdbcType="TIMESTAMP" property="updateAt"/>
+        <result column="create_by" jdbcType="BIGINT" property="createBy"/>
+        <result column="update_by" jdbcType="BIGINT" property="updateBy"/>
+        <result column="is_deleted" jdbcType="BOOLEAN" property="isDeleted"/>
+        <result column="pay_user_id" jdbcType="BIGINT" property="payUserId"/>
+        <result column="extra_id" jdbcType="BIGINT" property="extraId"/>
+        <result column="out_biz_no" jdbcType="VARCHAR" property="outBizNo"/>
+        <result column="trans_amount" jdbcType="VARCHAR" property="transAmount"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="msg" jdbcType="VARCHAR" property="msg"/>
+        <result column="body" jdbcType="VARCHAR" property="body"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id,
+        create_at,
+        update_at,
+        create_by,
+        update_by,
+        is_deleted,
+        pay_user_id,
+        extra_id,
+        out_biz_no,
+        trans_amount,
+        title,
+        remark,
+        `type`,
+        `status`,
+        msg,
+        body
+    </sql>
+
+    <select id="exist" resultType="java.lang.Boolean">
+        SELECT EXISTS(SELECT 1
+                      FROM pndb.pn_order
+                      WHERE pay_user_id = #{userId}
+                        and extra_id = #{articleId}
+                        and type = #{type}
+                        and is_deleted = 0)
+    </select>
+
+    <select id="selectArticleIdAndUserId" resultMap="BaseResultMap">
+        select *
+        from pndb.pn_order
+        where extra_id = #{articleId}
+          and pay_user_id = #{userId}
+          and type = 'article'
+          and is_deleted = 0
+    </select>
+</mapper>

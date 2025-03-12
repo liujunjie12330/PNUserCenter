@@ -3,7 +3,7 @@ package com.pn.service.listener;
 import com.pn.common.constant.CountConstant;
 import com.pn.common.enums.NotifyEnum;
 import com.pn.common.vos.count.CommentDO;
-import com.pn.service.bean.notify.NotifyMsgEvent;
+import com.pn.service.entity.notify.NotifyMsgEvent;
 import com.pn.dao.entity.PnUserFoot;
 import com.pn.web.PNUserCenterApp;
 import java.util.Date;

@@ -14,7 +14,7 @@ import com.pn.dao.mapper.PnArticleMapper;
 import com.pn.dao.mapper.PnArticlePayRecordMapper;
 import com.pn.dao.mapper.PnTransactionsMapper;
 import com.pn.service.PayRecordService;
-import com.pn.service.bean.config.PoolConfig;
+import com.pn.service.entity.config.PoolConfig;
 import com.pn.service.utils.RedisCache;
 import com.pn.service.utils.cover.RecordCoverUtil;
 import lombok.extern.slf4j.Slf4j;

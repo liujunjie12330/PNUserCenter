@@ -5,7 +5,7 @@ import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
 import com.pn.common.vos.count.CommentDO;
 import com.pn.dao.entity.PnUserFoot;
-import com.pn.service.bean.notify.NotifyMsgEvent;
+import com.pn.service.entity.notify.NotifyMsgEvent;
 import com.pn.service.utils.RedisCache;
 import org.springframework.stereotype.Component;
 

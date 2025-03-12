@@ -1,5 +1,6 @@
 package com.pn.service.utils.cover;
 
+import com.google.common.collect.Lists;
 import com.pn.common.enums.PayTypeEnum;
 import com.pn.common.enums.PushStatusEnum;
 import com.pn.common.enums.ThirdPayWayEnum;
@@ -10,10 +11,12 @@ import com.pn.common.vos.article.*;
 import com.pn.dao.entity.*;
 import com.pn.service.impls.pay.dto.AlipayByQrCodeDto;
 import com.pn.service.utils.id.IdUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 文章转换工具
@@ -93,13 +96,12 @@ public class ArticleCoverUtil {
     }
 
 
-
     public static ArticleVO coverToArticleVo(PnArticle article,
-                                              PnArticleDetail articleDetail,
-                                              List<PnTag> tagList,
-                                              PnColumnInfo columnInfo,
-                                              PnCatalog catalog,
-                                              PnUser user) {
+                                             PnArticleDetail articleDetail,
+                                             List<PnTag> tagList,
+                                             PnColumnInfo columnInfo,
+                                             PnCatalog catalog,
+                                             PnUser user) {
         ArticleVO articleVO = new ArticleVO();
         articleVO.setAuthorInfo(SimpleUserInfoDTO
                 .builder()
@@ -133,14 +135,123 @@ public class ArticleCoverUtil {
     }
 
 
-    public static AlipayByQrCodeDto articleCoverToDto(PnArticle article){
+    public static AlipayByQrCodeDto articleCoverToDto(PnArticle article) {
         AlipayByQrCodeDto codeDto = new AlipayByQrCodeDto();
-        codeDto.setOutBizNo(IdUtil.genPayCode(ThirdPayWayEnum.ALI_QR,article.getId()));
-        codeDto.setTransAmount(StringUtils.isEmpty(article.getPayAmount())?"0.88":article.getPayAmount());
-        codeDto.setTitle(String.format("尊敬的用户,您正在支付文章:%s",article.getTitle()));
+        codeDto.setOutBizNo(IdUtil.genPayCode(ThirdPayWayEnum.ALI_QR, article.getId()));
+        codeDto.setTransAmount(StringUtils.isEmpty(article.getPayAmount()) ? "0.88" : article.getPayAmount());
+        codeDto.setTitle(String.format("尊敬的用户,您正在支付文章:%s", article.getTitle()));
         codeDto.setRemark("本次支付的结果会以邮件或者平台消息通知您");
         codeDto.setPayType(PayTypeEnum.ARTICLE.getType());
         return codeDto;
     }
+
+    public static ArticleIndexVo coverTpIndexVo(ArticleIndexVo indexVo,
+                                         PnArticle article,
+                                         List<PnTag> tags,
+                                         PnColumnInfo columnInfo,
+                                         PnCatalog catalog,
+                                         PnUser user) {
+        if (Objects.isNull(indexVo)) {
+            indexVo = new ArticleIndexVo();
+        }
+        indexVo.setArticleId(article.getId());
+        indexVo.setReadType(article.getReadType());
+        indexVo.setAuthorId(article.getUserId());
+        indexVo.setSummary(article.getSummary());
+        indexVo.setAuthorName(user.getFullName());
+        indexVo.setAuthorAvatar(user.getAvatar());
+        indexVo.setTitle(article.getTitle());
+        indexVo.setShortTitle(article.getShortTitle());
+        indexVo.setCover(article.getPicture());
+        indexVo.setOfficalStat(article.getOfficalStat());
+        indexVo.setToppingStat(article.getToppingStat());
+        indexVo.setRecommend(article.getRecommend());
+        indexVo.setUpdateTime(article.getUpdateAt());
+        List<TagVo> tagVos;
+        if (CollectionUtils.isNotEmpty(tags)) {
+            tagVos = ListUtil.coverToListVo(tags, tag -> {
+                return TagVo.builder()
+                        .tagId(tag.getId())
+                        .status(tag.getStatus())
+                        .tagName(tag.getTagName())
+                        .tagType(tag.getTagType())
+                        .build();
+            });
+        } else {
+            tagVos = Lists.newArrayList();
+        }
+        indexVo.setTagVos(tagVos);
+        if (Objects.nonNull(columnInfo)){
+            indexVo.setColumnId(columnInfo.getId());
+            indexVo.setColumnName(columnInfo.getColumnName());
+        }
+        if (Objects.nonNull(catalog)){
+            indexVo.setCatalogId(catalog.getId());
+            indexVo.setCatalogName(catalog.getCategoryName());
+        }
+
+        return indexVo;
+    }
+
+    public static ArticleVO coverToArticleVo(ArticleVO articleVO,
+                                             PnArticle article,
+                                             PnArticleDetail articleDetail,
+                                             List<PnTag> tags,
+                                             PnColumnInfo columnInfo,
+                                             PnCatalog catalog,
+                                             PnUser user) {
+        // 如果 articleVO 为 null，则初始化
+        if (Objects.isNull(articleVO)) {
+            articleVO = new ArticleVO();
+        }
+
+        // 设置文章基本信息
+        articleVO.setArticleId(article.getId());
+        articleVO.setTitle(article.getTitle());
+        articleVO.setShortTitle(article.getShortTitle());
+        articleVO.setCover(article.getPicture());
+        articleVO.setSummary(article.getSummary());
+        articleVO.setArticleType(article.getArticleType());
+        articleVO.setSource(article.getSource());
+        articleVO.setSourceUrl(article.getSourceUrl());
+        articleVO.setOfficalStat(article.getOfficalStat());
+        articleVO.setRecommend(article.getRecommend());
+        articleVO.setContext(articleDetail.getContent());
+
+        // 设置标签信息
+        List<TagVo> tagVos;
+        if (CollectionUtils.isNotEmpty(tags)) {
+            tagVos = ListUtil.coverToListVo(tags, tag -> {
+                return TagVo.builder()
+                        .tagId(tag.getId())
+                        .status(tag.getStatus())
+                        .tagName(tag.getTagName())
+                        .tagType(tag.getTagType())
+                        .build();
+            });
+        } else {
+            tagVos = Lists.newArrayList();
+        }
+        articleVO.setTags(tagVos);
+
+        // 设置分类信息
+        CatalogPaveVo catalogPaveVo;
+        if (columnInfo != null) {
+            catalogPaveVo = CatalogPaveVo.builder()
+                    .categoryName(catalog.getCategoryName())
+                    .categoryId(catalog.getId())
+                    .rank(catalog.getRank())
+                    .status(catalog.getStatus())
+                    .build();
+
+        }else {
+            catalogPaveVo = null;
+        }
+        articleVO.setCatalog(catalogPaveVo);
+        return articleVO;
+    }
+
+
+
 
 }

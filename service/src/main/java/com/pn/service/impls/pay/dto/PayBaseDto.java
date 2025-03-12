@@ -26,4 +26,8 @@ public class PayBaseDto implements Serializable {
      * 备注
      */
     private String remark;
+    /**
+     * 交易号
+     */
+    private String tradeNo;
 }

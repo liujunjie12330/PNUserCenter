@@ -7,17 +7,17 @@ import me.zhyd.oauth.enums.scope.AuthGitlabScope;
 import me.zhyd.oauth.request.*;
 import me.zhyd.oauth.utils.AuthScopeUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Objects;
 
 /**
- * @author: javadadi
- * @Time: 19:34
- * @ClassName: AuthListBean
+ * 第三方登陆bean
  */
 @Component
+@PropertySource(value = "classpath:config/outh.properties")
 public class AuthListBean {
     @Resource
     private AuthStateCache authStateCache;

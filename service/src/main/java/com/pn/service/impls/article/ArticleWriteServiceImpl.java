@@ -1,6 +1,7 @@
 package com.pn.service.impls.article;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Lists;
 import com.pn.common.base.UserTokenThreadHolder;
 import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.enums.ArticleActionEnum;
@@ -8,22 +9,32 @@ import com.pn.common.enums.PushStatusEnum;
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
 import com.pn.common.reqParams.article.ArticleSaveParams;
+import com.pn.common.vos.article.ArticleIndexVo;
+import com.pn.common.vos.article.ArticleVO;
+import com.pn.common.vos.article.TagVo;
 import com.pn.common.vos.login.UserVo;
-import com.pn.dao.entity.PnArticle;
-import com.pn.dao.entity.PnArticleDetail;
-import com.pn.dao.mapper.PnArticleDetailMapper;
-import com.pn.dao.mapper.PnArticleMapper;
+import com.pn.dao.entity.*;
+import com.pn.dao.mapper.*;
 import com.pn.service.ArticleTagService;
 import com.pn.service.ArticleWriteService;
+import com.pn.service.impls.es.ESArticleIndexService;
+import com.pn.service.impls.es.ESArticleVoService;
 import com.pn.service.utils.SensitiveUtil;
+import com.pn.service.utils.cover.ArticleCoverUtil;
+import com.pn.service.utils.cover.ListUtil;
 import com.pn.service.utils.id.IdUtil;
+import io.minio.messages.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import static com.pn.service.utils.cover.ArticleCoverUtil.paramCoverToArticleDetail;
@@ -41,6 +52,27 @@ public class ArticleWriteServiceImpl extends ServiceImpl<PnArticleMapper, PnArti
     @Resource
     private PnArticleDetailMapper articleDetailMapper;
 
+    @Resource
+    private PnTagMapper tagMapper;
+
+    @Resource
+    private PnColumnInfoMapper columnInfoMapper;
+
+    @Resource
+    private PnArticleTagMapper articleTagMapper;
+
+
+    @Resource
+    private PnCatalogMapper catalogMapper;
+
+    @Resource
+    private PnUserMapper userMapper;
+
+    @Resource
+    private ESArticleIndexService indexService;
+
+    @Resource
+    private ESArticleVoService voService;
     /**
      * 保存文章-->存草稿 | 直接发布待审核都走这个方法
      */
@@ -60,6 +92,34 @@ public class ArticleWriteServiceImpl extends ServiceImpl<PnArticleMapper, PnArti
             articleId = updateArticle(params);
             log.info("更新文章===>articleId=={},username=={},userId=={},time=={},operation=={}", articleId, currentUser.getUsername(), userId, new Date(), params.getActionType());
         }
+        Long finalArticleId = articleId;
+        //canal不确定是否开启，用事务同步器同步一次
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            private final Long id = finalArticleId;
+
+            @Override
+            public void afterCompletion(int status) {
+                if (0 != status) return;
+                try {
+                    PnArticle article = getById(id);
+                    PnArticleDetail articleDetail = articleDetailMapper.getByArticleId(id);
+                    List<Long> ids = articleTagMapper.getTagIdsByArticleId(id);
+                    List<PnTag> tags = Lists.newArrayList();
+                    if (CollectionUtils.isNotEmpty(ids)){
+                       tags = tagMapper.selectBatchIds(ids);
+                    }
+                    PnColumnInfo columnInfo = columnInfoMapper.getByArticleId(id);
+                    PnCatalog catalog = catalogMapper.selectById(article.getCatalogId());
+                    PnUser pnUser = userMapper.selectById(article.getUserId());
+                    ArticleIndexVo articleIndexVo = ArticleCoverUtil.coverTpIndexVo(null, article, tags, columnInfo, catalog, pnUser);
+                    ArticleVO articleVO = ArticleCoverUtil.coverToArticleVo(null, article, articleDetail, tags, columnInfo, catalog, pnUser);
+                    indexService.saveArticleIndex(articleIndexVo);
+                    voService.saveArticleVo(articleVO);
+                } catch (Exception e) {
+                    log.error("异步插入失败:message={}", e.getMessage());
+                }
+            }
+        });
         return articleId;
     }
 

@@ -11,9 +11,13 @@ import java.util.List;
  */
 public interface PNUserCenterConstant {
     /**
-     * 文章支付前缀
+     * 文章支付前缀 article_id--userid
      */
-    public static final String ARTICLE_PAID = "article_paid";
+    public static final String ARTICLE_PAID = "article_paid::%d_%d";
+    /**
+     * 订单记录 id--userid
+     */
+    public static final String ORDER_PREFIX = "pn_order::%d_%d";
     /**
      * 文章的三种操作
      */

@@ -1,9 +1,13 @@
 package com.pn.service.user;
 
+import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.reqParams.user.UserRolePermissionSettingParam;
 import com.pn.dao.bo.user.SearchUserPermissionBo;
 import com.pn.service.RoleUserSettingService;
+import com.pn.service.UserLoginService;
+import com.pn.service.UserSettingService;
 import com.pn.web.PNUserCenterApp;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +28,9 @@ public class UserRoleTest {
     @Resource
     private RoleUserSettingService roleUserSettingService;
 
+
+    @Resource
+    private UserLoginService loginService;
     @Test
     void testSearchUserRole(){
         UserRolePermissionSettingParam roleParam = new UserRolePermissionSettingParam();
@@ -38,5 +45,7 @@ public class UserRoleTest {
 
     }
 
-
+    public static void main(String[] args) {
+        System.out.println(DigestUtil.md5Hex((PNUserCenterConstant.USER_PASSWORD_SLOT + "20021018").getBytes()));
+    }
 }

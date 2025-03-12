@@ -43,13 +43,13 @@ public class ArticleWriteServiceTest {
         UserVo userVo = UserVo.builder().id(1L).isAdmin(0).username("liujunjie").build();
         UserTokenThreadHolder.addCurrentUser(userVo);
         ArticleSaveParams params = new ArticleSaveParams();
-        params.setArticleId(1L);
+        params.setArticleId(null);
         params.setTitle("");
         params.setShortTitle("");
-        params.setCategoryId(0L);
+        params.setCategoryId(1L);
         params.setTagIds(new HashSet<Long>());
         params.setSummary("sss");
-        params.setContent("傻逼哦，sanacna9qn9q9as擦擦");
+        params.setContent("sssss");
         params.setCover("ssss");
         params.setArticleType(1);
         params.setSource(0);
@@ -59,8 +59,10 @@ public class ArticleWriteServiceTest {
         params.setColumnId(0L);
         params.setReadType(0);
         params.setPayWay(0);
-        params.setPayAmount("");
+        params.setPayAmount("0");
         params.setPayImageUrl("");
-        articleWrite.save(params);
+        for (int i = 0; i < 100; i++) {
+            articleWrite.save(params);
+        }
     }
 }

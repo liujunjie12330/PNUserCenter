@@ -1,16 +1,20 @@
-package com.pn.service.bean.pay;
+package com.pn.service.entity.pay;
 
 import com.alipay.api.AlipayConfig;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 /**
- * @author: javadadi
- * @Time: 18:38
- * @ClassName: AlipayConfig
+ * alipay配置文件
  */
 @Configuration
+@Component
+@Data
+@PropertySource(value = "classpath:config/alipay.properties")
 public class AlipayBean {
     @Value("${alipay.appid}")
     private String appId;

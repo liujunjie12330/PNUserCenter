@@ -25,6 +25,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--版本仲裁-->
+        <elasticsearch.version>7.7.1</elasticsearch.version>
         <gson.version>2.9.0</gson.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <knife4j.version>4.4.0</knife4j.version>

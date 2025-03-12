@@ -1,6 +1,7 @@
 package com.pn.service.impls.article;
 
 import com.alipay.api.AlipayApiException;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.pn.common.base.UserTokenThreadHolder;
 import com.pn.common.constant.PNUserCenterConstant;
@@ -10,8 +11,10 @@ import com.pn.common.exception.BizException;
 import com.pn.common.vos.login.UserVo;
 import com.pn.dao.entity.PnArticle;
 import com.pn.dao.entity.PnArticlePayRecord;
+import com.pn.dao.entity.PnOrder;
 import com.pn.dao.mapper.PnArticleMapper;
 import com.pn.dao.mapper.PnArticlePayRecordMapper;
+import com.pn.dao.mapper.PnOrderMapper;
 import com.pn.service.ArticlePayService;
 import com.pn.service.PayService;
 import com.pn.service.impls.pay.AliPayService;
@@ -21,8 +24,8 @@ import com.pn.service.utils.cover.ArticleCoverUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -42,10 +45,15 @@ public class ArticlePayServiceImpl extends ServiceImpl<PnArticlePayRecordMapper,
 
     @Resource(type = AliPayService.class)
     private PayService payService;
-    @Autowired
+
+    @Resource
     private RedisCache redisCache;
 
+    @Resource
+    private PnOrderMapper orderMapper;
+
     @Override
+    @Transactional
     public String payArticle(Long articleId) throws AlipayApiException {
         UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
         //查询文章是否被当前用户支付过
@@ -58,7 +66,6 @@ public class ArticlePayServiceImpl extends ServiceImpl<PnArticlePayRecordMapper,
             throw new BizException(StatusCode.NO_SUCH_ARTICLE);
         }
         AlipayByQrCodeDto codeDto = ArticleCoverUtil.articleCoverToDto(article);
-        redisCache.setHashCache(codeDto.getOutBizNo(), "articleId", articleId);
         String url = payService.payByQrCode(codeDto, PayTypeEnum.ARTICLE);
         if (StringUtils.isEmpty(url)) {
             throw new BizException(StatusCode.SYSTEM_ERROR);
@@ -69,15 +76,35 @@ public class ArticlePayServiceImpl extends ServiceImpl<PnArticlePayRecordMapper,
 
     @Override
     public boolean isPaid(Long articleId, Long userId) {
-        //现在redis里面查一次
-        boolean key = redisCache.hasKey(PNUserCenterConstant.ARTICLE_PAID + userId + "_" + articleId);
-        if (BooleanUtils.isTrue(key)) {
-            return key;
+        //支付成功并且成功回调
+        if (redisCache.hasKey(String.format(PNUserCenterConstant.ARTICLE_PAID, articleId, userId))) {
+            return true;
         }
-        boolean isPaid = recordMapper.isPaid(articleId, userId);
-        if (BooleanUtils.isTrue(isPaid)) {
-            redisCache.set(PNUserCenterConstant.ARTICLE_PAID + userId + "_" + articleId, articleId);
+        //支付成功并且成功回调，但是redis里面没有
+        boolean paid = recordMapper.isPaid(articleId, userId);
+        if (BooleanUtils.isTrue(paid)) {
+            redisCache.set(String.format(PNUserCenterConstant.ARTICLE_PAID, articleId, userId), "true");
+            return true;
         }
-        return isPaid;
+        //没有成功回调，并且没有成功调起支付界面  redis 和 mysql都没有存在数据
+        if (!redisCache.hasKey(String.format(PNUserCenterConstant.ORDER_PREFIX, articleId, userId))
+                && !orderMapper.exist(articleId,userId,PayTypeEnum.ARTICLE.getType())) {
+            //todo 可能需要删除用户的垃圾信息
+            return false;
+        }
+        //成功发起支付界面，但是没有回调,要去第三方平台进行查询
+        if (redisCache.hasKey(String.format(PNUserCenterConstant.ORDER_PREFIX, articleId, userId))) {
+            String outBizNo = (String) redisCache.get(String.format(PNUserCenterConstant.ORDER_PREFIX, articleId, userId));
+            AlipayTradeQueryResponse response = payService.queryPay(outBizNo, null);
+            return StringUtils.equalsIgnoreCase("TRADE_SUCCESS",response.getTradeStatus());
+        }
+        //如果redis里面没有，就在订单表里面进行查询
+        PnOrder pnOrder = orderMapper.selectArticleIdAndUserId(articleId, userId);
+        if (Objects.isNull(pnOrder)){
+            return false;
+        }
+        String outBizNo = pnOrder.getOutBizNo();
+        AlipayTradeQueryResponse response = payService.queryPay(outBizNo, null);
+        return StringUtils.equalsIgnoreCase("TRADE_SUCCESS",response.getTradeStatus());
     }
 }

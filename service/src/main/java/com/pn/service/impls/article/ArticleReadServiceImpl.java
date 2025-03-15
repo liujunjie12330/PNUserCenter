@@ -69,6 +69,11 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
     @Resource
     private ESArticleVoService voService;
 
+    /**
+     * 首页文章分页
+     * @param param param 查询参数
+     * @return Page<ArticleIndexVo> 分页数据
+     */
     @Override
     public Page<ArticleIndexVo> page(ArticleIndexParam param) {
         Page<ArticleIndexVo> pageVo;
@@ -88,6 +93,11 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
         return pageVo;
     }
 
+    /**
+     * 文章是否支付
+     * @param articleId articleId
+     * @return Boolean 是否支付
+     */
     @Override
     public Boolean isPaid(Long articleId) {
         UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
@@ -95,6 +105,12 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
         return articlePayService.isPaid(articleId, currentUser.getId());
     }
 
+    /**
+     * 阅读文章
+     * @param id id
+     * @return ArticleVO 文章详情
+     * @throws AlipayApiException AlipayApiException
+     */
     @Override
     public ArticleVO read(Long id) throws AlipayApiException {
         //首先查找文章是否存在
@@ -104,6 +120,10 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
         }
         //如果文章存在，查看文章的阅读状态
         Integer readType = article.getReadType();
+        //如果是文章的作者，直接阅读
+        if (Objects.equals(article.getUserId(), UserTokenThreadHolder.getCurrentUser().getId())) {
+            return readNormal(article);
+        }
         /*
           直接阅读--->不需要登陆权限
          */
@@ -128,6 +148,12 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
         return null;
     }
 
+    /**
+     * 支付阅读
+     * @param article article
+     * @return articleVO
+     * @throws AlipayApiException AlipayApiException
+     */
     private ArticleVO readPay(PnArticle article) throws AlipayApiException {
         //首先查看登陆状态
         if (!UserTokenThreadHolder.isLogin()) {
@@ -148,7 +174,11 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
         return vo;
     }
 
-
+    /**
+     * 登陆阅读
+     * @param article article
+     * @return articleVO
+     */
     private ArticleVO readLogin(PnArticle article) {
         //首先查看登陆状态
         if (!UserTokenThreadHolder.isLogin()) {

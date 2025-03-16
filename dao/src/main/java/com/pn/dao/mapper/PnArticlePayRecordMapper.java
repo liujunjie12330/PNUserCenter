@@ -7,5 +7,5 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface PnArticlePayRecordMapper extends BaseMapper<PnArticlePayRecord> {
-    boolean isPaid(@Param("articleId")Long articleId,@Param("userId")Long userId);
+    Boolean isPaid(@Param("payUserId") Long payUserId, @Param("articleId") Long articleId);
 }

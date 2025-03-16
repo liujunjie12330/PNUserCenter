@@ -6,6 +6,7 @@ import com.pn.dao.entity.PnOrder;
 import com.pn.dao.entity.PnTransactions;
 import com.pn.service.impls.pay.dto.PayBaseDto;
 import com.pn.service.utils.id.IdUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -67,15 +68,10 @@ public class RecordCoverUtil {
         payRecord.setReceiveUserId(receiveUuid);
         payRecord.setReceivePnUserId(receivePnUserId);
         payRecord.setArticleId(articleId);
-        payRecord.setPayStatus(getFirstValue(parameterMap, "trade_status"));
-        payRecord.setNotifyTime(new Date());
-        payRecord.setNotifyCnt(0);
-        payRecord.setNotes("文章支付");
-        payRecord.setVerifyCode("ss");
+        String tradeStatus = getFirstValue(parameterMap, "trade_status");
+//        payRecord.setPayStatus(StringUtils.equalsIgnoreCase(""));
         String paymentAmountStr = getFirstValue(parameterMap, "total_amount");
         payRecord.setPayAmount(paymentAmountStr);
-        payRecord.setPrePayId("0");
-        payRecord.setPrePayExpireTime(new Date());
         payRecord.setPayWay("alipay");
         payRecord.setThirdTransCode(getFirstValue(parameterMap, "trade_no"));
         payRecord.setPayCallbackTime(new Date());

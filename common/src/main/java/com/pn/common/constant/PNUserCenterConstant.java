@@ -10,6 +10,7 @@ import java.util.List;
  * @ClassName: PNUserCenterConstant
  */
 public interface PNUserCenterConstant {
+    public static final String THIRD_PAY_QUEUE="thirdPay.queue";
     /**
      * 文章支付前缀 article_id--userid
      */

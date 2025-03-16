@@ -40,4 +40,12 @@
       create_time,
       update_time
   </sql>
+
+  <select id="getByOrderNo" resultMap="BaseResultMap">
+      select
+      <include refid="Base_Column_List"/>
+        from pndb.pn_transactions
+      where is_deleted=0
+      and order_id = #{orderNo}
+    </select>
 </mapper>

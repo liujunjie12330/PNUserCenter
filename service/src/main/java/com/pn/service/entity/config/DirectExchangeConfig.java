@@ -1,5 +1,6 @@
 package com.pn.service.entity.config;
 
+import com.pn.common.constant.PNUserCenterConstant;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -32,7 +33,7 @@ public class DirectExchangeConfig {
 //        return new Queue("TestDirectQueue",true,true,false);
 
         // 一般设置一下队列的持久化就好,其余两个就是默认false
-        return new Queue("directQueue", true);
+        return new Queue(PNUserCenterConstant.THIRD_PAY_QUEUE, true);
     }
 
     /**

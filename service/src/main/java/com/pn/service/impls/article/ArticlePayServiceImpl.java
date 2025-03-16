@@ -35,7 +35,7 @@ import java.util.Objects;
  */
 @Service
 @Slf4j
-public class ArticlePayServiceImpl extends ServiceImpl<PnArticlePayRecordMapper, PnArticlePayRecord> implements ArticlePayService {
+public class ArticlePayServiceImpl extends ServiceImpl<PnArticlePayRecordMapper,PnArticlePayRecord> implements ArticlePayService {
 
     @Resource
     private PnArticlePayRecordMapper recordMapper;
@@ -89,7 +89,6 @@ public class ArticlePayServiceImpl extends ServiceImpl<PnArticlePayRecordMapper,
         //没有成功回调，并且没有成功调起支付界面  redis 和 mysql都没有存在数据
         if (!redisCache.hasKey(String.format(PNUserCenterConstant.ORDER_PREFIX, articleId, userId))
                 && !orderMapper.exist(articleId,userId,PayTypeEnum.ARTICLE.getType())) {
-            //todo 可能需要删除用户的垃圾信息
             return false;
         }
         //成功发起支付界面，但是没有回调,要去第三方平台进行查询

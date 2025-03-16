@@ -60,13 +60,8 @@ public class AlipayLogInterceptor {
             //发起支付成功,把支付相关信息放到redis里面
             redisCache.setHashCache(dto.getOutBizNo(),"pay_type",typeEnum.getType());
             redisCache.set(String.format(PNUserCenterConstant.ORDER_PREFIX,id,currentUser.getId()),dto.getOutBizNo());
-        } catch (AlipayApiException e) {
-            //代表发起支付错误,需要把支付的状态更改成false
-            log.error("【alipay】错误信息: {}", e.getMessage(), e);
-            throw new BizException(e.getMessage());
         } catch (Throwable e) {
-            //发起支付成功但是系统出现问题，需要额外处理
-            log.info("【alipay】支付成功但是系统出现问题,{}",e.getMessage());
+            log.info("【alipay】prepare to pay error==>{}",e.getMessage());
             msg = e.getMessage();
             throw new RuntimeException(e);
         } finally {

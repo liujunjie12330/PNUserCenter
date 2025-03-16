@@ -21,10 +21,10 @@ public class PnOrder extends BaseModel {
     @TableField(value = "pay_user_id")
     private Long payUserId;
     /**
-     * 额外的id,用下外部的订单绑定
+     * 文章id
      */
-    @TableField(value = "extra_id")
-    private Long extraId;
+    @TableField(value = "article_id")
+    private Long articleId;
 
     /**
      * 订单号

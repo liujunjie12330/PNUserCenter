@@ -11,7 +11,7 @@
         <result column="update_by" jdbcType="BIGINT" property="updateBy"/>
         <result column="is_deleted" jdbcType="BOOLEAN" property="isDeleted"/>
         <result column="pay_user_id" jdbcType="BIGINT" property="payUserId"/>
-        <result column="extra_id" jdbcType="BIGINT" property="extraId"/>
+        <result column="article_id" jdbcType="BIGINT" property="articleId"/>
         <result column="out_biz_no" jdbcType="VARCHAR" property="outBizNo"/>
         <result column="trans_amount" jdbcType="VARCHAR" property="transAmount"/>
         <result column="title" jdbcType="VARCHAR" property="title"/>
@@ -30,7 +30,7 @@
         update_by,
         is_deleted,
         pay_user_id,
-        extra_id,
+        article_id,
         out_biz_no,
         trans_amount,
         title,
@@ -45,7 +45,7 @@
         SELECT EXISTS(SELECT 1
                       FROM pndb.pn_order
                       WHERE pay_user_id = #{userId}
-                        and extra_id = #{articleId}
+                        and article_id = #{articleId}
                         and type = #{type}
                         and is_deleted = 0)
     </select>
@@ -53,7 +53,7 @@
     <select id="selectArticleIdAndUserId" resultMap="BaseResultMap">
         select *
         from pndb.pn_order
-        where extra_id = #{articleId}
+        where article_id = #{articleId}
           and pay_user_id = #{userId}
           and type = 'article'
           and is_deleted = 0

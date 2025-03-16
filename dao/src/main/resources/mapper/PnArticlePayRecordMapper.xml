@@ -1,63 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pn.dao.mapper.PnArticlePayRecordMapper">
-    <resultMap id="BaseResultMap" type="com.pn.dao.entity.PnArticlePayRecord">
-        <!--@mbg.generated-->
-        <!--@Table pn_article_pay_record-->
-        <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="create_at" jdbcType="TIMESTAMP" property="createAt"/>
-        <result column="update_at" jdbcType="TIMESTAMP" property="updateAt"/>
-        <result column="create_by" jdbcType="BIGINT" property="createBy"/>
-        <result column="update_by" jdbcType="BIGINT" property="updateBy"/>
-        <result column="is_deleted" jdbcType="INTEGER" property="isDeleted"/>
-        <result column="pay_user_id" jdbcType="VARCHAR" property="payUserId"/>
-        <result column="pay_pn_user_id" jdbcType="BIGINT" property="payPnUserId"/>
-        <result column="receive_user_id" jdbcType="VARCHAR" property="receiveUserId"/>
-        <result column="receive_pn_user_id" jdbcType="BIGINT" property="receivePnUserId"/>
-        <result column="article_id" jdbcType="BIGINT" property="articleId"/>
-        <result column="pay_status" jdbcType="VARCHAR" property="payStatus"/>
-        <result column="notify_time" jdbcType="TIMESTAMP" property="notifyTime"/>
-        <result column="notify_cnt" jdbcType="INTEGER" property="notifyCnt"/>
-        <result column="notes" jdbcType="VARCHAR" property="notes"/>
-        <result column="verify_code" jdbcType="VARCHAR" property="verifyCode"/>
-        <result column="pay_amount" jdbcType="VARCHAR" property="payAmount"/>
-        <result column="pre_pay_id" jdbcType="VARCHAR" property="prePayId"/>
-        <result column="pre_pay_expire_time" jdbcType="TIMESTAMP" property="prePayExpireTime"/>
-        <result column="pay_way" jdbcType="VARCHAR" property="payWay"/>
-        <result column="third_trans_code" jdbcType="VARCHAR" property="thirdTransCode"/>
-        <result column="pay_callback_time" jdbcType="TIMESTAMP" property="payCallbackTime"/>
-    </resultMap>
-    <sql id="Base_Column_List">
-        <!--@mbg.generated-->
-        id,
-        create_at,
-        update_at,
-        create_by,
-        update_by,
-        is_deleted,
-        pay_user_id,
-        pay_pn_user_id,
-        receive_user_id,
-        receive_pn_user_id,
-        article_id,
-        pay_status,
-        notify_time,
-        notify_cnt,
-        notes,
-        verify_code,
-        pay_amount,
-        pre_pay_id,
-        pre_pay_expire_time,
-        pay_way,
-        third_trans_code,
-        pay_callback_time
-    </sql>
+  <resultMap id="BaseResultMap" type="com.pn.dao.entity.PnArticlePayRecord">
+    <!--@mbg.generated-->
+    <!--@Table pn_article_pay_record-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+    <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+    <result column="is_deleted" jdbcType="BOOLEAN" property="isDeleted" />
+    <result column="pay_user_id" jdbcType="VARCHAR" property="payUserId" />
+    <result column="pay_pn_user_id" jdbcType="BIGINT" property="payPnUserId" />
+    <result column="receive_user_id" jdbcType="VARCHAR" property="receiveUserId" />
+    <result column="receive_pn_user_id" jdbcType="BIGINT" property="receivePnUserId" />
+    <result column="article_id" jdbcType="BIGINT" property="articleId" />
+    <result column="out_biz_no" jdbcType="VARCHAR" property="outBizNo" />
+    <result column="pay_amount" jdbcType="VARCHAR" property="payAmount" />
+    <result column="pay_status" jdbcType="INTEGER" property="payStatus" />
+    <result column="extra" jdbcType="VARCHAR" property="extra" />
+    <result column="pay_way" jdbcType="VARCHAR" property="payWay" />
+    <result column="third_trans_code" jdbcType="VARCHAR" property="thirdTransCode" />
+    <result column="pay_callback_time" jdbcType="TIMESTAMP" property="payCallbackTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, create_at, update_at, create_by, update_by, is_deleted, pay_user_id, pay_pn_user_id, 
+    receive_user_id, receive_pn_user_id, article_id, out_biz_no, pay_amount, pay_status, 
+    extra, pay_way, third_trans_code, pay_callback_time
+  </sql>
 
-    <select id="isPaid" resultType="boolean">
-        SELECT EXISTS(SELECT 1
-                      FROM pn_article_pay_record
-                      WHERE is_deleted = 0
-                        and article_id = #{articleId}
-                        and pay_user_id = #{userId})
-    </select>
+  <select id="isPaid" resultType="java.lang.Boolean">
+    select exists(select id
+                  from pndb.pn_article_pay_record
+    where  is_deleted =0
+    and pay_user_id = #{payUserId}
+    and article_id = #{articleId})
+  </select>
 </mapper>

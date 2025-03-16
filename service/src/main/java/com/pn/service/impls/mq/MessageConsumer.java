@@ -1,13 +1,23 @@
 package com.pn.service.impls.mq;
 
+import com.pn.common.constant.PNUserCenterConstant;
+import com.pn.common.enums.StatusCode;
+import com.pn.common.exception.BizException;
+import com.pn.dao.entity.PnTransactions;
+import com.pn.dao.mapper.PnTransactionsMapper;
+import com.pn.service.PayService;
+import com.pn.service.utils.id.IdUtil;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.Objects;
 
 
 /**
@@ -16,20 +26,28 @@ import java.io.IOException;
  */
 @Component
 @Slf4j
-@RabbitListener(queues = "directQueue")
 public class MessageConsumer {
 
+    @Resource
+    private PayService payService;
+
+
+
+    @Resource
+    private PnTransactionsMapper transactionsMapper;
     /**
      * 处理接收到的消息
+     *
      * @param message 接收到的消息内容
      */
     @RabbitHandler
-    public void process(String msg, Channel channel, Message message) throws IOException {
+    @RabbitListener(queues = PNUserCenterConstant.THIRD_PAY_QUEUE)
+    public void process(String outBizNo, Channel channel, Message message) throws IOException {
         long tag = message.getMessageProperties().getDeliveryTag();
         try {
-            processMessage(msg);
+            processMessage(outBizNo);
             channel.basicAck(tag, false);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("处理消息失败，准备重新入队", e);
             channel.basicNack(tag, false, true);
         }
@@ -37,24 +55,18 @@ public class MessageConsumer {
 
     /**
      * 处理消息的具体业务逻辑
-     * @param message 消息内容
+     *
+     * @param outBizNo 文章id
      */
-    private void processMessage(String message) {
-        // 根据消息内容进行业务处理
-        // 1. 可以解析消息内容，提取关键信息
-        // 2. 根据消息类型进行不同的处理
-        // 3. 调用相应的服务完成业务逻辑
-
-        // 这里只是示例，实际业务逻辑需要根据项目需求实现
-        if (message.contains("article")) {
-            // 处理文章相关消息
-            log.info("处理文章相关消息");
-        } else if (message.contains("user")) {
-            // 处理用户相关消息
-            log.info("处理用户相关消息");
-        } else {
-            // 处理其他类型消息
-            log.info("处理其他类型消息");
+    private void processMessage(String outBizNo) {
+        if (StringUtils.isBlank(outBizNo)) {
+            throw new BizException(StatusCode.PARAMS_ERROR);
         }
+        Long id = IdUtil.parseIdFromPayCode(outBizNo);
+        PnTransactions byOrderNo = transactionsMapper.getByOrderNo(outBizNo);
+        if(Objects.isNull(byOrderNo)) {
+            throw new BizException(StatusCode.TRANSACTION_NOT_EXIST);
+        }
+
     }
 }

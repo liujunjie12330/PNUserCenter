@@ -7,6 +7,7 @@ import com.pn.common.base.UserTokenThreadHolder;
 import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.enums.PayTypeEnum;
 import com.pn.common.enums.StatusCode;
+import com.pn.common.enums.TransactionStatus;
 import com.pn.common.exception.BizException;
 import com.pn.common.vos.login.UserVo;
 import com.pn.dao.entity.PnArticle;
@@ -35,7 +36,7 @@ import java.util.Objects;
  */
 @Service
 @Slf4j
-public class ArticlePayServiceImpl extends ServiceImpl<PnArticlePayRecordMapper,PnArticlePayRecord> implements ArticlePayService {
+public class ArticlePayServiceImpl extends ServiceImpl<PnArticlePayRecordMapper, PnArticlePayRecord> implements ArticlePayService {
 
     @Resource
     private PnArticlePayRecordMapper recordMapper;
@@ -88,22 +89,22 @@ public class ArticlePayServiceImpl extends ServiceImpl<PnArticlePayRecordMapper,
         }
         //没有成功回调，并且没有成功调起支付界面  redis 和 mysql都没有存在数据
         if (!redisCache.hasKey(String.format(PNUserCenterConstant.ORDER_PREFIX, articleId, userId))
-                && !orderMapper.exist(articleId,userId,PayTypeEnum.ARTICLE.getType())) {
+                && !orderMapper.exist(articleId, userId, PayTypeEnum.ARTICLE.getType())) {
             return false;
         }
         //成功发起支付界面，但是没有回调,要去第三方平台进行查询
         if (redisCache.hasKey(String.format(PNUserCenterConstant.ORDER_PREFIX, articleId, userId))) {
             String outBizNo = (String) redisCache.get(String.format(PNUserCenterConstant.ORDER_PREFIX, articleId, userId));
             AlipayTradeQueryResponse response = payService.queryPay(outBizNo, null);
-            return StringUtils.equalsIgnoreCase("TRADE_SUCCESS",response.getTradeStatus());
+            return StringUtils.equalsIgnoreCase(TransactionStatus.TRADE_SUCCESS.getName(), response.getTradeStatus());
         }
         //如果redis里面没有，就在订单表里面进行查询
         PnOrder pnOrder = orderMapper.selectArticleIdAndUserId(articleId, userId);
-        if (Objects.isNull(pnOrder)){
+        if (Objects.isNull(pnOrder)) {
             return false;
         }
         String outBizNo = pnOrder.getOutBizNo();
         AlipayTradeQueryResponse response = payService.queryPay(outBizNo, null);
-        return StringUtils.equalsIgnoreCase("TRADE_SUCCESS",response.getTradeStatus());
+        return StringUtils.equalsIgnoreCase(TransactionStatus.TRADE_SUCCESS.getName(), response.getTradeStatus());
     }
 }

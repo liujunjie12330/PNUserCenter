@@ -56,7 +56,7 @@ public class PnArticlePayRecord extends BaseModel {
     private String payAmount;
 
     /**
-     * 0-完成,1-用户已支付,3-用户支付失败,4-打款异常
+     *0-用户已支付,1-用户支付失败,2-异常
      */
     @TableField(value = "pay_status")
     private Integer payStatus;

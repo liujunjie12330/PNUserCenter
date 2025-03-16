@@ -76,4 +76,10 @@ public class PnTransactions extends BaseModel {
      */
     @TableField(value = "update_time")
     private Date updateTime;
+
+    /**
+     * 支付类型
+     */
+    @TableField(value = "pay_type")
+    private String payType;
 }

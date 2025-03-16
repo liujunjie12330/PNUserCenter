@@ -1,11 +1,16 @@
 package com.pn.service.impls.mq;
 
 import com.pn.common.constant.PNUserCenterConstant;
+import com.pn.common.enums.PayTypeEnum;
 import com.pn.common.enums.StatusCode;
+import com.pn.common.enums.ThirdPayWayEnum;
 import com.pn.common.exception.BizException;
+import com.pn.dao.entity.PnArticlePayRecord;
 import com.pn.dao.entity.PnTransactions;
+import com.pn.dao.mapper.PnArticlePayRecordMapper;
 import com.pn.dao.mapper.PnTransactionsMapper;
 import com.pn.service.PayService;
+import com.pn.service.impls.pay.dto.AlipayToThirdUserDto;
 import com.pn.service.utils.id.IdUtil;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +39,7 @@ public class MessageConsumer {
 
 
     @Resource
-    private PnTransactionsMapper transactionsMapper;
+    private PnArticlePayRecordMapper payRecordMapper;
     /**
      * 处理接收到的消息
      *
@@ -63,10 +68,22 @@ public class MessageConsumer {
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
         Long id = IdUtil.parseIdFromPayCode(outBizNo);
-        PnTransactions byOrderNo = transactionsMapper.getByOrderNo(outBizNo);
-        if(Objects.isNull(byOrderNo)) {
+        PnArticlePayRecord payRecord = payRecordMapper.getByOutBizNo(outBizNo);
+        if(Objects.isNull(payRecord)) {
             throw new BizException(StatusCode.TRANSACTION_NOT_EXIST);
         }
+        AlipayToThirdUserDto dto = initDto(payRecord);
+        payService.payToThirdUser(dto, PayTypeEnum.PAY_TO_THIRD);
+    }
 
+    private AlipayToThirdUserDto initDto(PnArticlePayRecord payRecord){
+        AlipayToThirdUserDto dto = new AlipayToThirdUserDto();
+        dto.setArticleId(payRecord.getArticleId());
+        dto.setAuthorId(payRecord.getReceivePnUserId());
+        dto.setOutBizNo(IdUtil.genPayCode(ThirdPayWayEnum.ALI_THIRD_PAY,payRecord.getReceivePnUserId()));
+        dto.setTransAmount(payRecord.getPayAmount());
+        dto.setTitle("尊敬的用户,您的文章收到一笔支付");
+        dto.setRemark("");
+        return dto;
     }
 }

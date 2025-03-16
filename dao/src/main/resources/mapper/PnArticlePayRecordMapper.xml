@@ -31,10 +31,19 @@
   </sql>
 
   <select id="isPaid" resultType="java.lang.Boolean">
-    select exists(select id
-                  from pndb.pn_article_pay_record
-    where  is_deleted =0
-    and pay_user_id = #{payUserId}
-    and article_id = #{articleId})
+      select exists(select id
+                    from pndb.pn_article_pay_record
+                    where is_deleted = 0
+                      and pay_user_id = #{payUserId}
+                      and article_id = #{articleId}
+                      and pay_status = 0)
+  </select>
+
+  <select id="getByOutBizNo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from pn_article_pay_record
+    where is_deleted = 0
+    and out_biz_no= #{outBizNo}
   </select>
 </mapper>

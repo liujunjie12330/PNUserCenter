@@ -1,6 +1,7 @@
 package com.pn.service.utils.cover;
 
 import com.pn.common.enums.PayTypeEnum;
+import com.pn.common.enums.TransactionStatus;
 import com.pn.dao.entity.PnArticlePayRecord;
 import com.pn.dao.entity.PnOrder;
 import com.pn.dao.entity.PnTransactions;
@@ -69,7 +70,7 @@ public class RecordCoverUtil {
         payRecord.setReceivePnUserId(receivePnUserId);
         payRecord.setArticleId(articleId);
         String tradeStatus = getFirstValue(parameterMap, "trade_status");
-//        payRecord.setPayStatus(StringUtils.equalsIgnoreCase(""));
+        payRecord.setPayStatus(StringUtils.equalsIgnoreCase(tradeStatus, TransactionStatus.TRADE_SUCCESS.getName())?0:1);
         String paymentAmountStr = getFirstValue(parameterMap, "total_amount");
         payRecord.setPayAmount(paymentAmountStr);
         payRecord.setPayWay("alipay");
@@ -84,8 +85,8 @@ public class RecordCoverUtil {
     {
         PnOrder pnOrder = new PnOrder();
         pnOrder.setPayUserId(userId);
-        Long extraId = IdUtil.parseIdFromPayCode(dto.getOutBizNo());
-        pnOrder.setExtraId(extraId);
+        Long articleId = IdUtil.parseIdFromPayCode(dto.getOutBizNo());
+        pnOrder.setArticleId(articleId);
         pnOrder.setOutBizNo(dto.getOutBizNo());
         pnOrder.setTransAmount(dto.getTransAmount());
         pnOrder.setTitle(dto.getTitle());

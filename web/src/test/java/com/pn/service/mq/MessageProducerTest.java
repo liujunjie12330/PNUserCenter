@@ -1,6 +1,6 @@
 package com.pn.service.mq;
 
-import com.pn.service.impls.mq.MessageProducer;
+import com.pn.service.impls.mq.ArticlePayMessageProducer;
 import com.pn.web.PNUserCenterApp;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -10,10 +10,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.mockito.Mockito.*;
 @SpringBootTest(classes = PNUserCenterApp.class)
 @RunWith(SpringRunner.class)
 class MessageProducerTest {
@@ -22,7 +18,7 @@ class MessageProducerTest {
     private RabbitTemplate rabbitTemplate;
 
     @Resource
-    private MessageProducer messageProducer;
+    private ArticlePayMessageProducer messageProducer;
 
 
     @Test

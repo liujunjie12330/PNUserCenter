@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>邮箱验证码</title>
+    <title>感谢您的支持</title>
     <style>
         table {
             width: 700px;
@@ -36,10 +36,6 @@
             color: #f60;
             font-size: 16px;
         }
-        #verificationCode {
-            color: #f60;
-            font-size: 24px;
-        }
         #content_bottom {
             margin-bottom: 30px;
         }
@@ -71,35 +67,19 @@
             color: #FE4F70;
             font-weight: bold;
         }
-        #verificationCode {
-            height: 100px;
-            width: 680px;
+        .read-button {
+            display: inline-block;
+            margin: 10px 0;
+            padding: 15px 30px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #FE4F70;
+            text-decoration: none;
+            border-radius: 5px;
             text-align: center;
-            margin: 30px 0;
         }
-        #verificationCode div {
-            height: 100px;
-            width: 680px;
-        }
-        .button {
-            color: #FE4F70;
-            margin-left: 10px;
-            height: 80px;
-            width: 80px;
-            resize: none;
-            font-size: 42px;
-            border: none;
-            outline: none;
-            padding: 10px 15px;
-            background: #ededed;
-            text-align: center;
-            border-radius: 17px;
-            box-shadow: 6px 6px 12px #cccccc,
-            -6px -6px 12px #ffffff;
-        }
-        .button:hover {
-            box-shadow: inset 6px 6px 4px #d1d1d1,
-            inset -6px -6px 4px #ffffff;
+        .read-button:hover {
+            background-color: #e03a5f;
         }
     </style>
 </head>
@@ -115,26 +95,24 @@
             </div>
             <div id="content">
                 <div id="content_top">
-                    <strong>尊敬的用户：您好！</strong>
+                    <strong>尊敬的<span th:text="${fullname}">用户</span>，您好！</strong>
                     <strong>
-                        您正在进行<span>用户中心登录</span>操作，请在五分钟内输入以下验证码完成操作：
+                        感谢您购买文章《<span th:text="${title}">文章标题</span>》。您的支持是我们前进的动力！
                     </strong>
-                    <div id="verificationCode">
-                        <button class="button" th:each="a:${code}">[[${a}]]</button>
-                    </div>
+                    <strong>
+                        如有任何问题，请联系我们的客服团队。
+                    </strong>
                 </div>
                 <div id="content_bottom">
                     <small>
-                        注意：此操作可能会登录您的账号。如非本人操作，请及时登录并修改密码以保证帐户安全
-                        <br>（请不要泄露此验证码)
+                        注意：此邮件为系统自动发送，请勿直接回复。<br>
+                        如果您有任何疑问，请通过平台客服渠道联系我们。
                     </small>
                 </div>
             </div>
             <div id="bottom">
                 <div>
-                    <p>此为系统邮件，请勿回复<br>
-                        请保管好您的邮箱，避免账号被他人盗用
-                    </p>
+                    <p>请保管好您的账号信息，避免账号被他人盗用。</p>
                     <p id="sign">编程导航</p>
                 </div>
             </div>

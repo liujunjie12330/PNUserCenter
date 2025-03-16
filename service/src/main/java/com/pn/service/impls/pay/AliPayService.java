@@ -50,6 +50,7 @@ public class AliPayService implements PayService {
      * 向第三方用户转账===>一般用于文章支付观看
      */
     @Override
+    @AlipayLog
     public void payToThirdUser(AlipayToThirdUserDto alipay, PayTypeEnum typeEnum) {
         //首先查询转账目标账户的
         PnAlipayUserInfo alipayUserInfo = infoMapper.getByUserId(alipay.getAuthorId());
@@ -75,14 +76,8 @@ public class AliPayService implements PayService {
             //当付款方为企业账户且转账金额达到（大于等于）50000元，remark不能为空。
             model.setRemark(alipay.getRemark());
             request.setBizModel(model);
+            request.setNotifyUrl(notifyUrl);
             AlipayFundTransToaccountTransferResponse response = alipayClient.execute(request);
-            if (response.isSuccess()) {
-                //调用成功要记录本次的交易信息
-                System.out.println("调用成功");
-            } else {
-                //调用失败,打印一下失败的信息
-                System.out.println("调用失败");
-            }
         } catch (Exception e) {
             //着重处理,可能存在数据库插入异常或者是调用支付异常
             throw new BizException(e.getMessage());

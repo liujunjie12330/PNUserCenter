@@ -3,6 +3,8 @@ package com.pn.service.impls.email;
 import com.github.houbb.heaven.util.util.CollectionUtil;
 import com.pn.common.enums.StatusCode;
 import com.pn.common.exception.BizException;
+import com.pn.dao.entity.PnUser;
+import com.pn.dao.mapper.PnUserMapper;
 import com.pn.service.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -10,12 +12,14 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -27,6 +31,13 @@ public class EmailServiceImpl implements EmailService {
 
     @Resource
     private JavaMailSender javaMailSender;
+
+    @Resource
+    private TemplateEngine templateEngine;
+
+    @Resource
+    private PnUserMapper pnUserMapper;
+
     /**
      * 邮件发送
      *
@@ -57,11 +68,11 @@ public class EmailServiceImpl implements EmailService {
             //邮件内容
             messageHelper.setText(content, isHtml);
             //抄送
-            if (!StringUtils.isEmpty(cc)) {
+            if (StringUtils.isNotEmpty(cc)) {
                 messageHelper.setCc(cc.split(","));
             }
             //密送
-            if (!StringUtils.isEmpty(bcc)) {
+            if (StringUtils.isNotEmpty(bcc)) {
                 messageHelper.setCc(bcc.split(","));
             }
             //添加邮件附件
@@ -75,9 +86,30 @@ public class EmailServiceImpl implements EmailService {
             //正式发送邮件
             javaMailSender.send(messageHelper.getMimeMessage());
         } catch (Exception e) {
-            log.error("邮件发送失败:{}",e.getMessage());
+            log.error("邮件发送失败:{}", e.getMessage());
             throw new BizException(StatusCode.SEND_FAILED);
         }
+    }
+
+    @Override
+    public void sendArticlePaid(String username, String title, Long receiveId) {
+        PnUser pnUser = pnUserMapper.selectById(receiveId);
+        if (Objects.isNull(pnUser)) {
+            throw new BizException(StatusCode.USER_NO_REGISTERING);
+        }
+        Context context = new Context();
+        context.setVariable("username", username);
+        context.setVariable("title", title);
+        String process = templateEngine.process("ArticlePay", context);
+        send("pn-admin@pn.com",
+                "1647415022@qq.com",
+                pnUser.getEmail(),
+                "支付消息",
+                process,
+                true,
+                "",
+                "",
+                null);
     }
 
 }

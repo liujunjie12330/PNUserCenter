@@ -9,7 +9,9 @@ import com.pn.common.enums.PayTypeEnum;
 import com.pn.common.exception.BizException;
 import com.pn.common.vos.login.UserVo;
 import com.pn.dao.entity.PnOrder;
+import com.pn.dao.entity.PnUser;
 import com.pn.dao.mapper.PnOrderMapper;
+import com.pn.dao.mapper.PnUserMapper;
 import com.pn.service.impls.pay.dto.PayBaseDto;
 import com.pn.service.utils.RedisCache;
 import com.pn.service.utils.cover.RecordCoverUtil;
@@ -37,6 +39,9 @@ public class AlipayLogInterceptor {
     @Resource
     private PnOrderMapper orderMapper;
 
+    @Resource
+    private PnUserMapper userMapper;
+
     @Around("@annotation(alipayLog)")
     public Object payLog(ProceedingJoinPoint joinPoint, AlipayLog alipayLog){
         StopWatch stopWatch = new StopWatch();
@@ -51,7 +56,7 @@ public class AlipayLogInterceptor {
         PayBaseDto dto = (PayBaseDto) args[0];
         PayTypeEnum typeEnum = (PayTypeEnum) args[1];
         Long id = IdUtil.parseIdFromPayCode(dto.getOutBizNo());
-        UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
+        PnUser pnUser = userMapper.selectById(id);
         String msg = "success";
         try {
             // 执行原方法
@@ -59,7 +64,7 @@ public class AlipayLogInterceptor {
             log.info("【alipay】返回结果: {}", result);
             //发起支付成功,把支付相关信息放到redis里面
             redisCache.setHashCache(dto.getOutBizNo(),"pay_type",typeEnum.getType());
-            redisCache.set(String.format(PNUserCenterConstant.ORDER_PREFIX,id,currentUser.getId()),dto.getOutBizNo());
+            redisCache.set(String.format(PNUserCenterConstant.ORDER_PREFIX,id,pnUser.getId()),dto.getOutBizNo());
         } catch (Throwable e) {
             log.info("【alipay】prepare to pay error==>{}",e.getMessage());
             msg = e.getMessage();

@@ -18,7 +18,7 @@ public interface PNUserCenterConstant {
     /**
      * 订单记录 id--userid
      */
-    public static final String ORDER_PREFIX = "pn_order::%d_%d";
+    public static final String ORDER_PREFIX = "pn_order::%s";
     /**
      * 文章的三种操作
      */

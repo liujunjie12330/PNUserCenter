@@ -120,10 +120,10 @@ public class ArticleReadServiceImpl extends ServiceImpl<PnArticleMapper, PnArtic
         }
         //如果文章存在，查看文章的阅读状态
         Integer readType = article.getReadType();
-        //如果是文章的作者，直接阅读
-        if (Objects.equals(article.getUserId(), UserTokenThreadHolder.getCurrentUser().getId())) {
-            return readNormal(article);
-        }
+//        //如果是文章的作者，直接阅读
+//        if (Objects.equals(article.getUserId(), UserTokenThreadHolder.getCurrentUser().getId())) {
+//            return readNormal(article);
+//        }
         /*
           直接阅读--->不需要登陆权限
          */

@@ -111,8 +111,8 @@ public class AliPayService implements PayService {
             log.info("支付信息:{},查询时间:{}", response.getBody(), new Date());
             if (response.isSuccess()) {
                 return response;
-            } else {
-                throw new AlipayApiException(response.getMsg());
+            }else{
+                return new AlipayTradeQueryResponse();
             }
         } catch (AlipayApiException e) {
             throw new BizException(e.getMessage());

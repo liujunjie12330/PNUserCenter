@@ -54,7 +54,7 @@ public class MessageConsumer {
             channel.basicAck(tag, false);
         } catch (Exception e) {
             log.error("处理消息失败，准备重新入队", e);
-            channel.basicNack(tag, false, true);
+            channel.basicNack(tag, false, false);
         }
     }
 
@@ -67,7 +67,6 @@ public class MessageConsumer {
         if (StringUtils.isBlank(outBizNo)) {
             throw new BizException(StatusCode.PARAMS_ERROR);
         }
-        Long id = IdUtil.parseIdFromPayCode(outBizNo);
         PnArticlePayRecord payRecord = payRecordMapper.getByOutBizNo(outBizNo);
         if(Objects.isNull(payRecord)) {
             throw new BizException(StatusCode.TRANSACTION_NOT_EXIST);
@@ -78,9 +77,9 @@ public class MessageConsumer {
 
     private AlipayToThirdUserDto initDto(PnArticlePayRecord payRecord){
         AlipayToThirdUserDto dto = new AlipayToThirdUserDto();
-        dto.setArticleId(payRecord.getArticleId());
         dto.setAuthorId(payRecord.getReceivePnUserId());
-        dto.setOutBizNo(IdUtil.genPayCode(ThirdPayWayEnum.ALI_THIRD_PAY,payRecord.getReceivePnUserId()));
+        dto.setArticleId(payRecord.getArticleId());
+        dto.setOutBizNo(IdUtil.genPayCode(ThirdPayWayEnum.ALI_THIRD_PAY,payRecord.getArticleId()));
         dto.setTransAmount(payRecord.getPayAmount());
         dto.setTitle("尊敬的用户,您的文章收到一笔支付");
         dto.setRemark("");

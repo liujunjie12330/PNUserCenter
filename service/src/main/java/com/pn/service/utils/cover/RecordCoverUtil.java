@@ -74,6 +74,7 @@ public class RecordCoverUtil {
         String paymentAmountStr = getFirstValue(parameterMap, "total_amount");
         payRecord.setPayAmount(paymentAmountStr);
         payRecord.setPayWay("alipay");
+        payRecord.setOutBizNo(getFirstValue(parameterMap, "out_trade_no"));
         payRecord.setThirdTransCode(getFirstValue(parameterMap, "trade_no"));
         payRecord.setPayCallbackTime(new Date());
         payRecord.setCreateBy(payPnUserId);

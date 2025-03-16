@@ -38,6 +38,7 @@ public class ArticleCoverUtil {
         article.setCatalogId(params.getCategoryId());
         article.setArticleType(params.getArticleType());
         article.setSource(params.getSource());
+        article.setReadType(params.getReadType());
         article.setSourceUrl(params.getSourceUrl());
         article.setStatus(params.getStatus());
         article.setPayWay(params.getPayWay());

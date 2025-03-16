@@ -10,12 +10,15 @@ import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.request.AlipayTradePayRequest;
 import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.alipay.api.response.AlipayTradePayResponse;
+import com.pn.common.enums.PayTypeEnum;
 import com.pn.dao.entity.PnAlipayUserInfo;
 import com.pn.dao.mapper.PnAlipayUserInfoMapper;
 import com.pn.service.PayService;
 import com.pn.service.impls.pay.AliPayService;
 import com.pn.service.impls.pay.dto.AlipayByQrCodeDto;
+import com.pn.service.impls.pay.dto.AlipayToThirdUserDto;
 import com.pn.service.impls.pay.dto.PayBaseDto;
+import com.pn.service.utils.id.IdUtil;
 import com.pn.web.PNUserCenterApp;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -80,6 +83,16 @@ public class AlipayTradePay {
         } else {
             System.out.println("调用失败");
         }
+    }
+
+    public void testeThird(){
+        AlipayToThirdUserDto dto = new AlipayToThirdUserDto();
+        dto.setAuthorId(2L);
+        dto.setOutBizNo(IdUtil.genStrId());
+        dto.setTransAmount("0.99");
+        dto.setTitle("aaaaa");
+        dto.setRemark("ss");
+        aliPayService.payToThirdUser(dto, PayTypeEnum.PAY_TO_THIRD);
     }
 
     @Test

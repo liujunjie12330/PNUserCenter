@@ -7,7 +7,6 @@ import com.pn.dao.entity.PnAlipayUserInfo;
 import com.pn.dao.entity.PnRole;
 import com.pn.dao.entity.PnRolePermission;
 import com.pn.dao.entity.PnUser;
-import org.apache.catalina.User;
 
 import java.util.Objects;
 
@@ -16,7 +15,7 @@ import java.util.Objects;
  */
 public class UserCoverUtil {
 
-    public static UserVo pnUserCoverToVo(PnUser pnUser){
+    public static UserVo pnUserCoverToVo(PnUser pnUser) {
         return UserVo.builder()
                 .id(pnUser.getId())
                 .username(pnUser.getUsername())
@@ -30,7 +29,7 @@ public class UserCoverUtil {
     }
 
     public static PnRole paramCoverToPnRole(PnRole pnRole, UserRolePermissionSettingParam param, Long userId) {
-        if(Objects.isNull(pnRole)){
+        if (Objects.isNull(pnRole)) {
             pnRole = new PnRole();
         }
         pnRole.setRoleName(param.getRoleName());
@@ -41,15 +40,16 @@ public class UserCoverUtil {
     }
 
     public static PnRolePermission paramCoverToPnRolePermission(PnRolePermission rolePermission, UserRolePermissionSettingParam param, Long userId) {
-        if(Objects.isNull(rolePermission)){
-           rolePermission = new PnRolePermission();
+        if (Objects.isNull(rolePermission)) {
+            rolePermission = new PnRolePermission();
         }
         rolePermission.setPermissionId(param.getPermissionId());
         rolePermission.setRoleId(param.getRoleId());
         rolePermission.setCreateBy(userId);
         return rolePermission;
     }
-    public static PnAlipayUserInfo responseCoverToPnAliPay(AlipayUserInfoShareResponse response, Long pnUserId){
+
+    public static PnAlipayUserInfo responseCoverToPnAliPay(AlipayUserInfoShareResponse response, Long pnUserId) {
         PnAlipayUserInfo userInfo = new PnAlipayUserInfo();
         userInfo.setAlipayUuid(response.getUserId());
         userInfo.setPnUserId(pnUserId);
@@ -71,7 +71,8 @@ public class UserCoverUtil {
         userInfo.setIsBlocked(response.getIsBlocked());
         userInfo.setInstOrCorp(response.getInstOrCorp());
         userInfo.setUserStatus(response.getUserStatus());
-        userInfo.setUserType(Integer.valueOf(response.getUserType()));
+        Integer type = Integer.valueOf(Objects.isNull(response.getUserType())?"0":response.getUserType());
+        userInfo.setUserType(type);
         userInfo.setMemberGrade(response.getMemberGrade());
         return userInfo;
     }

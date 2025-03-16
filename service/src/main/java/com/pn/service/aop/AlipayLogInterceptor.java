@@ -1,12 +1,10 @@
 package com.pn.service.aop;
 
 import cn.hutool.core.date.StopWatch;
-import com.alipay.api.AlipayApiException;
 import com.pn.common.annotation.AlipayLog;
 import com.pn.common.base.UserTokenThreadHolder;
 import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.enums.PayTypeEnum;
-import com.pn.common.exception.BizException;
 import com.pn.common.vos.login.UserVo;
 import com.pn.dao.entity.PnOrder;
 import com.pn.dao.entity.PnUser;
@@ -15,8 +13,10 @@ import com.pn.dao.mapper.PnUserMapper;
 import com.pn.service.impls.pay.dto.PayBaseDto;
 import com.pn.service.utils.RedisCache;
 import com.pn.service.utils.cover.RecordCoverUtil;
+import com.pn.service.utils.cover.UserCoverUtil;
 import com.pn.service.utils.id.IdUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -43,7 +43,7 @@ public class AlipayLogInterceptor {
     private PnUserMapper userMapper;
 
     @Around("@annotation(alipayLog)")
-    public Object payLog(ProceedingJoinPoint joinPoint, AlipayLog alipayLog){
+    public Object payLog(ProceedingJoinPoint joinPoint, AlipayLog alipayLog) {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         // 获取方法信息
@@ -55,33 +55,30 @@ public class AlipayLogInterceptor {
         Object result;
         PayBaseDto dto = (PayBaseDto) args[0];
         PayTypeEnum typeEnum = (PayTypeEnum) args[1];
-        Long id = IdUtil.parseIdFromPayCode(dto.getOutBizNo());
-        PnUser pnUser = userMapper.selectById(id);
         String msg = "success";
         try {
             // 执行原方法
             result = joinPoint.proceed();
             log.info("【alipay】返回结果: {}", result);
             //发起支付成功,把支付相关信息放到redis里面
-            redisCache.setHashCache(dto.getOutBizNo(),"pay_type",typeEnum.getType());
-            redisCache.set(String.format(PNUserCenterConstant.ORDER_PREFIX,id,pnUser.getId()),dto.getOutBizNo());
+            redisCache.setHashCache(dto.getOutBizNo(), "pay_type", typeEnum.getType());
+            redisCache.set(String.format(PNUserCenterConstant.ORDER_PREFIX, dto.getOutBizNo()), dto.getOutBizNo());
         } catch (Throwable e) {
-            log.info("【alipay】prepare to pay error==>{}",e.getMessage());
+            log.info("【alipay】prepare to pay error==>{}", e.getMessage());
             msg = e.getMessage();
             throw new RuntimeException(e);
         } finally {
             stopWatch.stop();
             //保存发起的支付记录
-            insertOrder(dto,typeEnum,msg);
+            insertOrder(dto, typeEnum, msg);
             log.info("【alipay】方法 {} 执行耗时: {} ms", signature.getName(), stopWatch.getTotalTimeMillis());
         }
         return result;
     }
 
-    private void insertOrder(PayBaseDto dto,PayTypeEnum typeEnum,String msg)
-    {
-        UserVo currentUser = UserTokenThreadHolder.getCurrentUser();
-        PnOrder pnOrder = RecordCoverUtil.coverToPnOrder(dto, typeEnum, currentUser.getId());
+    private void insertOrder(PayBaseDto dto, PayTypeEnum typeEnum, String msg) {
+
+        PnOrder pnOrder = RecordCoverUtil.coverToPnOrder(dto, typeEnum,1L);
         orderMapper.insert(pnOrder);
     }
 

@@ -2,21 +2,16 @@ package com.pn.service.impls.record;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.pn.common.base.UserTokenThreadHolder;
 import com.pn.common.constant.PNUserCenterConstant;
 import com.pn.common.enums.PayTypeEnum;
-import com.pn.common.vos.login.UserVo;
-import com.pn.dao.entity.PnAlipayUserInfo;
-import com.pn.dao.entity.PnArticle;
-import com.pn.dao.entity.PnArticlePayRecord;
-import com.pn.dao.entity.PnTransactions;
+import com.pn.dao.entity.*;
 import com.pn.dao.mapper.*;
 import com.pn.service.EmailService;
 import com.pn.service.PayRecordService;
-import com.pn.service.entity.config.PoolConfig;
 import com.pn.service.impls.mq.ArticlePayMessageProducer;
 import com.pn.service.utils.RedisCache;
 import com.pn.service.utils.cover.RecordCoverUtil;
+import com.pn.service.utils.id.IdUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -71,26 +66,22 @@ public class PayRecordServiceImpl extends ServiceImpl<PnTransactionsMapper, PnTr
         save(transaction);
         //文章支付
         if (StringUtils.equalsIgnoreCase(paytype, PayTypeEnum.ARTICLE.getType())) {
-            Long articleId = (Long) redisCache.getHashCache(transaction.getOrderId(), "articleId");
+            Long articleId = IdUtil.parseIdFromPayCode(transaction.getOrderId());
             reArticleId = articleId;
-            UserVo user = UserTokenThreadHolder.getCurrentUser();
             redisCache.set(PNUserCenterConstant.ARTICLE_PAID + userInfo.getPnUserId() + "_" + articleId, articleId);
             //把支付的相关信息存入到文章支付信息表,异步通知mq发起转账
-            PoolConfig.RUN_SYNC_JOB_POOL.submit(() -> {
-                Map<String, String[]> localParameterMap = new HashMap<>(parameterMap);
-                UserVo currentUser = user;
-                try {
-                    PnArticle article = articleMapper.selectById(articleId);
-                    PnAlipayUserInfo receiveInfo = infoMapper.getByUserId(article.getUserId());
-                    PnArticlePayRecord payRecord = RecordCoverUtil.paramCoverToPA(localParameterMap, buyerId, userInfo.getPnUserId(), receiveInfo.getAlipayUuid(), receiveInfo.getPnUserId(), articleId);
-                    payRecordMapper.insert(payRecord);
-
-                    producer.sendMessage(String.valueOf(articleId));
-                    emailService.sendArticlePaid(currentUser.getFullName(),article.getTitle(),article.getUserId());
-                } catch (Exception e) {
-                    log.error("call back sync error==>{}", e.getMessage());
-                }
-            });
+            Map<String, String[]> localParameterMap = new HashMap<>(parameterMap);
+            try {
+                PnArticle article = articleMapper.selectById(articleId);
+                PnAlipayUserInfo receiveInfo = infoMapper.getByUserId(article.getUserId());
+                PnArticlePayRecord payRecord = RecordCoverUtil.paramCoverToPA(localParameterMap, buyerId, userInfo.getPnUserId(), receiveInfo.getAlipayUuid(), receiveInfo.getPnUserId(), articleId);
+                payRecordMapper.insert(payRecord);
+                producer.sendMessage(String.valueOf(payRecord.getOutBizNo()));
+                PnUser pnUser = userMapper.selectById(receiveInfo.getPnUserId());
+                emailService.sendArticlePaid(pnUser.getFullName(), article.getTitle(), article.getUserId());
+            } catch (Exception e) {
+                log.error("call back sync error==>{}", e.getMessage());
+            }
         }
         //第三方转账
         if (StringUtils.equalsIgnoreCase(paytype, PayTypeEnum.PAY_TO_THIRD.getType())) {

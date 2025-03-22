@@ -17,4 +17,12 @@ public interface RedisKeyConstant {
      * 用户注销锁
      */
     public static final String USER_DELETION="pn_user_service:user_deletion:";
+    /**
+     * ai 聊天历史key=chatName_userId
+     */
+    public static final String USER_AI_CHAT_HISTORY="user_ai_history:%s_%d";
+    /**
+     * ai 会话历史记录key = chatName_userId
+     */
+    public static final String USER_AI_SESSION_HISTORY="user_ai_session_history:%s_%d";
 }

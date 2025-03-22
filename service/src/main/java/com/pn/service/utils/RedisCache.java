@@ -1,6 +1,8 @@
 package com.pn.service.utils;
 
+import cn.hutool.core.map.MapUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
@@ -8,10 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -155,7 +154,7 @@ public class RedisCache {
      * 递减
      *
      * @param redisKey 键
-     * @param delta       要减少几(小于0)
+     * @param delta    要减少几(小于0)
      * @return
      */
     public long decr(String redisKey, long delta) {
@@ -186,6 +185,51 @@ public class RedisCache {
      */
     public Map<Object, Object> getHashCaches(String redisKey) {
         return redisTemplate.opsForHash().entries(redisKey);
+    }
+
+    /**
+     * 获取 hashKey 对应的所有键值，并转换为 Map<String, T>
+     *
+     * @param redisKey 键
+     * @param type     值的类型
+     * @param <T>      值的泛型类型
+     * @return 对应的多个键值，键为 String 类型，值为 T 类型
+     */
+    public <T> Map<String, T> getHashCaches(String redisKey, Class<T> type) {
+        // 从 Redis 中获取原始的 Map<Object, Object>
+        Map<Object, Object> rawMap = redisTemplate.opsForHash().entries(redisKey);
+
+        // 如果原始 map 为空，返回空 Map
+        if (rawMap.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        // 创建一个新的 Map<String, T>
+        Map<String, T> resultMap = new HashMap<>();
+
+        // 遍历原始 map，进行类型检查和转换
+        for (Map.Entry<Object, Object> entry : rawMap.entrySet()) {
+            Object key = entry.getKey();
+            Object value = entry.getValue();
+
+            // 检查键是否为 String 类型
+            if (!(key instanceof String)) {
+                continue; // 跳过非 String 类型的键
+            }
+
+            // 检查值是否为指定类型
+            if (type.isInstance(value)) {
+                // 类型安全，进行强制转换
+                T typedValue = type.cast(value);
+                resultMap.put((String) key, typedValue);
+            } else {
+                // 如果值类型不匹配，可以选择跳过或记录日志
+                continue; // 或者 throw new IllegalArgumentException("Value is not of type " + type.getSimpleName());
+            }
+        }
+
+        // 返回转换后的 map
+        return resultMap;
     }
 
     /**
@@ -558,12 +602,26 @@ public class RedisCache {
      *
      * @param redisKey 键
      * @param value    值
-     * @param time     时间(秒)
-     * @return
      */
-    public boolean setListCache(String redisKey, Object value) {
+    public boolean setListCacheRPush(String redisKey, Object value) {
         try {
             redisTemplate.opsForList().rightPush(redisKey, value);
+            return true;
+        } catch (Exception e) {
+            log.error(redisKey, e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * 将list放入缓存
+     *
+     * @param redisKey 键
+     * @param value    值
+     */
+    public boolean setListCacheLPush(String redisKey, Object value) {
+        try {
+            redisTemplate.opsForList().leftPush(redisKey, value);
             return true;
         } catch (Exception e) {
             log.error(redisKey, e.getMessage());
@@ -663,6 +721,23 @@ public class RedisCache {
             log.error(redisKey, e.getMessage());
             return 0;
         }
+    }
+
+    /**
+     * 列表修剪操作
+     *
+     * @param redisKey 键值
+     * @param start    开始
+     * @param end      结束
+     */
+    public void doListLTrim(String redisKey, long start, long end) {
+        redisTemplate.execute(new RedisCallback<Long>() {
+            @Override
+            public Long doInRedis(RedisConnection connection) throws DataAccessException {
+                connection.lTrim(redisKey.getBytes(), start, end);
+                return null;
+            }
+        });
     }
 
 }

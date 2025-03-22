@@ -21,7 +21,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @MapperScan(basePackages = "com.pn.dao")
 @EnableScheduling
 @EnableConfigurationProperties(UserRegisterBloomFilterProperties.class)  // Register your properties class
+
 public class PNUserCenterApp {
+
     public static void main(String[] args) {
         SpringApplication.run(PNUserCenterApp.class,args);
     }

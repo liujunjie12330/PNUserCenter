@@ -5,11 +5,19 @@ import java.util.List;
 
 /**
  * 系统相关常量
- * @author: javadadi
- * @Time: 18:28
- * @ClassName: PNUserCenterConstant
  */
 public interface PNUserCenterConstant {
+    /**
+     * ai 对话次数限制 200次
+     */
+    public static final Integer MAX_HISTORY_RECORD_ITEMS = 500;
+    /**
+     * 提示词标识
+     */
+    public static final String PROMPT_TAG = "prompt-";
+    /**
+     * 支付回调队列
+     */
     public static final String THIRD_PAY_QUEUE="thirdPay.queue";
     /**
      * 文章支付前缀 article_id--userid

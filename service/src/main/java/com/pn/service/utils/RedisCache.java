@@ -1,6 +1,8 @@
 package com.pn.service.utils;
 
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.json.JSONUtil;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.dao.DataAccessException;
@@ -8,10 +10,14 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author javadadi
@@ -22,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 public class RedisCache {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
-
+    private static final Charset CODE = StandardCharsets.UTF_8;
     /*普通操作*/
 
     /**
@@ -328,7 +334,7 @@ public class RedisCache {
      * @param by       要增加几(大于0)
      * @return
      */
-    public double incrHash(String redisKey, String item, double by) {
+    public Long incrHash(String redisKey, String item, Integer by) {
         return redisTemplate.opsForHash().increment(redisKey, item, by);
     }
 
@@ -739,5 +745,29 @@ public class RedisCache {
             }
         });
     }
+    public  <T> List<T> lRange(String key, int start, int size, Class<T> clz) {
+        return redisTemplate.execute(new RedisCallback<List<T>>() {
 
+            @Override
+            public List<T> doInRedis(RedisConnection connection) throws DataAccessException {
+                List<byte[]> list = connection.lRange(key.getBytes(), start, size);
+                if (CollectionUtils.isEmpty(list)) {
+                    return new ArrayList<>();
+                }
+                return list.stream().map(k -> toObj(k, clz)).collect(Collectors.toList());
+            }
+        });
+    }
+
+    private static <T> T toObj(byte[] ans, Class<T> clz) {
+        if (ans == null) {
+            return null;
+        }
+
+        if (clz == String.class) {
+            return (T) new String(ans, CODE);
+        }
+
+        return JSONUtil.toBean(new String(ans, CODE), clz);
+    }
 }

@@ -8,6 +8,10 @@ import java.util.List;
  */
 public interface PNUserCenterConstant {
     /**
+     * ai 对话使用完毕
+     */
+    public static final String TOKEN_OVER = "您的免费次数已经使用完毕了!";
+    /**
      * ai 对话次数限制 200次
      */
     public static final Integer MAX_HISTORY_RECORD_ITEMS = 500;
